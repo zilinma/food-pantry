@@ -5,14 +5,14 @@ import { Button, View, StyleSheet, Text } from "react-native";
 
 export default class ListView extends React.Component {
   static navigationOptions = {
-    headerTitle: "List View"
+    headerTitle: "Map View"
   }
 
   render() {
     return (
       <View>
         <Button
-          title="List View"
+          title="Map View"
           onPress={
             () => this.props.navigation.navigate("Login")
 

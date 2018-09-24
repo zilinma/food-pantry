@@ -1,18 +1,25 @@
 import React from "react";
 import { Button, View, StyleSheet, Text } from "react-native";
+//import MainTabNavigator from "../Navigators/MainTabNavigator";
 
 export default class LoginScreen extends React.Component {
-
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>You are currently logged out.</Text>
-        <Button title = "Admin" />
-        <Button title = "Consumer"/>
-        <Button title = "Donor"/>
+        <Text> You are not logged in ... </Text>
+        <Button 
+        title="Donor" 
+        onPress={() =>this.props.navigation.navigate("ListView")}/> 
+        <Button 
+        title="Consumer" 
+        onPress={() =>this.props.navigation.navigate("ListView")}/> 
+        
       </View>
-    );
-  }
+
+
+      )
+  };
+
 }
 
 const styles = StyleSheet.create({

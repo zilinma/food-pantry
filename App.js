@@ -7,20 +7,13 @@ import {
   createSwitchNavigator,
   createBottomTabNavigator
 } from "react-navigation";
-
-//import * as firebase from 'firebase';
-//import firebaseConfig from './firebaseConfig.js'
+import AppNavigator from './Navigators/AppNavigator';
+import * as firebase from 'firebase';
+import firebaseConfig from './firebaseConfig.js'
 
 // Initialize Firebase
 
-//firebase.initializeApp(firebaseConfig);
-
-
-const AppNavigator = createSwitchNavigator({
-  Login: LoginScreen,
-  ListView: ListView
-});
-
+firebase.initializeApp(firebaseConfig);
 
 export default class App extends React.Component {
   render() {
@@ -29,6 +22,8 @@ export default class App extends React.Component {
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
