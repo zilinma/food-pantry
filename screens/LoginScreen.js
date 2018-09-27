@@ -9,10 +9,10 @@ export default class LoginScreen extends React.Component {
         <Text> You are not logged in ... </Text>
         <Button 
         title="Donor" 
-        onPress={() =>this.props.navigation.navigate("ListView")}/> 
+        onPress={() =>this.props.navigation.navigate("PantryListView")}/> 
         <Button 
         title="Consumer" 
-        onPress={() =>this.props.navigation.navigate("ListView")}/> 
+        onPress={() =>this.props.navigation.navigate("PantryListView")}/> 
         
       </View>
 
