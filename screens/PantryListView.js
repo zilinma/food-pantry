@@ -58,7 +58,22 @@ export default class PantryListView extends React.Component {
         />
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(data) => <Row {...data} />}
+          renderRow={(data) =>   
+            <View style={styles.container}>
+              <Button 
+                style={styles.text}
+                title={`${data.name}`}
+                onPress={(navigation) => {
+                  this.props.navigation.navigate("PantryInfoView", {
+                    pantryName: data.name
+
+                  })
+
+
+                }}
+              />
+            </View>
+}
           enableEmptySections={true}
         />
       </View>
@@ -69,9 +84,18 @@ export default class PantryListView extends React.Component {
 
 const Row = (props) => (
   <View style={styles.container}>
-    <Text style={styles.text}>
-      {`${props.name}`}
-    </Text>
+    <Button 
+      style={styles.text}
+      title={`${props.name}`}
+      onPress={(navigation) => {
+        this.props.navigation.navigate("PantryInfoView", {
+          pantryName: props.name
+
+        })
+
+
+      }}
+    />
   </View>
 );
 

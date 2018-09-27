@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import LoginScreen from '../screens/LoginScreen';
 import MainTabs from '../Navigators/MainTabNavigator';
+import PantryInfoView from '../screens/PantryInfoView';
 
 import {
   createBottomTabNavigator,
@@ -10,7 +11,8 @@ import {
 
 const AppNavigator = createStackNavigator({
   Login: LoginScreen,
-  MainTab: MainTabs
+  MainTab: MainTabs,
+  PantryInfoView: PantryInfoView
 },
 {
   initialRouteName: 'Login',
