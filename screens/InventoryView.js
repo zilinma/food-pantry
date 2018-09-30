@@ -56,7 +56,7 @@ export default class InventoryView extends React.Component {
 
   render() {
     return (
-      <View style = {styles.container}>
+      <View style = {styles.appContainer}>
         
         <ListView
           dataSource={this.state.dataSource}
@@ -69,33 +69,42 @@ export default class InventoryView extends React.Component {
   }
 }
 
-const Row = (props) => (
-  <View style={styles.container}>
-      <Text style={styles.text}> {`${props.item_name}`} </Text>
-      <Text style = {styles.text}>  {`${props.item_quantity}`}  </Text>
+const Row = props => (
+  <View>
+    <View style={styles.row}>
+        <Text style={styles.nameText}>{`${props.item_name}`}</Text>
+        <Text style={styles.quantityText}>{`${props.item_quantity}`}</Text>
+    </View>
+    <View style={styles.separator} />
   </View>
 );
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    flex: 1, 
-    flexDirection: 'row'
+  appContainer: {
+    flex: 1,
+    paddingTop: 20,
   },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center'
-  }
+  nameText: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 20,
+    fontWight: 'bold',
+    //paddingLeft: 20,
+    //color: 'red',
+  },
+  quantityText: {
+    flex: 1,
+    textAlign: 'right',
+    fontSize: 20,
+    paddingRight: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    padding: 12,
+    height: 60,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#CCCCCC',
+  },
 });
-
-
-
-    //*/ 
-    /*0
-    <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row' }}>
-      <View style={{ flex: 1, alignSelf: 'stretch' }}>
-        <Text>{`${props.item_name}`}</Text>
-      </View>
-    </View>
-    */ 
