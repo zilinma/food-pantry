@@ -21,13 +21,13 @@ export default class PantryMapView extends React.Component {
       <View>
         <Text style = {styles.text}>{JSON.stringify(pantryName)}</Text>
         <TouchableOpacity
-          title= "Inventory"
           onPress={() => this.props.navigation.navigate("InventoryView",
           {
             name: pantryName
 
-          })}
-        />
+          })}>
+          <Text>Inventory</Text>
+        </TouchableOpacity>
 
       </View>
       );

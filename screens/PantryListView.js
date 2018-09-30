@@ -51,18 +51,19 @@ export default class PantryListView extends React.Component {
     return (
       <View style = {styles.container}>
         <TouchableOpacity
-          title="List View"
+          style={styles.button}
           onPress={
             () => this.props.navigation.navigate("Login")
-          }
-        />
+          }>
+
+          <Text style = {styles.text}> Back to Login</Text>
+        </TouchableOpacity>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(data) =>   
             <View style={styles.container}>
               <TouchableOpacity 
-                style={styles.text}
-                title={`${data.name}`}
+                style={styles.button}
                 onPress={(navigation) => {
                   this.props.navigation.navigate("PantryInfoView", {
                     pantryName: data.name
@@ -70,8 +71,9 @@ export default class PantryListView extends React.Component {
                   })
 
 
-                }}
-              />
+                }}>
+                <Text style = {styles.text}>{`${data.name}`}</Text>
+              </TouchableOpacity>
             </View>
 }
           enableEmptySections={true}
@@ -81,7 +83,7 @@ export default class PantryListView extends React.Component {
 
   }
 }
-
+/**
 const Row = (props) => (
   <View style={styles.container}>
     <Button 
@@ -98,13 +100,19 @@ const Row = (props) => (
     />
   </View>
 );
-
+*/
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     flex: 1
   },
   text: {
-    textAlign: "center"
-  }
+    //textAlign: "center",
+    fontSize: 18
+  },  
+  button: {
+    padding: 10,
+    margin: 10
+  },
+
 });
