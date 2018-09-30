@@ -1,16 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView } from 'react-native';
+import { StyleSheet, Text, View, Button, ListView, TouchableOpacity } from 'react-native';
 
 import * as firebase from 'firebase';
-import firebaseConfig from 'firebaseConfig';
+import firebaseConfig from '../firebaseConfig';
 
-firebase.initializeApp(firebaseConfig);
+//firebase.initializeApp(firebaseConfig);
 
 export default class InventoryView extends React.Component {
-	
-	constructor() {
-    super();
-    this.tasksRef = firebase.database().ref("Inventory/Lewisburg Pantry");  // change the name of the pantry with what the user selects before.
+
+
+	constructor(props) {
+    super(props);
+    name = this.props.navigation.getParam("name", "NO-name");
+    name = "Inventory/" + name
+
+
+    this.tasksRef = firebase.database().ref(name);  // change the name of the pantry with what the user selects before.
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
@@ -19,6 +24,9 @@ export default class InventoryView extends React.Component {
     };
   }
 
+  static navigationOptions = {
+    headerTitle: "Inventory View"
+  }
 
   listenForTasks(tasksRef) {
     tasksRef.on('value', (dataSnapshot) => {
@@ -45,19 +53,11 @@ export default class InventoryView extends React.Component {
     this.listenForTasks(this.tasksRef);
   }
 
-  static navigationOptions = {
-    headerTitle: "Inventory View"
-  }
 
   render() {
     return (
       <View style = {styles.container}>
-        <Button
-          title="Inventory View"
-          //onPress={
-           // () => this.props.navigation.navigate("Login")
-         // }
-        />
+        
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(data) => <Row {...data} />}
@@ -71,20 +71,21 @@ export default class InventoryView extends React.Component {
 
 const Row = (props) => (
   <View style={styles.container}>
-    <Text>
       <Text style={styles.text}> {`${props.item_name}`} </Text>
-      <Text style = {{textAlign: 'right'}}>  {`${props.item_quantity}`}  </Text>
-    </Text>
+      <Text style = {styles.text}>  {`${props.item_quantity}`}  </Text>
   </View>
 );
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    flex: 1
+    flex: 1, 
+    flexDirection: 'row'
   },
   text: {
-    textAlign: "center"
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center'
   }
 });
 

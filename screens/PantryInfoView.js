@@ -1,6 +1,6 @@
 import React from "react";
 import {MapView} from 'expo';
-import { Button, View, StyleSheet, Text } from "react-native";
+import { Button, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 
@@ -20,6 +20,15 @@ export default class PantryMapView extends React.Component {
     return (
       <View>
         <Text style = {styles.text}>{JSON.stringify(pantryName)}</Text>
+        <TouchableOpacity
+          title= "Inventory"
+          onPress={() => this.props.navigation.navigate("InventoryView",
+          {
+            name: pantryName
+
+          })}
+        />
+
       </View>
       );
 

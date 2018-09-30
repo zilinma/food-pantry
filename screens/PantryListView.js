@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, View, StyleSheet, Text, ListView } from "react-native";
+import { Button, View, StyleSheet, Text, ListView, TouchableOpacity } from "react-native";
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 import * as firebase from 'firebase';
@@ -50,7 +50,7 @@ export default class PantryListView extends React.Component {
   render() {
     return (
       <View style = {styles.container}>
-        <Button
+        <TouchableOpacity
           title="List View"
           onPress={
             () => this.props.navigation.navigate("Login")
@@ -60,7 +60,7 @@ export default class PantryListView extends React.Component {
           dataSource={this.state.dataSource}
           renderRow={(data) =>   
             <View style={styles.container}>
-              <Button 
+              <TouchableOpacity 
                 style={styles.text}
                 title={`${data.name}`}
                 onPress={(navigation) => {
