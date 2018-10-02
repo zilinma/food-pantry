@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, View, StyleSheet, Text, ListView, TouchableOpacity } from "react-native";
+import { Container, Header, Content, Card, CardItem, Body} from 'native-base';
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 import * as firebase from 'firebase';
@@ -16,6 +17,7 @@ export default class PantryListView extends React.Component {
     });
     this.state = {
       dataSource: dataSource
+      //allData: []
     };
   }
 
@@ -25,13 +27,18 @@ export default class PantryListView extends React.Component {
       dataSnapshot.forEach((child) => {
         //console.log(child.key)
         console.log(child.val().name)
+        
         tasks.push({
-          name: child.val().name
+          name: child.val().name,
+          address: child.val().address,
+          contact: child.val().contact,
+          hour: child.val().hour,
         });
       });
 
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(tasks)
+        //allData: allData
       });
     });
   }
@@ -50,14 +57,6 @@ export default class PantryListView extends React.Component {
   render() {
     return (
       <View style = {styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={
-            () => this.props.navigation.navigate("Login")
-          }>
-
-          <Text style = {styles.text}> Back to Login</Text>
-        </TouchableOpacity>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={(data) =>   
@@ -66,8 +65,10 @@ export default class PantryListView extends React.Component {
                 style={styles.button}
                 onPress={(navigation) => {
                   this.props.navigation.navigate("PantryInfoView", {
-                    pantryName: data.name
-
+                    pantryName: data.name,
+                    pantryAddress: data.address,
+                    pantryContact: data.contact,
+                    pantryHour: data.pantryHour,
                   })
 
 

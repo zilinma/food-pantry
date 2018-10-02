@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'left',
     fontSize: 20,
-    fontWight: 'bold',
+    fontWeight: 'bold',
     //paddingLeft: 20,
     //color: 'red',
   },

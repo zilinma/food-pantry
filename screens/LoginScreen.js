@@ -10,7 +10,7 @@ export default class LoginScreen extends React.Component {
           <Text style= {{fontSize : 20}}> You are not logged in ... </Text>
           <TouchableOpacity
             style = {styles.button}
-            onPress={() =>this.props.navigation.navigate("PantryListView")}>
+            onPress={() =>this.props.navigation.navigate("LoginForms")}>
             <Text style = {styles.text}> Administrator</Text>
           </TouchableOpacity>
         </View>

@@ -4,6 +4,8 @@ import LoginScreen from '../screens/LoginScreen';
 import MainTabs from '../Navigators/MainTabNavigator';
 import PantryInfoView from '../screens/PantryInfoView';
 import InventoryView from '../screens/InventoryView';
+import LoginForms from "../AdminLogins/loginForms";
+//import LoginNavigators from '../Navigators/LoginNavigator';
 
 import {
   createBottomTabNavigator,
@@ -14,7 +16,9 @@ const AppNavigator = createStackNavigator({
   Login: LoginScreen,
   MainTab: MainTabs,
   PantryInfoView: PantryInfoView,
-  InventoryView: InventoryView
+  InventoryView: InventoryView,
+  LoginForms: LoginForms,
+  //LoginNavigator: LoginNavigator,
 },
 {
   initialRouteName: 'Login',
