@@ -10,11 +10,15 @@ import {
 } from 'react-native';
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
-import firebaseConfig from 'firebaseConfig';
+import firebaseConfig from '../firebaseConfig';
 
 //firebase.initializeApp(firebaseConfig);
 
 export default class InventoryView extends React.Component {
+  static navigationOptions = {
+      headerTitle : "Inventory",
+  }
+
   constructor(props) {
     super(props);
     this.tasksRef = firebase.database().ref('Inventory/Lewisburg Pantry');
@@ -157,7 +161,7 @@ const Row = props => (
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
+    //paddingTop: Constants.statusBarHeight,
   },
   topText: {
     fontSize: 20,
