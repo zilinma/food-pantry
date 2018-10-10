@@ -8,6 +8,8 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   TextInput,
+  Alert,
+
 } from 'react-native';
 import { Constants } from 'expo';
 import * as firebase from 'firebase';
@@ -36,7 +38,7 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editItem: false,
       newItemName: '',
-      newItemQuantity: '',
+      newItemQuantity: 0,
     };
   }
 
@@ -79,15 +81,17 @@ export default class InventoryView extends React.Component {
   }
 
   decreaseItemCount(item) {
-    this.tasksRef.update({ [item.item_name]: item.item_quantity - 1 });
+    if(parseInt(item.item_quantity) > 0) {
+      this.tasksRef.update({ [item.item_name]: parseInt(item.item_quantity) - 1 });
+    }
   }
 
   increaseItemCount(item) {
-    this.tasksRef.update({ [item.item_name]: item.item_quantity + 1 });
+    this.tasksRef.update({ [item.item_name]: parseInt(item.item_quantity) + 1 });
   }
 
   deleteItem(item) {
-    alert('Are you sure you want to delete the item?');
+    //alert('Are you sure you want to delete the item?');
     this.tasksRef.child(item.item_name).remove();
   }
 
@@ -97,9 +101,9 @@ export default class InventoryView extends React.Component {
       return;
     }
     this.tasksRef.update({
-      [this.state.newItemName]: this.state.newItemQuantity,
+      [this.state.newItemName]: parseInt(this.state.newItemQuantity),
     });
-    this.setState({ newItemName: '', newItemQuantity: '' });
+    this.setState({ newItemName: '', newItemQuantity: 0 });
   }
 
   render() {
@@ -140,6 +144,7 @@ export default class InventoryView extends React.Component {
               value={this.state.newItemQuantity}
               style={styles.textEdit}
               onChangeText={text => this.setState({ newItemQuantity: text })}
+              keyboardType="number-pad"
               placeholder="Item Quantity"
             />
             <Button
@@ -160,7 +165,15 @@ export default class InventoryView extends React.Component {
               <View style={styles.row}>
                 <View style={styles.rowContainer}>
                   {this.state.editItem && (
-                    <TouchableHighlight onPress={() => this.deleteItem(data)}>
+                    <TouchableHighlight onPress={() => Alert.alert(
+                      'Are you sure you want to delete?',
+                      "Yep???",
+                      [
+                        {text: "Yes", onPress: () => this.deleteItem(data)},
+                        {text: "Cancel", onPress: () => console.log("cancel"), style: "cancel"}
+                      ],
+                      { cancelable: true}
+                      )}>
                       <Text
                         style={{
                           fontSize: 20,
@@ -168,9 +181,8 @@ export default class InventoryView extends React.Component {
                           paddingHorizontal: 5,
                           color: 'red',
                         }}>
-                        {' '}
-                        -{' '}
-                      </Text>
+                        -
+                        </Text>
                     </TouchableHighlight>
                   )}
                   <Text style={styles.nameText}>{`${data.item_name}`}</Text>
