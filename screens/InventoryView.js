@@ -107,15 +107,19 @@ export default class InventoryView extends React.Component {
   }
 
   render() {
+    const isDisabled = this.props.navigation.getParam("pantryUID", null)
+    console.log(isDisabled)
     return (
       <View style={styles.appContainer}>
-        <TouchableOpacity style={{ paddingVertical: 10 }}>
-          <Text
-            style={{ textAlign: 'right', fontSize: 20, fontWeight: 'bold' }}
-            onPress={this.toggleEdit}>
-            {this.renderConditionalText()}
-          </Text>
-        </TouchableOpacity>
+        {(isDisabled != "no-id") &&
+          <TouchableOpacity style={{ paddingVertical: 10 }}>
+            <Text
+              style={{ textAlign: 'right', fontSize: 20, fontWeight: 'bold' }}
+              onPress={this.toggleEdit}>
+              {this.renderConditionalText()}
+            </Text>
+          </TouchableOpacity>
+        }
 
         <View
           style={{
@@ -141,7 +145,7 @@ export default class InventoryView extends React.Component {
               placeholder="Item Name"
             />
             <TextInput
-              value={this.state.newItemQuantity}
+              value={String(this.state.newItemQuantity)}
               style={styles.textEdit}
               onChangeText={text => this.setState({ newItemQuantity: text })}
               keyboardType="number-pad"
@@ -171,8 +175,7 @@ export default class InventoryView extends React.Component {
                       [
                         {text: "Yes", onPress: () => this.deleteItem(data)},
                         {text: "Cancel", onPress: () => console.log("cancel"), style: "cancel"}
-                      ],
-                      { cancelable: true}
+                      ]
                       )}>
                       <Text
                         style={{
@@ -273,7 +276,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    fontSize: 20,
+    //fontSize: 20,
   },
   row: {
     flexDirection: 'row',
@@ -290,7 +293,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#48afdb',
     justifyContent: 'center',
-    color: '#FFFFFF',
     borderRadius: 10,
   },
   btnText: {

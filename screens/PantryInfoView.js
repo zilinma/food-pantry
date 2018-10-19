@@ -10,9 +10,11 @@ import firebaseConfig from '../firebaseConfig';
 
 //firebase.initializeApp(firebaseConfig);
 
-export default class PantryMapView extends React.Component {
+export default class PantryInfoView extends React.Component {
+
   static navigationOptions = {
-    headerTitle: "Information View"
+    headerTitle: "Information View",
+
   }
 
   render() {
@@ -21,8 +23,16 @@ export default class PantryMapView extends React.Component {
     const pantryAddress = navigation.getParam("pantryAddress", "Unknown");
     const pantryContact = navigation.getParam("pantryContact", "No contact provided");
     const pantryHour = navigation.getParam("pantryHours", "No hours provided");
+    const isDisabled = navigation.getParam("pantryUID", null);
+    console.log(isDisabled)
     return (
       <View>
+        <View style = {styles.infoContainer}>
+          {isDisabled != "no-id" &&
+            <Button 
+            title="Edits"/>
+          }
+        </View>
         <View style = {styles.infoContainer}>
           <Text>Name: {pantryName}</Text>
         </View>
@@ -41,7 +51,8 @@ export default class PantryMapView extends React.Component {
           style = {styles.button}
           onPress={() => this.props.navigation.navigate("InventoryView",
           {
-            name: pantryName
+            name: pantryName,
+            pantryUID: isDisabled,
 
           })}>
           <Text style = {styles.text}>Inventory</Text>

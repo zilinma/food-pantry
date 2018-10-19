@@ -64,11 +64,13 @@ export default class PantryListView extends React.Component {
               <TouchableOpacity 
                 style={styles.button}
                 onPress={(navigation) => {
+                  uid = this.props.navigation.getParam('uid', 'no-id')
                   this.props.navigation.navigate("PantryInfoView", {
                     pantryName: data.name,
                     pantryAddress: data.address,
                     pantryContact: data.contact,
                     pantryHour: data.pantryHour,
+                    pantryUID: uid,
                   })
 
 

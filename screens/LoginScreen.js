@@ -1,19 +1,26 @@
 import React from "react";
-import { Button, View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
-
+import { Container, Button, Text } from 'native-base';
 export default class LoginScreen extends React.Component {
   render() {
     return (
-        <View style = {styles.container}>
+      <View>
         <View>
-          <Text style= {{fontSize : 20}}> You are not logged in ... </Text>
-          <TouchableOpacity
-            style = {styles.button}
-            onPress={() =>this.props.navigation.navigate("LoginForms")}>
-            <Text style = {styles.text}> Administrator</Text>
-          </TouchableOpacity>
+          <Text style= {{fontSize: 40, top: 200, textAlign: 'center', color: '#2699FB'}}> Welcome to'Burg Eats</Text>
+          <Text style= {{fontSize: 40, top: 200, textAlign: 'center', color: '#2699FB'}}>'Burg Eats</Text>
+          <Text style= {{top: 250,textAlign: "center",, color: '#2699FB'}}> I am a(n)...</Text>
+
         </View>
+
+        <View style = {styles.container}>
+          <View>
+            <Button bordered info
+              style = {styles.button}
+              onPress={() =>this.props.navigation.navigate("LoginNavigators")}>
+              <Text style = {styles.text}> Administrator</Text>
+            </TouchableOpacity>
+          </View>
 
         <View>
 
@@ -26,8 +33,8 @@ export default class LoginScreen extends React.Component {
           
         </View>
 
+        </View>
       </View>
-      
       )
   };
 
@@ -35,15 +42,20 @@ export default class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     paddingHorizontal: 20,
     flex: 1,
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#414288',
+    backgroundColor: '#2699FB',
+    width: 150,
+    height: 40,
     padding: 10,
-    margin: 10
+    margin: 10,
+    top: 400,
+    borderRadius:5, 
   },
   text: {
     textAlign: "center",

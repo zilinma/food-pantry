@@ -2,19 +2,18 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import loginForms from '../AdminLogins/loginForms';
 //import forgetPassword from '../AdminLogins/forgetPassword';
-//import SignUpName from '../AdminLogins/SignUpName';
+import SignUpEmail from '../AdminLogins/SignUpEmail';
 
 //import PantryInfoView from '../screens/PantryInfoView';
 import {
-  ,
   createStackNavigator
 } from "react-navigation";
 
-const MainTabs = createTabNavigator(
+const LoginNavigators = createStackNavigator(
   {
     loginForms: loginForms,
     //forgetPassword: forgetPassword,
-    //SignUpName: SignUpName
+    SignUpEmail: SignUpEmail
   },
   {
     tabBarOptions: {
@@ -23,5 +22,5 @@ const MainTabs = createTabNavigator(
   }
 );
 
-export default MainTabs;
+export default LoginNavigators;
 
