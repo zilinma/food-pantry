@@ -1,6 +1,8 @@
 import React from "react";
-import { Button, View, StyleSheet, Text, ListView, TouchableOpacity } from "react-native";
-import { Container, Header, Content, Card, CardItem, Body} from 'native-base';
+import { Button, View, StyleSheet,  ListView, TouchableOpacity } from "react-native";
+import { Container, Header, Text, Content, Card, CardItem, Body, StyleProvider} from 'native-base';
+import getTheme from '../native-base-theme/components';
+import colors from '../native-base-theme/variables/commonColor';
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 import * as firebase from 'firebase';
@@ -56,32 +58,35 @@ export default class PantryListView extends React.Component {
 
   render() {
     return (
-      <View style = {styles.container}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(data) =>   
-            <View style={styles.container}>
-              <TouchableOpacity 
-                style={styles.button}
-                onPress={(navigation) => {
-                  uid = this.props.navigation.getParam('uid', 'no-id')
-                  this.props.navigation.navigate("PantryInfoView", {
-                    pantryName: data.name,
-                    pantryAddress: data.address,
-                    pantryContact: data.contact,
-                    pantryHour: data.pantryHour,
-                    pantryUID: uid,
-                  })
+      <StyleProvider style = {getTheme(colors)}>
+        <Container>
+          <ListView
+            dataSource={this.state.dataSource}
+            renderRow={(data) =>   
+              <View>
+                <TouchableOpacity 
+                  style={styles.button}
+                  onPress={(navigation) => {
+                    uid = this.props.navigation.getParam('uid', 'no-id')
+                    this.props.navigation.navigate("PantryInfoView", {
+                      pantryName: data.name,
+                      pantryAddress: data.address,
+                      pantryContact: data.contact,
+                      pantryHour: data.pantryHour,
+                      pantryUID: uid,
+                    })
+                  }}>
+                  <Text style = {styles.text}>{`${data.name}`}</Text>
+                </TouchableOpacity>
+              </View>
+            }
+            renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+            enableEmptySections={true}
+          />
+        </Container>
 
+    </StyleProvider>
 
-                }}>
-                <Text style = {styles.text}>{`${data.name}`}</Text>
-              </TouchableOpacity>
-            </View>
-}
-          enableEmptySections={true}
-        />
-      </View>
       );
 
   }
@@ -105,6 +110,11 @@ const Row = (props) => (
 );
 */
 const styles = StyleSheet.create({
+  separator: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#8E8E8E',
+  },
   container: {
     justifyContent: "center",
     flex: 1

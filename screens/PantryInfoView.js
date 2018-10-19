@@ -1,7 +1,8 @@
 import React from "react";
 import {MapView} from 'expo';
-import { Button, View, StyleSheet, Text, TouchableOpacity } from "react-native";
-
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Container, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 
@@ -13,9 +14,8 @@ import firebaseConfig from '../firebaseConfig';
 export default class PantryInfoView extends React.Component {
 
   static navigationOptions = {
-    headerTitle: "Information View",
-
-  }
+    headerTitle: "INFORMATION",
+  };
 
   render() {
     const { navigation } = this.props;
@@ -26,6 +26,51 @@ export default class PantryInfoView extends React.Component {
     const isDisabled = navigation.getParam("pantryUID", null);
     console.log(isDisabled)
     return (
+      <Container>
+        <Header />
+        <Content>
+          <ListItem icon>
+            <Left>
+                <Icon name="phone"/>
+            </Left>
+            <Body>
+              <Text>Airplane Mode</Text>
+            </Body>
+            <Right>
+              <Switch value={false} />
+            </Right>
+          </ListItem>
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#007AFF" }}>
+                <Icon active name="wifi" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Wi-Fi</Text>
+            </Body>
+            <Right>
+              <Text>GeekyAnts</Text>
+              <Icon active name="arrow-forward" />
+            </Right>
+          </ListItem>
+          <ListItem icon>
+            <Left>
+              <Button style={{ backgroundColor: "#007AFF" }}>
+                <Icon active name="bluetooth" />
+              </Button>
+            </Left>
+            <Body>
+              <Text>Bluetooth</Text>
+            </Body>
+            <Right>
+              <Text>On</Text>
+              <Icon active name="arrow-forward" />
+            </Right>
+          </ListItem>
+        </Content>
+      </Container>
+      /**
       <View>
         <View style = {styles.infoContainer}>
           {isDisabled != "no-id" &&
@@ -59,6 +104,7 @@ export default class PantryInfoView extends React.Component {
         </TouchableOpacity>
 
       </View>
+      */
       );
 
   }
