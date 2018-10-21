@@ -1,8 +1,11 @@
 import React from "react";
 import {MapView} from 'expo';
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Container, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
+import { Grid, Button,StyleProvider,  Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import getTheme from '../native-base-theme/components';
+import colors from '../native-base-theme/variables/commonColor';
+import Dimensions from 'Dimensions';
 //import MainTabNavigator from "../Navigators/MainTabNavigator";
 //import AppNavigator from "../App.js"
 
@@ -11,10 +14,20 @@ import firebaseConfig from '../firebaseConfig';
 
 //firebase.initializeApp(firebaseConfig);
 
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+const CENTER = DEVICE_HEIGHT/ 2.5
+const SKIP = DEVICE_HEIGHT/  1.75
+const BUTTON_WIDTH = DEVICE_WIDTH * 0.25;
+const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
+const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
+
 export default class PantryInfoView extends React.Component {
 
   static navigationOptions = {
+
     headerTitle: "INFORMATION",
+    
   };
 
   render() {
@@ -26,94 +39,101 @@ export default class PantryInfoView extends React.Component {
     const isDisabled = navigation.getParam("pantryUID", null);
     console.log(isDisabled)
     return (
+    <StyleProvider style = {getTheme(colors)}>
       <Container>
-        <Header />
+
         <Content>
-          <ListItem icon>
-            <Left>
-                <Icon name="phone"/>
-            </Left>
+          <View style={styles.container}>
             <Body>
-              <Text>Airplane Mode</Text>
+            <Text style={styles.title}>
+              {pantryName}
+            </Text>
             </Body>
             <Right>
-              <Switch value={false} />
-            </Right>
-          </ListItem>
-          <ListItem icon>
-            <Left>
-              <Button style={{ backgroundColor: "#007AFF" }}>
-                <Icon active name="wifi" />
+              <Button style={styles.button}>
+                <Text>
+                  EDIT
+                </Text>
               </Button>
-            </Left>
-            <Body>
-              <Text>Wi-Fi</Text>
-            </Body>
-            <Right>
-              <Text>GeekyAnts</Text>
-              <Icon active name="arrow-forward" />
             </Right>
-          </ListItem>
-          <ListItem icon>
+          </View>
+
+          <ListItem icon noBorder style={styles.item}>
             <Left>
-              <Button style={{ backgroundColor: "#007AFF" }}>
-                <Icon active name="bluetooth" />
-              </Button>
+              <Icon active name="phone" style={styles.icon}/>
             </Left>
             <Body>
-              <Text>Bluetooth</Text>
+              <Text>{pantryContact}</Text>
+              <Text style={styles.textDes}>phone</Text>
             </Body>
-            <Right>
-              <Text>On</Text>
-              <Icon active name="arrow-forward" />
-            </Right>
+
           </ListItem>
+          <ListItem icon noBorder style={styles.item}>
+            <Left>
+              <Icon active name="map-marker"  style={styles.icon}/>
+            </Left>
+            <Body>
+              <Text>{pantryAddress}</Text>
+              <Text style={styles.textDes}>address</Text>
+            
+            </Body>
+
+          </ListItem>
+
+          <ListItem icon noBorder style={styles.item}>
+            <Left>
+              <Icon active name="clock-o"  style={styles.icon}/>
+            </Left>
+            <Body>
+              <Text>{pantryHour}</Text>
+            </Body>
+          </ListItem>
+
+          <View style={styles.map}>
+          
+            <MapView
+              style={{ flex: 1 }}
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            />
+
+
+          </View>
         </Content>
+
       </Container>
-      /**
-      <View>
-        <View style = {styles.infoContainer}>
-          {isDisabled != "no-id" &&
-            <Button 
-            title="Edits"/>
-          }
-        </View>
-        <View style = {styles.infoContainer}>
-          <Text>Name: {pantryName}</Text>
-        </View>
-        <View style = {styles.infoContainer}>
-          <Text>Address: {pantryAddress}</Text>
-        </View>
-        <View style = {styles.infoContainer}>
-          <Text>Contact: {pantryContact}</Text>
-        </View>
-        <View style = {styles.infoContainer}>
-          <Text>Hours: {pantryHour}</Text>
-        </View>
-        
 
-        <TouchableOpacity
-          style = {styles.button}
-          onPress={() => this.props.navigation.navigate("InventoryView",
-          {
-            name: pantryName,
-            pantryUID: isDisabled,
-
-          })}>
-          <Text style = {styles.text}>Inventory</Text>
-        </TouchableOpacity>
-
-      </View>
-      */
+    </StyleProvider>
+      
       );
 
   }
 }
 
 const styles = StyleSheet.create({
+  item:{
+    marginTop: DEVICE_HEIGHT / 10,
+    marginLeft: DEVICE_HEIGHT/ 20,
+    marginRight: DEVICE_HEIGHT/ 20,
+
+
+  },
   container: {
-    justifyContent: "center",
     flex: 1,
+    flexDirection: 'row',
+    alignItems: "center",
+    marginTop: DEVICE_HEIGHT/ 50,
+    marginLeft: DEVICE_HEIGHT/ 40,
+    marginRight: DEVICE_HEIGHT/ 40,
+  },
+  buttonContainer:{
+    flexDirection: "row",
+    justifyContent: "center",
+
   },
   infoContainer:{
     padding: 10, 
@@ -122,13 +142,38 @@ const styles = StyleSheet.create({
   text: {
     textAlign: "center",
     fontSize: 15,
-    color: "white",
+    color: "#FFFFFF"
+  }, 
+  textDes: {
+    fontSize: 14,
+  },
+  title: {
+    fontSize: 20,
+  },
+  icon: {
+    fontSize: 20,
+    color: '#2699FB',
   },
   button: {
-    alignItems: 'center',
-    backgroundColor: '#414288',
+    width: BUTTON_WIDTH * 0.85,
+    height: BUTTON_HEIGHT,
+    borderRadius: BUTTON_RADIUS,
+    justifyContent: 'center',
     padding: 10,
-    margin: 10
+    margin: DEVICE_HEIGHT / 40,
+  },
+  map: { 
+    flex: 1,
+    minHeight: DEVICE_HEIGHT/2,
+    margin: DEVICE_HEIGHT/ 20,
+    },
+  buttonInventory: {
+    width: BUTTON_WIDTH * 2,
+    height: BUTTON_HEIGHT,
+    borderRadius: BUTTON_RADIUS,
+    justifyContent: 'center',
+    padding: 10,
+    margin: DEVICE_HEIGHT / 40,
   },
 
 });

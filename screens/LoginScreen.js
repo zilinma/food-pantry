@@ -11,9 +11,9 @@ import colors from '../native-base-theme/variables/commonColor';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-const CENTER = DEVICE_HEIGHT / 2
-const SKIP = DEVICE_HEIGHT/ 1.5
-const BUTTON_WIDTH = DEVICE_WIDTH * 0.43;
+const CENTER = DEVICE_HEIGHT/ 2.5
+const SKIP = DEVICE_HEIGHT/  1.75
+const BUTTON_WIDTH = DEVICE_WIDTH * 0.38;
 const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
 const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
 
@@ -77,12 +77,15 @@ const styles = StyleSheet.create({
   },
 
   text_title: {
+    fontFamily: "Georgia",
     fontSize: 40,
     top: CENTER * 1.2, 
     textAlign: 'center', 
   },
 
   text_description: {
+
+    fontFamily: "Georgia",
     fontSize: 20,
     top: CENTER * 1.2, 
     textAlign: 'center', 
