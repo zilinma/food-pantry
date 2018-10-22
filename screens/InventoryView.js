@@ -12,8 +12,12 @@ import {
 
 } from 'react-native';
 import { Constants } from 'expo';
+import { Icon } from 'react-native-elements';
+import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
+import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
+import DropdownMenu from 'react-native-dropdown-menu';
 import * as firebase from 'firebase';
-import firebaseConfig from '../firebaseConfig';
+import firebaseConfig from 'firebaseConfig';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -38,7 +42,7 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editItem: false,
       newItemName: '',
-      newItemQuantity: 0,
+      newItemAvailability: '',
     };
   }
 
@@ -69,148 +73,116 @@ export default class InventoryView extends React.Component {
     this.listenForTasks(this.tasksRef);
   }
 
-  toggleEdit = () => {
+  _toggleEdit = () => {
     this.setState(prevState => ({ editItem: !prevState.editItem }));
   };
 
-  renderConditionalText() {
+  _renderConditionalText() {
     if (this.state.editItem) {
       return <Text> Done </Text>;
     }
     return <Text> Edit</Text>;
   }
 
-  decreaseItemCount(item) {
-    if(parseInt(item.item_quantity) > 0) {
-      this.tasksRef.update({ [item.item_name]: parseInt(item.item_quantity) - 1 });
-    }
-  }
-
-  increaseItemCount(item) {
-    this.tasksRef.update({ [item.item_name]: parseInt(item.item_quantity) + 1 });
-  }
-
-  deleteItem(item) {
+  _deleteItem(item) {
     //alert('Are you sure you want to delete the item?');
     this.tasksRef.child(item.item_name).remove();
   }
 
-  addItem() {
-    if (this.state.newItemName === '' || this.state.newItemQuantity === '') {
-      alert('Fill both items');
+  _additem() {
+    if (
+      this.state.newItemName === '' ||
+      this.state.newItemAvailability === ''
+    ) {
+      alert('Need both item name and availability');
       return;
     }
     this.tasksRef.update({
-      [this.state.newItemName]: parseInt(this.state.newItemQuantity),
+      [this.state.newItemName]: this.state.newItemAvailability,
     });
-    this.setState({ newItemName: '', newItemQuantity: 0 });
+    this.setState({ newItemName: '' });
+    this._dismissPopup();
   }
+
+  _dismissPopup() {
+    this.popupDialog.dismiss();
+    this.setState({ newItemName: '' });
+  }
+
+  _onSelect(index, value) {
+    this.setState({
+      newItemAvailability: value,
+    });
+  }
+
 
   render() {
     const isDisabled = this.props.navigation.getParam("pantryUID", null)
     console.log(isDisabled)
     return (
       <View style={styles.appContainer}>
-        {(isDisabled != "no-id") &&
+        {isDisabled != 'no-id' && (
           <TouchableOpacity style={{ paddingVertical: 10 }}>
             <Text
               style={{ textAlign: 'right', fontSize: 20, fontWeight: 'bold' }}
-              onPress={this.toggleEdit}>
-              {this.renderConditionalText()}
+              onPress={this._toggleEdit}>
+              {this._renderConditionalText()}
             </Text>
           </TouchableOpacity>
-        }
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignSelf: 'center',
-          }}>
-          <Text style={styles.topText}>Item Name</Text>
-          <Text style={styles.topText}>Quantity</Text>
-        </View>
-
-        {this.state.editItem && (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              padding: 10,
-            }}>
-            <TextInput
-              value={this.state.newItemName}
-              style={styles.textEdit}
-              onChangeText={text => this.setState({ newItemName: text })}
-              placeholder="Item Name"
-            />
-            <TextInput
-              value={String(this.state.newItemQuantity)}
-              style={styles.textEdit}
-              onChangeText={text => this.setState({ newItemQuantity: text })}
-              keyboardType="number-pad"
-              placeholder="Item Quantity"
-            />
-            <Button
-              title="Add"
-              hideShadow={true}
-              //buttonColor = "rgba(231,76,60,1)"
-              onPress={this.addItem.bind(this)}
+        )}
+        // Show add button only for the admin view
+        {isDisabled != 'no-id' && (
+          <View>
+            <Icon
+              name="add-circle"
+              color="maroon"
+              size={30}
+              onPress={() => this.popupDialog.show()}
             />
           </View>
         )}
-
-        {this.state.editItem && <View style={styles.separator} />}
-
+        <View style={styles.row}>
+          <View style={styles.rowItem}>
+            <Text style={styles.topText}>Item Name</Text>
+          </View>
+          <View style={styles.rowItem}>
+            <Text style={styles.topText}>Availability</Text>
+          </View>
+        </View>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={data => (
             <View>
               <View style={styles.row}>
-                <View style={styles.rowContainer}>
+                <View style={styles.rowItem}>
                   {this.state.editItem && (
-                    <TouchableHighlight onPress={() => Alert.alert(
-                      'Are you sure you want to delete?',
-                      "Yep???",
-                      [
-                        {text: "Yes", onPress: () => this.deleteItem(data)},
-                        {text: "Cancel", onPress: () => console.log("cancel"), style: "cancel"}
-                      ]
-                      )}>
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          paddingHorizontal: 5,
-                          color: 'red',
-                        }}>
-                        -
-                        </Text>
-                    </TouchableHighlight>
+                    <Icon
+                      name="delete"
+                      color="maroon"
+                      onPress={() =>
+                        Alert.alert(
+                          'Are you sure you want to delete?',
+                          'Yes/Cancel?',
+                          [
+                            {
+                              text: 'Yes',
+                              onPress: () => this._deleteItem(data),
+                            },
+                            {
+                              text: 'Cancel',
+                              onPress: () => console.log('cancel'),
+                              style: 'cancel',
+                            },
+                          ]
+                        )
+                      }
+                    />
                   )}
-                  <Text style={styles.nameText}>{`${data.item_name}`}</Text>
+                  <Text style={styles.text}>{`${data.item_name}`}</Text>
                 </View>
 
-                <View style={styles.rowContainer}>
-                  {this.state.editItem && (
-                    <TouchableHighlight
-                      style={styles.button}
-                      onPress={() => this.decreaseItemCount(data)}>
-                      <Text style={styles.btnText}> - </Text>
-                    </TouchableHighlight>
-                  )}
-
-                  <Text style={styles.quantityText}>{`${
-                    data.item_quantity
-                  }`}</Text>
-
-                  {this.state.editItem && (
-                    <TouchableHighlight
-                      style={styles.button}
-                      onPress={() => this.increaseItemCount(data)}>
-                      <Text style={styles.btnText}> + </Text>
-                    </TouchableHighlight>
-                  )}
+                <View style={styles.rowItem}>
+                  <Text style={styles.text}>{`${data.item_availability}`}</Text>
                 </View>
               </View>
               <View style={styles.separator} />
@@ -218,29 +190,75 @@ export default class InventoryView extends React.Component {
           )}
           enableEmptySections={true}
         />
+        // pop up dialog box to add new item
+        <PopupDialog
+          dialogTitle={<DialogTitle title="Add New Item" />}
+          height={0.5}
+          dismissOnTouchOutside={false}
+          ref={popupDialog => {
+            this.popupDialog = popupDialog;
+          }}>
+          // View inside the popup dialog
+          <View style={styles.rowItem}>
+            <TextInput
+              value={this.state.newItemName}
+              style={styles.textEdit}
+              onChangeText={text => this.setState({ newItemName: text })}
+              placeholder="Item Name"
+            />
+          </View>
+          <View style={styles.separator} />
+          <Text style={styles.textEdit}> Check Availability </Text>
+          // Radio buttons for availability
+          <RadioGroup
+            //selectedIndex={}
+            onSelect={(index, value) => this._onSelect(index, value)}>
+            <RadioButton value={'Low'}>
+              <Text>Low</Text>
+            </RadioButton>
+
+            <RadioButton value={'Medium'}>
+              <Text>Medium</Text>
+            </RadioButton>
+
+            <RadioButton value={'High'}>
+              <Text>High</Text>
+            </RadioButton>
+          </RadioGroup>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 100,
+            }}>
+            <Button title="Cancel" onPress={this._dismissPopup.bind(this)} />
+            <Button title="Add" onPress={this._additem.bind(this)} />
+          </View>
+        </PopupDialog>
       </View>
     );
   }
 }
 
+/*
 const Row = props => (
   <View>
     <View style={styles.row}>
-      <Text style={styles.nameText}>{`${props.item_name}`}</Text>
-      <View style={styles.rowContainer}>
+      <Text style={styles.text}>{`${props.item_name}`}</Text>
+      <View style={styles.rowItem}>
         {this.state.editItem && (
           <TouchableHighlight
             style={styles.button}
-            /* onPress={() => this.addTodo()}*/ underlayColor="#dddddd">
+             onPress={() => this.addTodo()} underlayColor="#dddddd">
             <Text style={styles.btnText}> - </Text>
           </TouchableHighlight>
         )}
 
-        <Text style={styles.quantityText}>{`${props.item_quantity}`}</Text>
+        <Text style={styles.text}>{`${props.item_availability}`}</Text>
 
         <TouchableHighlight
           style={styles.button}
-          /* onPress={() => this.addTodo()}*/ underlayColor="#dddddd">
+           onPress={() => this.addTodo()} underlayColor="#dddddd">
           <Text style={styles.btnText}> + </Text>
         </TouchableHighlight>
       </View>
@@ -248,39 +266,39 @@ const Row = props => (
     <View style={styles.separator} />
   </View>
 );
+*/
 
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     //paddingTop: Constants.statusBarHeight,
   },
-  topText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingHorizontal: 50,
-    paddingVertical: 5,
-    color: 'maroon',
-    textAlign: 'center',
-  },
-  nameText: {
-    flex: 1,
-    textAlign: 'left',
-    fontSize: 20,
-  },
-  quantityText: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 20,
-  },
-  rowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    //fontSize: 20,
-  },
   row: {
     flexDirection: 'row',
     padding: 12,
+    height: 60,
+  },
+  rowItem: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  topText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    color: 'maroon',
+    textAlign: 'center',
+  },
+  text: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 20,
+    paddingLeft: 20,
+  },
+  textEdit: {
+    fontSize: 20,
+    padding: 15,
     height: 60,
   },
   separator: {
@@ -299,9 +317,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#fff',
     marginTop: 3,
-  },
-  textEdit: {
-    fontSize: 20,
-    paddingHorizontal: 20,
   },
 });
