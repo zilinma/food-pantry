@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
-  Button,
   ListView,
   TouchableHighlight,
   TouchableOpacity,
@@ -13,11 +11,21 @@ import {
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
+import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
-import DropdownMenu from 'react-native-dropdown-menu';
+//import DropdownMenu from 'react-native-dropdown-menu';
 import * as firebase from 'firebase';
-import firebaseConfig from 'firebaseConfig';
+import firebaseConfig from '../firebaseConfig';
+import Dimensions from 'Dimensions';
+import getTheme from '../native-base-theme/components';
+import colors from '../native-base-theme/variables/commonColor';
+
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+sideMargin = DEVICE_WIDTH / 20
+topMargin = DEVICE_HEIGHT/ 50
+
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -58,7 +66,7 @@ export default class InventoryView extends React.Component {
         //console.log(child.val());
         tasks.push({
           item_name: child.key,
-          item_quantity: child.val(),
+          item_availability: child.val(),
         });
       });
 
@@ -74,14 +82,17 @@ export default class InventoryView extends React.Component {
   }
 
   _toggleEdit = () => {
+    console.log(this.state.editItem)
     this.setState(prevState => ({ editItem: !prevState.editItem }));
+    console.log(this.state.editItem)
+
   };
 
   _renderConditionalText() {
     if (this.state.editItem) {
-      return <Text> Done </Text>;
+      return "Done"
     }
-    return <Text> Edit</Text>;
+    return "Edit"
   }
 
   _deleteItem(item) {
@@ -117,45 +128,52 @@ export default class InventoryView extends React.Component {
 
 
   render() {
-    const isDisabled = this.props.navigation.getParam("pantryUID", null)
+    const isDisabled = this.props.navigation.getParam("userID", null)
+
+
     console.log(isDisabled)
     return (
-      <View style={styles.appContainer}>
-        {isDisabled != 'no-id' && (
-          <TouchableOpacity style={{ paddingVertical: 10 }}>
-            <Text
-              style={{ textAlign: 'right', fontSize: 20, fontWeight: 'bold' }}
-              onPress={this._toggleEdit}>
-              {this._renderConditionalText()}
-            </Text>
-          </TouchableOpacity>
-        )}
-        // Show add button only for the admin view
-        {isDisabled != 'no-id' && (
-          <View>
-            <Icon
-              name="add-circle"
-              color="maroon"
-              size={30}
-              onPress={() => this.popupDialog.show()}
-            />
+    <StyleProvider style = {getTheme(colors)}>
+      <Container>
+        <View style={{flexDirection: 'row'}}>
+          <Left>
+          {isDisabled != 'no-id' && (
+            <Button transparent onPress={this._toggleEdit}>
+              <Text
+                style={styles.editDoneButton}>
+                {this._renderConditionalText()}
+              </Text>
+            </Button>
+          )}
+          </Left>
+          // Show add button only for the admin view
+          <Right style={styles.availabilityTitle}>
+          {isDisabled != 'no-id' && (
+              <Icon
+                name="add-circle"
+                size={30}
+                onPress={() => this.popupDialog.show()}
+              />
+          )}
+          </Right>
           </View>
-        )}
-        <View style={styles.row}>
-          <View style={styles.rowItem}>
-            <Text style={styles.topText}>Item Name</Text>
-          </View>
-          <View style={styles.rowItem}>
-            <Text style={styles.topText}>Availability</Text>
-          </View>
-        </View>
+          <ListItem icon>
+            <Left/>
+            <Body>
+              <Text style= {styles.itemnameTitle}>Item Name</Text>
+            </Body>
+            
+            <Right>
+              <Text style={styles.availabilityTitle}>Availability</Text>
+            </Right>
+          </ListItem>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={data => (
-            <View>
-              <View style={styles.row}>
-                <View style={styles.rowItem}>
-                  {this.state.editItem && (
+            <ListItem icon>
+
+            <Left>
+              {this.state.editItem && (
                     <Icon
                       name="delete"
                       color="maroon"
@@ -178,15 +196,16 @@ export default class InventoryView extends React.Component {
                       }
                     />
                   )}
-                  <Text style={styles.text}>{`${data.item_name}`}</Text>
-                </View>
+            </Left>
+            <Body>
+            <Text >{`${data.item_name}`}</Text>
+            </Body>
+            <Right>
+              <Text style={styles.availabilityText}>{`${data.item_availability}`}</Text>
+            </Right>
+            </ListItem>
 
-                <View style={styles.rowItem}>
-                  <Text style={styles.text}>{`${data.item_availability}`}</Text>
-                </View>
-              </View>
-              <View style={styles.separator} />
-            </View>
+
           )}
           enableEmptySections={true}
         />
@@ -194,48 +213,50 @@ export default class InventoryView extends React.Component {
         <PopupDialog
           dialogTitle={<DialogTitle title="Add New Item" />}
           height={0.5}
+          width = {0.9}
           dismissOnTouchOutside={false}
           ref={popupDialog => {
             this.popupDialog = popupDialog;
           }}>
           // View inside the popup dialog
-          <View style={styles.rowItem}>
-            <TextInput
+          <Form>
+            <Item floatingLabel>
+              <Label>Item Name</Label>
+              <Input               
               value={this.state.newItemName}
-              style={styles.textEdit}
-              onChangeText={text => this.setState({ newItemName: text })}
-              placeholder="Item Name"
-            />
-          </View>
-          <View style={styles.separator} />
-          <Text style={styles.textEdit}> Check Availability </Text>
-          // Radio buttons for availability
-          <RadioGroup
-            //selectedIndex={}
-            onSelect={(index, value) => this._onSelect(index, value)}>
-            <RadioButton value={'Low'}>
-              <Text>Low</Text>
-            </RadioButton>
+              onChangeText={text => this.setState({ newItemName: text })}/>
+            </Item>
+          </Form>
+          <View style={styles.checkBoxes}>
+            <Text style={styles.checkAvailabilityTitle}>Check Availability</Text>
+            // Radio buttons for availability
+            <RadioGroup
+              //selectedIndex={}
+              onSelect={(index, value) => this._onSelect(index, value)}>
+              <RadioButton value={'Low'}>
+                <Text>Low</Text>
+              </RadioButton>
 
-            <RadioButton value={'Medium'}>
-              <Text>Medium</Text>
-            </RadioButton>
+              <RadioButton value={'Medium'}>
+                <Text>Medium</Text>
+              </RadioButton>
 
-            <RadioButton value={'High'}>
-              <Text>High</Text>
-            </RadioButton>
-          </RadioGroup>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: 100,
-            }}>
-            <Button title="Cancel" onPress={this._dismissPopup.bind(this)} />
-            <Button title="Add" onPress={this._additem.bind(this)} />
+              <RadioButton value={'High'}>
+                <Text>High</Text>
+              </RadioButton>
+            </RadioGroup>
           </View>
+          <Grid style={styles.container}>
+            <Button onPress={this._dismissPopup.bind(this)} style={styles.cancelButton}> 
+              <Text>Cancel</Text>
+            </Button>
+            <Button onPress={this._additem.bind(this)} style={styles.addButton}> 
+              <Text>Add</Text>
+            </Button>
+          </Grid>
         </PopupDialog>
-      </View>
+      </Container>
+    </StyleProvider>
     );
   }
 }
@@ -269,53 +290,55 @@ const Row = props => (
 */
 
 const styles = StyleSheet.create({
-  appContainer: {
-    flex: 1,
-    //paddingTop: Constants.statusBarHeight,
-  },
-  row: {
+  checkBoxes: {
+    margin: DEVICE_WIDTH / 30,
+  }
+  ,
+  container: {
     flexDirection: 'row',
-    padding: 12,
-    height: 60,
-  },
-  rowItem: {
+    justifyContent: 'space-around',
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
-  topText: {
+  itemnameTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingLeft: 20,
-    color: 'maroon',
-    textAlign: 'center',
+
+
   },
-  text: {
-    flex: 1,
-    textAlign: 'left',
-    fontSize: 20,
-    paddingLeft: 20,
-  },
-  textEdit: {
-    fontSize: 20,
-    padding: 15,
-    height: 60,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#CCCCCC',
-  },
-  button: {
-    height: 36,
-    flex: 0.4,
-    flexDirection: 'row',
-    backgroundColor: '#48afdb',
+  cancelButton: {
+    width: DEVICE_WIDTH / 4,
+    height: DEVICE_HEIGHT / 20,
+    backgroundColor: 'red',
     justifyContent: 'center',
-    borderRadius: 10,
   },
-  btnText: {
+
+  addButton: {
+    width: DEVICE_WIDTH / 4,
+    height: DEVICE_HEIGHT / 20,
+    justifyContent: 'center',
+  },
+
+  availabilityText: {
+    marginRight: sideMargin,
+  },
+
+  availabilityTitle: {
+    marginRight: sideMargin,
     fontSize: 20,
-    color: '#fff',
-    marginTop: 3,
+    fontWeight: 'bold',
+
   },
+
+  editDoneButton: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+
+  checkAvailabilityTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+
+
+  }
+  
 });

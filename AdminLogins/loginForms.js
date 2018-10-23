@@ -50,7 +50,7 @@ export default class LoginForm extends Component {
 			var user = firebase.auth().currentUser;
 			var uid = user.uid;
 			//registerForPushNotificationsAsyc(uid);
-			nav.navigate("MainTab", {uid: uid, loginNav: nav});
+			nav.navigate("MainTab", {userID: uid, loginNav: nav});
 		}).catch(function(error) {
 			// Handle Errors here.
 			var errorCode = error.code;

@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, View, StyleSheet,  ListView, TouchableOpacity } from "react-native";
-import { Grid, Container, Header, Text, Content, Card, CardItem, Body, StyleProvider, Left, Right} from 'native-base';
+import { View, StyleSheet,  ListView, TouchableOpacity } from "react-native";
+import { Button, Grid, Container, Header, Text, Content, Card, CardItem, Body, StyleProvider, Left, Right} from 'native-base';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,7 +15,17 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 sideMargin = DEVICE_WIDTH / 20
 topMargin = DEVICE_HEIGHT/ 50
+const CENTER = DEVICE_HEIGHT/ 2.5
+const SKIP = DEVICE_HEIGHT/  1.75
+const BUTTON_WIDTH = DEVICE_WIDTH * 0.38;
+const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
+const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
 export default class PantryListView extends React.Component {
+
+
+  static navigationOptions = {
+    headerTitle: "List View"
+  }
   constructor() {
     super();
     this.tasksRef = firebase.database().ref("Pantry");
@@ -57,10 +67,6 @@ export default class PantryListView extends React.Component {
 
 
 
-  static navigationOptions = {
-    headerTitle: "List View"
-  }
-
   render() {
     return (
       <StyleProvider style = {getTheme(colors)}>
@@ -69,29 +75,29 @@ export default class PantryListView extends React.Component {
             dataSource={this.state.dataSource}
             renderRow={(data) =>   
               <Grid style={styles.container}>
-                <TouchableOpacity 
+                <Button 
                   style={styles.button}
                   onPress={(navigation) => {
-                    uid = this.props.navigation.getParam('uid', 'no-id')
+                    uid = this.props.navigation.getParam('userID', 'no-id')
                     this.props.navigation.navigate("InventoryView",
                     {
                       name: data.name,
-                      pantryUID: uid,
+                      userID: uid,
                     })
                   }}>
                   <Text style = {styles.text}>{`${data.name}`}</Text>
 
-                </TouchableOpacity>
+                </Button>
                 <Right>
                   <TouchableOpacity
                   onPress={(navigation) => {
-                    uid = this.props.navigation.getParam('uid', 'no-id')
+                    uid = this.props.navigation.getParam('userID', 'no-id')
                     this.props.navigation.navigate("PantryInfoView", {
                       pantryName: data.name,
                       pantryAddress: data.address,
                       pantryContact: data.contact,
                       pantryHour: data.hour,
-                      pantryUID: uid,
+                      userID: uid,
                     })
                   }}>
                     <Ionicons style={styles.fontIcon} active name="ios-information-circle" />
@@ -148,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },  
   button: {
-    padding: 10,
+    borderRadius:BUTTON_RADIUS,
     margin: 10
   },
   fontIcon: {
