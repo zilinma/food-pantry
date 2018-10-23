@@ -152,7 +152,10 @@ export default class InventoryView extends React.Component {
               <Icon
                 name="add-circle"
                 size={30}
-                onPress={() => this.popupDialog.show()}
+                onPress={() => {
+                  this.popupDialog.show()
+                  this.ItemName.focus()}
+                }
               />
           )}
           </Right>
@@ -224,6 +227,7 @@ export default class InventoryView extends React.Component {
               <Label>Item Name</Label>
               <Input               
               value={this.state.newItemName}
+              ref="ItemName"
               onChangeText={text => this.setState({ newItemName: text })}/>
             </Item>
           </Form>

@@ -72,7 +72,7 @@ export default class LoginForm extends Component {
 		return (
 			<View style={styles.container}>
 				<Container style={styles.container1}>
-					<Content scrollEnabled={false} style={styles.test}>
+					<Content scrollEnabled={false} style={styles.test} keyboardShouldPersistTaps={'handled'}>
 						<Form>
 							<Item stackedLabel style={styles.item}>
 								<Label style={styles.label}>USERNAME / EMAIL</Label>
