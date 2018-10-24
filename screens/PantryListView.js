@@ -43,7 +43,7 @@ export default class PantryListView extends React.Component {
       var tasks = [];
       dataSnapshot.forEach((child) => {
         //console.log(child.key)
-        console.log(child.val().name)
+        console.log(child.val().hour)
         
         tasks.push({
           name: child.val().name,
@@ -85,13 +85,14 @@ export default class PantryListView extends React.Component {
                       userID: uid,
                     })
                   }}>
-                  <Text style = {styles.text}>{`${data.name}`}</Text>
+                  <Text style = {styles.text} numberOfLines="1" ellipsizeMode="tail">{`${data.name}`}</Text>
 
                 </Button>
                 <Right>
                   <TouchableOpacity
                   onPress={(navigation) => {
                     uid = this.props.navigation.getParam('userID', 'no-id')
+                    console.log("hour: " + data.hour)
                     this.props.navigation.navigate("PantryInfoView", {
                       pantryName: data.name,
                       pantryAddress: data.address,
@@ -151,14 +152,17 @@ const styles = StyleSheet.create({
   text: {
     //textAlign: "center",
     color: "#FAFAFA",
-    fontSize: 18
+    fontSize: 18,
+    flexWrap: 'wrap'
   },  
   button: {
     borderRadius:BUTTON_RADIUS,
-    margin: 10
+    margin: 10,
+    elevation:0,
+    width: DEVICE_WIDTH * 0.6,
   },
   fontIcon: {
-    color: '#7AA9D3',
+    color: '#FAFAFA',
     fontSize: 30,
     marginRight: sideMargin,
   }

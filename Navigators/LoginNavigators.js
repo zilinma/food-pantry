@@ -4,6 +4,7 @@ import loginForms from '../AdminLogins/loginForms';
 //import forgetPassword from '../AdminLogins/forgetPassword';
 import SignUpEmail from '../AdminLogins/SignUpEmail';
 
+import signUpPwd from '../AdminLogins/signUpPwd';
 //import PantryInfoView from '../screens/PantryInfoView';
 import {
   createStackNavigator
@@ -13,7 +14,8 @@ const LoginNavigators = createStackNavigator(
   {
     loginForms: loginForms,
     //forgetPassword: forgetPassword,
-    SignUpEmail: SignUpEmail
+    signUpPwd: signUpPwd,
+    SignUpEmail: SignUpEmail,
   },
   {
     tabBarOptions: {
