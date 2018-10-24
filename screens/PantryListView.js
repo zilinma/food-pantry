@@ -86,7 +86,6 @@ export default class PantryListView extends React.Component {
                     })
                   }}>
                   <Text style = {styles.text} numberOfLines="1" ellipsizeMode="tail">{`${data.name}`}</Text>
-
                 </Button>
                 <Right>
                   <TouchableOpacity
