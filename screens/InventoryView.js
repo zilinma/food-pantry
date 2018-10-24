@@ -11,10 +11,9 @@ import {
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
-import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
+import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
-//import DropdownMenu from 'react-native-dropdown-menu';
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
@@ -126,11 +125,15 @@ export default class InventoryView extends React.Component {
     });
   }
 
+  _onValueChange(value:string, item) {
+    console.log(item);
+    this.tasksRef.update({ [item.item_name]: value });
+  }
+
 
   render() {
-    const isDisabled = this.props.navigation.getParam("userID", null)
-
-
+    //const isDisabled = this.props.navigation.getParam("userID", null)
+    const isDisabled = '1234'
     console.log(isDisabled)
     return (
     <StyleProvider style = {getTheme(colors)}>
@@ -146,7 +149,6 @@ export default class InventoryView extends React.Component {
             </Button>
           )}
           </Left>
-          // Show add button only for the admin view
           <Right style={styles.availabilityTitle}>
           {isDisabled != 'no-id' && (
               <Icon
@@ -204,15 +206,30 @@ export default class InventoryView extends React.Component {
             <Text >{`${data.item_name}`}</Text>
             </Body>
             <Right>
-              <Text style={styles.availabilityText}>{`${data.item_availability}`}</Text>
+              {!this.state.editItem && (
+                <Text style={styles.availabilityText}>{`${data.item_availability}`}</Text>
+              )}
+              {this.state.editItem && (
+                <View style={{marginLeft: 0, marginRight: 10}}>
+                  <Picker
+                    mode = "dropdown"
+                    style={{width:100}}
+                    selectedValue={`${data.item_availability}`}
+                    onValueChange={(e) => this._onValueChange(e,data)} 
+                  >
+                    <Picker.Item label="Low" value="Low"/>
+                    <Picker.Item label="Medium" value="Medium"/>
+                    <Picker.Item label="High" value="High"/>
+                  </Picker>
+                </View>
+              )}
             </Right>
             </ListItem>
-
-
           )}
           enableEmptySections={true}
         />
-        // pop up dialog box to add new item
+               
+
         <PopupDialog
           dialogTitle={<DialogTitle title="Add New Item" />}
           height={0.5}
@@ -221,7 +238,6 @@ export default class InventoryView extends React.Component {
           ref={popupDialog => {
             this.popupDialog = popupDialog;
           }}>
-          // View inside the popup dialog
           <Form>
             <Item floatingLabel>
               <Label>Item Name</Label>
@@ -233,9 +249,7 @@ export default class InventoryView extends React.Component {
           </Form>
           <View style={styles.checkBoxes}>
             <Text style={styles.checkAvailabilityTitle}>Check Availability</Text>
-            // Radio buttons for availability
             <RadioGroup
-              //selectedIndex={}
               onSelect={(index, value) => this._onSelect(index, value)}>
               <RadioButton value={'Low'}>
                 <Text>Low</Text>
