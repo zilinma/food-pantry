@@ -39,7 +39,7 @@ export default class PantryInfoView extends React.Component {
   };
   static navigationOptions = {
 
-    headerTitle: "INFORMATION",
+    headerTitle: "Pantry Information",
     
   };
 
@@ -109,7 +109,7 @@ export default class PantryInfoView extends React.Component {
     const userid = navigation.getParam("userID", "no-id")
     console.log("userID: " + userid)
     console.log("pantryContact: " + pantryContact)
-    const pantryHour = navigation.getParam("pantryHours", null);
+    const pantryHour = navigation.getParam("pantryHour", null);
     //const isDisabled = navigation.getParam("pantryUID", null);
     //console.log(isDisabled)
 
@@ -119,11 +119,11 @@ export default class PantryInfoView extends React.Component {
 
         <Content>
           <View style={styles.container}>
-            <Body>
-            <Text style={styles.title}>
-              {pantryName}
-            </Text>
-            </Body>
+            <Left>
+              <Text style={styles.title}>
+                {pantryName}
+              </Text>
+            </Left>
             <Right>
               {
                 userid != 'no-id' && 
@@ -245,7 +245,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   title: {
-    fontSize: 20,
+    fontSize: 20
+    ,
+    fontWeight: "bold",
   },
   icon: {
     fontSize: 20,

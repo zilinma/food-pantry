@@ -8,7 +8,7 @@ import firebase from 'firebase';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-
+const MARGIN = DEVICE_WIDTH * 0.1
 const MARGIN_LEFT = DEVICE_WIDTH * 0.1;
 const MARGIN_RIGHT = MARGIN_LEFT;
 
@@ -21,15 +21,19 @@ const HEIGHT = WIDTH;
 const RADIUS = WIDTH / 2;
 
 export default class SignupEmail extends Component {
+	static navigationOptions = {
+		header: null
+
+
+	}
+
 	constructor(props) {
 		super(props);
-  	this.state = {
-  		disabled: true,
-  		duplicate: false,
-  		firstName: this.props.nav.state.params.firstName,
-  		lastName: this.props.nav.state.params.lastName,
-  		email: "",
-  	};
+	  	this.state = {
+	  		disabled: true,
+	  		duplicate: false,
+	  		email: "",
+	  	};
 	}
 
 	checkEmail(email) {
@@ -49,12 +53,15 @@ export default class SignupEmail extends Component {
 		});
 		this.setState({ duplicate });
 		if (!duplicate) {
-			this.props.nav.navigate('SignUpPwd', this.getUserData());
+			this.props.navigation.navigate('signUpPwd', this.getUserData());
 		}
 	}
 
 	getUserData() {
-		return {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email};
+		return {
+			email: this.state.email,
+			pantryName: this.state.pantryName,
+		};
 	}
 
 	render() {
@@ -76,3 +83,63 @@ export default class SignupEmail extends Component {
 		);
 	}
 }
+
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 8,
+	},
+	container1: {
+		marginTop: SKIP,
+		marginLeft: MARGIN,
+		marginRight: MARGIN,
+		justifyContent:'center',
+		flex: 4.7,
+	},
+	label: {
+		//color: primary,
+		fontSize: 12,
+		fontWeight: "700",
+		marginBottom: DEVICE_HEIGHT * 0.01,
+	},
+	input: {
+		height: INPUT_HEIGHT,
+		color: "black",
+	},
+	item: {
+		marginBottom: INPUT_HEIGHT/3,
+		paddingLeft: 0,
+		marginLeft: 0,
+		paddingBottom: 0,
+	},
+	container2: {
+		flex: 0.8,
+		marginLeft: 20,
+		marginRight: 20,
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+	text: {
+		color: "gray",
+		backgroundColor: 'transparent',
+		fontSize: 12,
+		fontWeight: '500',
+	},
+	container3: {
+		flex: 2,
+		alignItems: 'center',
+		justifyContent: 'center',
+	},
+	button: {
+		width: WIDTH,
+		height: HEIGHT,
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: "blue",
+		borderRadius: RADIUS,
+	},
+	buttonText: {
+		color: "white",
+		fontWeight: 'bold',
+	},
+});

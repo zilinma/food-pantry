@@ -70,8 +70,7 @@ export default class LoginForm extends Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<Container style={styles.container1}>
+				<Container>
 					<Content scrollEnabled={false} style={styles.test} keyboardShouldPersistTaps={'handled'}>
 						<Form>
 							<Item stackedLabel style={styles.item}>
@@ -83,18 +82,18 @@ export default class LoginForm extends Component {
 								<Input onChangeText={(text) => this.updatePwd(text)} secureTextEntry={true} autoCapitalize='none' keyboardAppearance={'light'} style={styles.input}/>
 							</Item>
 						</Form>
+
+						<View style={styles.container2}>
+							<TouchableOpacity onPress={() => {this.props.navigation.navigate('ForgotPwd')}}><Text style={styles.text}>Forgot Password?</Text></TouchableOpacity>
+							<TouchableOpacity onPress={() => {this.props.navigation.navigate('SignUpEmail')}}><Text style={styles.text}>New Here? Sign Up</Text></TouchableOpacity>
+						</View>
+						<View>
+			    			<TouchableOpacity style={styles.button} onPress={() => {this.loginSubmit()}}>
+						    	<Text style={styles.buttonText}>LOGIN</Text>
+						    </TouchableOpacity>
+						</View>
 					</Content>
 				</Container>
-				<View style={styles.container2}>
-					<TouchableOpacity onPress={() => {this.props.navigation.navigate('ForgotPwd')}}><Text style={styles.text}>Forgot Password?</Text></TouchableOpacity>
-					<TouchableOpacity onPress={() => {this.props.navigation.navigate('SignUpEmail')}}><Text style={styles.text}>New Here? Sign Up</Text></TouchableOpacity>
-				</View>
-				<View style={styles.container3}>
-	    			<TouchableOpacity style={styles.button} onPress={() => {this.loginSubmit()}}>
-				    	<Text style={styles.buttonText}>LOGIN</Text>
-				    </TouchableOpacity>
-				</View>
-			</View>
 		);
 	}
 }
