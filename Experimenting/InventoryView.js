@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
-import { Grid, Button,CheckBox, StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
+import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import * as firebase from 'firebase';
@@ -19,6 +19,7 @@ import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
+import InventoryList from './InventoryList';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -31,9 +32,6 @@ if (!firebase.apps.length) {
 }
 
 export default class InventoryView extends React.Component {
-  static navigationOptions = {
-      headerTitle : "Inventory",
-  }
 
   constructor(props) {
     super(props);
@@ -47,6 +45,7 @@ export default class InventoryView extends React.Component {
 
     this.state = {
       inventoryName: name,
+      tasksRef: this.tasksRef,
       dataSource: dataSource,
       editItem: false,
       newItemName: '',
@@ -62,6 +61,7 @@ export default class InventoryView extends React.Component {
 
 
   listenForTasks(tasksRef) {
+    console.log(this.state.tasksRef)
     tasksRef.on('value', dataSnapshot => {
       //console.log(dataSnapshot.val());
       var tasks = [];
@@ -96,25 +96,11 @@ export default class InventoryView extends React.Component {
     }
     return "Edit"
   }
-  
-  _renderTags(item){
-    rtn_text = "";
-    if(item.tags === undefined){
-      return rtn_text;
-    } else {
-      if (item.tags.Vegetarian === true){
-        rtn_text = rtn_text + " (V)";
-      }
-      if (item.tags.Glutenfree === true){
-        rtn_text =  rtn_text + " (G)";
-      }
-      return rtn_text;
-    }
-  }
 
   _deleteItem(item) {
     //alert('Are you sure you want to delete the item?');
-    this.tasksRef.child(item.item_name).remove();
+    //console.log(item.tasksRef)
+    item.tasksRef.child(item.item_name).remove();
   }
 
   _additem() {
@@ -148,7 +134,7 @@ export default class InventoryView extends React.Component {
 
   _onValueChange(value:string, item) {
     console.log(item);
-    itemRef = firebase.database().ref(name+"/"+item.item_name);
+    itemRef = item.tasksRef + "/" + item.item_name;
     itemRef.update({ item_availability: value });
   }
 
@@ -193,84 +179,21 @@ export default class InventoryView extends React.Component {
           </ListItem>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={data => (
-            <ListItem icon>
-
-            <Left>
-              {this.state.editItem && (
-                    <Icon
-                      name="delete"
-                      color="maroon"
-                      onPress={() =>
-                        Alert.alert(
-                          'Are you sure you want to delete '+[data.item_name]+'?',
-                          'Yes/Cancel?',
-                          [
-                            {
-                              text: 'Yes',
-                              onPress: () => this._deleteItem(data),
-                            },
-                            {
-                              text: 'Cancel',
-                              onPress: () => console.log('cancel'),
-                              style: 'cancel',
-                            },
-                          ]
-                        )
-                      }
-                    />
-                  )}
-            </Left>
-            <Body>
-            <Text>
-            <Text>{`${data.item_name}`}</Text>
-            <Text> {" " + this._renderTags(data)}</Text>
-            </Text>
-            </Body>
-            <Right>
-              {!this.state.editItem && (
-                <Text style={styles.availabilityText}>{`${data.item_availability}`}</Text>
-              )}
-              {this.state.editItem && (
-                <View style={{marginLeft: 0, marginRight: 10}}>
-                  <Picker
-                    mode = "dropdown"
-                    style={{width:100}}
-                    selectedValue={`${data.item_availability}`}
-                    onValueChange={(e) => 
-                      Alert.alert(
-                          'Are you sure you want to change the availability for '+[data.item_name]+'?',
-                          'Yes/Cancel?',
-                          [
-                            {
-                              text: 'Yes',
-                              onPress: () => this._onValueChange(e,data),
-                            },
-                            {
-                              text: 'Cancel',
-                              onPress: () => console.log('cancel'),
-                              style: 'cancel',
-                            },
-                          ]
-                        )
-                    }        
-                  >
-                    <Picker.Item label="Low" value="Low"/>
-                    <Picker.Item label="Medium" value="Medium"/>
-                    <Picker.Item label="High" value="High"/>
-                  </Picker>
-                </View>
-              )}
-            </Right>
-            </ListItem>
-          )}
+          renderRow={(data) => 
+            <InventoryList 
+            {...data} 
+            editItem={this.state.editItem} 
+            deleteItem = {this._deleteItem}
+            tasksRef = {this.state.tasksRef}
+            onChange={this._onValueChange}
+          />}
           enableEmptySections={true}
         />
                
 
         <PopupDialog
           dialogTitle={<DialogTitle title="Add New Item" />}
-          height={0.75}
+          height={0.5}
           width = {0.9}
           dismissOnTouchOutside={false}
           ref={popupDialog => {
@@ -300,22 +223,6 @@ export default class InventoryView extends React.Component {
                 <Text>High</Text>
               </RadioButton>
             </RadioGroup>
-          </View>
-
-          <View style={styles.checkBoxes}>
-            <Text style={styles.checkAvailabilityTitle}>Check Tags</Text>
-              <ListItem>
-              <CheckBox checked={false} />
-              <Body>
-                <Text>Vegetarian</Text>
-              </Body>
-            </ListItem>
-            <ListItem>
-              <CheckBox checked={false} />
-              <Body>
-                <Text>Gluten Free</Text>
-              </Body>
-            </ListItem>
           </View>
           <Grid style={styles.container}>
             <Button onPress={this._dismissPopup.bind(this)} style={styles.cancelButton}> 
