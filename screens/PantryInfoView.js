@@ -120,8 +120,8 @@ export default class PantryInfoView extends React.Component {
     //const isDisabled = navigation.getParam("pantryUID", null);
     //console.log(isDisabled)
     const endPoint = this.props.navigation.getParam("pantryCoordinates");
-    console.log(endPoint);
-    this._getLocationAsync();
+    //console.log(endPoint);
+    //this._getLocationAsync();
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
@@ -202,7 +202,7 @@ export default class PantryInfoView extends React.Component {
 
 
 
-
+          /**
           <View style={styles.map}>
             <MapView
               style={{ flex: 1 }}
@@ -213,6 +213,7 @@ export default class PantryInfoView extends React.Component {
 
 
           </View>
+          */
         </Content>
 
       </Container>

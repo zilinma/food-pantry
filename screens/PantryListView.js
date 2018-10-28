@@ -86,7 +86,7 @@ export default class PantryListView extends React.Component {
                 <Button 
                   style={styles.button}
                   onPress={(navigation) => {
-                    uid = this.props.navigation('userID', 'no-id')
+                    uid = this.props.navigation.navigate('userID', 'no-id')
                     this.props.navigation.navigate("InventoryView",
                     {
                       name: data.name,

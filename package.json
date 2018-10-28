@@ -21,7 +21,6 @@
     "react-native-google-maps-directions": "^2.0.0",
     "react-native-navigation-directions": "^1.0.3",
     "react-native-open-maps": "^0.3.2",
-
     "react-native-popup-dialog": "^0.16.0",
     "react-navigation": "^2.18.2",
     "whatwg-fetch": "^2.0.4"
