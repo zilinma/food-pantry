@@ -3,8 +3,9 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import loginForms from '../AdminLogins/loginForms';
 //import forgetPassword from '../AdminLogins/forgetPassword';
 import SignUpEmail from '../AdminLogins/SignUpEmail';
-
+import SignUpHandle from '../AdminLogins/signUpHandle';
 import signUpPwd from '../AdminLogins/signUpPwd';
+import SignUpConfirm from '../AdminLogins/signUpConfirm';
 //import PantryInfoView from '../screens/PantryInfoView';
 import {
   createStackNavigator
@@ -16,6 +17,8 @@ const LoginNavigators = createStackNavigator(
     //forgetPassword: forgetPassword,
     signUpPwd: signUpPwd,
     SignUpEmail: SignUpEmail,
+    SignUpHandle: SignUpHandle,
+    SignUpConfirm: SignUpConfirm,
   },
   {
     tabBarOptions: {

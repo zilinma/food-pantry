@@ -60,37 +60,6 @@ export default class SignupPwd extends Component {
 	getUserData() {
 		return {...this.state};
 	}
-
-	async createAccount() {
-
-		var email = this.state.email;
-		var pantryName = this.state.pantryName
-
-		firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.pwd).then(function() {
-
-			var user = firebase.auth().currentUser;
-
-			user.updateProfile({
-				pantryName: pantryName,
-			}).then(function() {
-				user.sendEmailVerification().then(function() {
-				  	// Email sent.
-				  	 this.props.navigation.navigate('SignUpConfirm', {email: email});
-				}).catch(function(error) {
-				  	// An error happened.
-				  	 this.props.navigation.navigate('SignUpConfirm', {email: error.message});
-				});
-			}, function(error) {
-				// An error happened.
-			});
-
-		}).catch(function(error) {
-			// Handle Errors here.
-			var errorCode = error.code;
-			var errorMessage = error.message;
-		});
-	}
-
 	render() {
 		return (
 			<Container style={styles.container}>
@@ -100,8 +69,19 @@ export default class SignupPwd extends Component {
 							<Label style={styles.label}>PANTRY NAME</Label>
 							<Input onChangeText={(text) => {this.state.pantryName = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
 						</Item>
-						<Text style={[styles.duplicate, {display: this.state.duplicate ? 'flex' : 'none'}]}>THIS EMAIL IS ALREADY REGISTERED!</Text>
-					
+						<Item stackedLabel style={styles.item}>
+							<Label style={styles.label}>PANTRY ADDRESS</Label>
+							<Input onChangeText={(text) => {this.state.pantryAddress = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
+						</Item>
+						<Item stackedLabel style={styles.item}>
+							<Label style={styles.label}>PANTRY HOUR</Label>
+							<Input onChangeText={(text) => {this.state.pantryHour = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
+						</Item>
+
+						<Item stackedLabel style={styles.item}>
+							<Label style={styles.label}>PANTRY PHONE CONTACT</Label>
+							<Input onChangeText={(text) => {this.state.pantryPhone = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
+						</Item>
 						<Item stackedLabel style={styles.item}>
 							<Label style={styles.label}>PASSWORD</Label>
 							<Input onChangeText={(text) => this.checkPwd(text)} secureTextEntry={true} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
@@ -112,9 +92,16 @@ export default class SignupPwd extends Component {
 						</Item>
 						<Text style={[styles.alert, {display: this.state.verified ? 'none' : 'flex'}]}>VERIFIED PASSWORD DOES NOT MATCH!</Text>
 					</Form>
-					<TouchableOpacity disabled={!(this.state.allowed && this.state.verified)} style={(this.state.allowed && this.state.verified) ? styles.button : [styles.button, styles.disabled]} onPress={() => {this.props.navigation.navigate('SignUpHandle', this.getUserData())}}>
-			    	<FontAwesome name="angle-right" style={styles.next}/>
-			    </TouchableOpacity>
+					<TouchableOpacity 
+					disabled={!(this.state.allowed && this.state.verified)} 
+					style={(this.state.allowed && this.state.verified) ? styles.button : [styles.button, styles.disabled]} 
+					onPress={() => {
+						console.log(this.getUserData());
+						this.props.navigation.navigate('SignUpHandle', this.getUserData());
+
+					}}>
+			    		<FontAwesome name="angle-right" style={styles.next}/>
+			    	</TouchableOpacity>
 				</Content>
 			</Container>
 		);
@@ -123,9 +110,6 @@ export default class SignupPwd extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		marginTop: SKIP,
-		marginLeft: MARGIN_LEFT,
-		marginRight: MARGIN_RIGHT,
 		justifyContent:'center',
 	},
 	label: {

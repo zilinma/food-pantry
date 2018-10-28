@@ -44,7 +44,7 @@ export default class SignupEmail extends Component {
 
 	async checkDuplicate() {
 		var duplicate = false;
-		await firebase.auth().fetchProvidersForEmail(this.state.email).then(function(ids) {
+		await firebase.auth().fetchSignInMethodsForEmail(this.state.email).then(function(ids) {
 			duplicate = (ids.length > 0);
 		}).catch(function(error) {
 			if (error.code == 'auth/quota-exceeded') {
@@ -52,6 +52,7 @@ export default class SignupEmail extends Component {
 			}
 		});
 		this.setState({ duplicate });
+		console.log("duplicate: " + this.state.duplicate)
 		if (!duplicate) {
 			this.props.navigation.navigate('signUpPwd', this.getUserData());
 		}

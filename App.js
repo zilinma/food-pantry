@@ -7,14 +7,13 @@ import {
   createSwitchNavigator,
   createBottomTabNavigator
 } from "react-navigation";
-import AppNavigator from './Navigators/AppNavigator';
-
+import Setup from "./setup";
 
 
 export default class App extends React.Component {
   render() {
     return (
-      <AppNavigator/>
+      <Setup />
     );
   }
 }
