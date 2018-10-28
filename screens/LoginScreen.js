@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
 
   text_title: {
-    //fontFamily: "Georgia",
+    fontFamily: "Georgia",
     fontSize: 40,
     top: CENTER * 1.2, 
     textAlign: 'center', 
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
 
   text_description: {
 
-    //fontFamily: "Georgia",
+    fontFamily: "Georgia",
     fontSize: 20,
     top: CENTER * 1.2, 
     textAlign: 'center', 

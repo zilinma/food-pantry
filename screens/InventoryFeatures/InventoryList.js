@@ -55,7 +55,7 @@ export default class InventoryList extends React.Component {
   render(){
     return (
       <View>
-      <ListItem icon>
+      <ListItem icon style={styles.items}>
         <Left>
           {this.props.editButtonClicked && (
                 <Icon
@@ -84,8 +84,8 @@ export default class InventoryList extends React.Component {
 
         <Body>
           <Text>
-          <Text>{`${this.props.item_name}`}</Text>
-          <Text> {" " + this._renderTags(this.props)}</Text>
+            <Text style={styles.itemName}>{`${this.props.item_name}`}</Text>
+            <Text> {" " + this._renderTags(this.props)}</Text>
           </Text>
         </Body>
 
@@ -122,8 +122,16 @@ export default class InventoryList extends React.Component {
 
 const styles = StyleSheet.create({
   availabilityText: {
-    marginRight: sideMargin,
-  }
+    color: "black",
+  },
+  items: {
+    marginRight: sideMargin * 2,
+
+
+  },
+  itemName: {
+    color: "black",
+  },
 });
 
 

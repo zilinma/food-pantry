@@ -19,6 +19,7 @@ import InventoryAddItem from './InventoryFeatures/InventoryAddItem';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
+const BUTTON_HEIGH = DEVICE_HEIGHT / 20;
 sideMargin = DEVICE_WIDTH / 20
 topMargin = DEVICE_HEIGHT/ 50
 
@@ -91,47 +92,52 @@ export default class InventoryView extends React.Component {
     if (this.state.editButtonClicked) {
       return "Done"
     }
-    return "Edit"
+    return "Edit Items"
   }
 
   render() {
-    //const isDisabled = this.props.navigation.getParam("userID", null)
-    const isDisabled = '1234'
-    console.log(this.state.showAddItemDialog)
+    const userID = this.props.navigation.getParam("userID", "no-id")
+    //const userID = '1234'
+    //console.log(this.state.showAddItemDialog)
+    //console.log("isDisabled: "+ isDisabled)
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
-        
-        <View style={{flexDirection: 'row'}}>
-          <Left>
-          {isDisabled != 'no-id' && (
-            <Button transparent onPress={this._toggleEdit}>
-              <Text
-                style={styles.editDoneButton}>
-                {this._renderConditionalText()}
-              </Text>
-            </Button>
-          )}
-          </Left>
-          
-          <Body>
-            <Button transparent onPress={console.log("filter")}>
-              <Text> Filter </Text>
-            </Button>
-          </Body>
-
-          <Right style={styles.availabilityTitle}>
-            {isDisabled != 'no-id' && (
-              <Icon
-                name="add-circle"
-                size={30}
-                onPress={() => this.setState({showAddItemDialog: !this.state.showAddItemDialog})}
-              />
+      {userID != "no-id" && (
+        <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+            <Left>
+            {userID != 'no-id' && (
+              <Button transparent onPress={this._toggleEdit}>
+                <Text
+                  style={styles.editDoneButton}>
+                  {this._renderConditionalText()}
+                </Text>
+              </Button>
             )}
-          </Right>
+            </Left>
+
+            <Body style={styles.bodyContainer}>
+                <Button
+                  style={styles.addItemButton}
+                  onPress={() => this.setState({showAddItemDialog: !this.state.showAddItemDialog})}
+                >
+                  <Text> + Add Item</Text>
+
+                </Button>
+
+            </Body>
+            <Right/>
+                        {/*
+            <Body>
+              <Button transparent onPress={()=>console.log("filter")}>
+                <Text> Filter </Text>
+              </Button>
+            </Body>
+            **/}
         </View>
-        
-        <ListItem icon>
+        )
+      }
+        <ListItem icon style={styles.items}>
           <Left/>
           <Body>
             <Text style= {styles.itemnameTitle}>Item Name</Text>
@@ -174,21 +180,43 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flex: 1,
   },
+  bodyContainer: {
+    flex: 1,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    backgroundColor: "#FAFAFA",
+    height: BUTTON_HEIGH * 1.5,
+    marginBottom: sideMargin,
+  },
+  items: {
+    marginRight: sideMargin * 2, 
+  },
+  addItemButton: {
+
+    padding: sideMargin / 10,
+    height: BUTTON_HEIGH,
+    justifyContent: 'center',
+
+  }
+  ,
   itemnameTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: "black",
   },
   availabilityText: {
     marginRight: sideMargin,
+    color: "black",
   },
   availabilityTitle: {
-    marginRight: sideMargin,
     fontSize: 20,
     fontWeight: 'bold',
+    color: "black",
   },
   editDoneButton: {
     fontSize: 20,
-    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   checkAvailabilityTitle: {
     fontSize: 20,

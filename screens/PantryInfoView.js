@@ -78,6 +78,7 @@ export default class PantryInfoView extends React.Component {
     });
 
   }
+  /**
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -89,7 +90,7 @@ export default class PantryInfoView extends React.Component {
     let location = await Location.getCurrentPositionAsync({});
     this.setState({ location: location });
     console.log(this.state.location);
-    /**
+
     const end = this.props.navigation.getParam("pantryAddress", "Unknown")
     if(end != "Unknown"){
         Geocoder.from(end)
@@ -103,10 +104,11 @@ export default class PantryInfoView extends React.Component {
 
 
     }
-    */
+
 
 
   };
+  */
 
   render() {
     const { navigation } = this.props;
@@ -188,6 +190,7 @@ export default class PantryInfoView extends React.Component {
                   }}>
               <Text>Inventory</Text>
             </Button>
+            /**
             <Button
             style ={styles.button} 
             onPress={() => {
@@ -198,6 +201,7 @@ export default class PantryInfoView extends React.Component {
             }}>
               <Text>Directions</Text>
             </Button>
+            */
           </ListItem>
 
 
