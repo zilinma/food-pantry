@@ -34,7 +34,7 @@ export default {
   badgePadding: platform === "ios" ? 3 : 0,
 
   // Button
-  btnFontFamily: platform === "ios" ? "System" : "Roboto_medium",
+  btnFontFamily: platform === "ios" ? "System" : "System",
   btnDisabledBg: "#b5b5b5",
   buttonPadding: 6,
   get btnPrimaryBg() {
@@ -122,7 +122,7 @@ export default {
 
   // Font
   DefaultFontSize: 16,
-  fontFamily: platform === "ios" ? "System" : "Roboto",
+  fontFamily: platform === "ios" ? "System" : "System",
   fontSizeBase: 15,
   get fontSizeH1() {
     return this.fontSizeBase * 1.8;
@@ -248,7 +248,7 @@ export default {
   },
 
   // Title
-  titleFontfamily: platform === "ios" ? "System" : "Roboto_medium",
+  titleFontfamily: platform === "ios" ? "System" : "System",
   titleFontSize: platform === "ios" ? 17 : 19,
   subTitleFontSize: platform === "ios" ? 11 : 14,
   subtitleColor: platform === "ios" ? "#000" : "#fff",

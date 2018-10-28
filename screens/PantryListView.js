@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet,  ListView, TouchableOpacity } from "react-native";
+import { View, StyleSheet,  ListView, TouchableOpacity} from "react-native";
 import { Button, Grid, Container, Header, Text, Content, Card, CardItem, Body, StyleProvider, Left, Right} from 'native-base';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
@@ -9,6 +9,7 @@ import Dimensions from 'Dimensions';
 //import AppNavigator from "../App.js"
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
+//import FontAwesome from '../node_modules/@expo/vector-icons/fonts/FontAwesome.ttf';
 
 firebase.initializeApp(firebaseConfig);
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -26,6 +27,7 @@ export default class PantryListView extends React.Component {
   static navigationOptions = {
     headerTitle: "List View"
   }
+
   constructor() {
     super();
     this.tasksRef = firebase.database().ref("Pantry");

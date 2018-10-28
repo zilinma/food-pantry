@@ -7,18 +7,20 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
 import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
-import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
+import Dialog, { DialogTitle } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
+
+import InventoryList from './InventoryList';
+import InventoryAddItem from './InventoryAddItem';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -31,9 +33,11 @@ if (!firebase.apps.length) {
 }
 
 export default class InventoryView extends React.Component {
-  static navigationOptions = {
-      headerTitle : "Inventory",
-  }
+
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: `${navigation.getParam("name", "NO-name")}`,
+    headerTitleStyle : {alignSelf:'center'}
+  })
 
   constructor(props) {
     super(props);
@@ -41,34 +45,30 @@ export default class InventoryView extends React.Component {
     name = "Inventory/" + name
     this.tasksRef = firebase.database().ref(name);
 
+    this.hideAddBox = this._hideAddBox.bind(this);
+
     const dataSource = new ListView.DataSource({
       rowHasChanged: (row1, row2) => row1 !== row2,
     });
 
     this.state = {
+      tasksRef: this.tasksRef,
       dataSource: dataSource,
-      editItem: false,
-      newItemName: '',
-      newItemAvailability: '',
+      editButtonClicked: false,
+      showAddItemDialog: false,
     };
-  }
-
-  static navigationOptions = {
-    headerTitle: "Inventory View"
   }
 
   listenForTasks(tasksRef) {
     tasksRef.on('value', dataSnapshot => {
-      //console.log(dataSnapshot.val());
       var tasks = [];
       dataSnapshot.forEach(child => {
-        //console.log(child.val());
         tasks.push({
-          item_name: child.key,
-          item_availability: child.val(),
+          item_name: child.val().item_name,
+          item_availability: child.val().item_availability,
+          tags: child.val().tags,
         });
       });
-
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(tasks),
       });
@@ -80,64 +80,33 @@ export default class InventoryView extends React.Component {
     this.listenForTasks(this.tasksRef);
   }
 
+  /* Toggle the Edit and Done button for the Admins */
   _toggleEdit = () => {
-    console.log(this.state.editItem)
-    this.setState(prevState => ({ editItem: !prevState.editItem }));
-    console.log(this.state.editItem)
+    this.setState(prevState => ({ editButtonClicked: !prevState.editButtonClicked }));
 
   };
 
+  /* Hide the Add Item Popup Dialog box */
+  _hideAddBox() {
+    this.setState({ showAddItemDialog: false });
+  }
+
+  /* Render the "Edit" and "Done" button based on the condition editButtonClicked */
   _renderConditionalText() {
-    if (this.state.editItem) {
+    if (this.state.editButtonClicked) {
       return "Done"
     }
     return "Edit"
   }
 
-  _deleteItem(item) {
-    //alert('Are you sure you want to delete the item?');
-    this.tasksRef.child(item.item_name).remove();
-  }
-
-  _additem() {
-    if (
-      this.state.newItemName === '' ||
-      this.state.newItemAvailability === ''
-    ) {
-      alert('Need both item name and availability');
-      return;
-    }
-    this.tasksRef.update({
-      [this.state.newItemName]: this.state.newItemAvailability,
-    });
-    this.setState({ newItemName: '' });
-    this._dismissPopup();
-  }
-
-  _dismissPopup() {
-    this.popupDialog.dismiss();
-    this.setState({ newItemName: '' });
-  }
-
-  _onSelect(index, value) {
-    this.setState({
-      newItemAvailability: value,
-    });
-  }
-
-  _onValueChange(value:string, item) {
-    console.log(item);
-    this.tasksRef.update({ [item.item_name]: value });
-  }
-
-
   render() {
     //const isDisabled = this.props.navigation.getParam("userID", null)
     const isDisabled = '1234'
-    console.log(isDisabled)
+    console.log(this.state.showAddItemDialog)
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
+        
         <View style={{flexDirection: 'row'}}>
           <Left>
           {isDisabled != 'no-id' && (
@@ -149,165 +118,62 @@ export default class InventoryView extends React.Component {
             </Button>
           )}
           </Left>
+          
+          <Body>
+            <Button transparent onPress={console.log("filter")}>
+              <Text> Filter </Text>
+            </Button>
+          </Body>
+
           <Right style={styles.availabilityTitle}>
-          {isDisabled != 'no-id' && (
+            {isDisabled != 'no-id' && (
               <Icon
                 name="add-circle"
                 size={30}
-                onPress={() => this.popupDialog.show()}
+                onPress={() => this.setState({showAddItemDialog: !this.state.showAddItemDialog})}
               />
-          )}
+            )}
           </Right>
-          </View>
-          <ListItem icon>
-            <Left/>
-            <Body>
-              <Text style= {styles.itemnameTitle}>Item Name</Text>
-            </Body>
-            
-            <Right>
-              <Text style={styles.availabilityTitle}>Availability</Text>
-            </Right>
-          </ListItem>
+        </View>
+        
+        <ListItem icon>
+          <Left/>
+          <Body>
+            <Text style= {styles.itemnameTitle}>Item Name</Text>
+          </Body>
+          
+          <Right>
+            <Text style={styles.availabilityTitle}>Availability</Text>
+          </Right>
+        </ListItem>
+        
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={data => (
-            <ListItem icon>
-
-            <Left>
-              {this.state.editItem && (
-                    <Icon
-                      name="delete"
-                      color="maroon"
-                      onPress={() =>
-                        Alert.alert(
-                          'Are you sure you want to delete?',
-                          'Yes/Cancel?',
-                          [
-                            {
-                              text: 'Yes',
-                              onPress: () => this._deleteItem(data),
-                            },
-                            {
-                              text: 'Cancel',
-                              onPress: () => console.log('cancel'),
-                              style: 'cancel',
-                            },
-                          ]
-                        )
-                      }
-                    />
-                  )}
-            </Left>
-            <Body>
-            <Text >{`${data.item_name}`}</Text>
-            </Body>
-            <Right>
-              {!this.state.editItem && (
-                <Text style={styles.availabilityText}>{`${data.item_availability}`}</Text>
-              )}
-              {this.state.editItem && (
-                <View style={{marginLeft: 0, marginRight: 10}}>
-                  <Picker
-                    mode = "dropdown"
-                    style={{width:100}}
-                    selectedValue={`${data.item_availability}`}
-                    onValueChange={(e) => this._onValueChange(e,data)} 
-                  >
-                    <Picker.Item label="Low" value="Low"/>
-                    <Picker.Item label="Medium" value="Medium"/>
-                    <Picker.Item label="High" value="High"/>
-                  </Picker>
-                </View>
-              )}
-            </Right>
-            </ListItem>
-          )}
+          renderRow={(data) => 
+            <InventoryList 
+            {...data} 
+            editButtonClicked={this.state.editButtonClicked} 
+            tasksRef = {this.state.tasksRef}
+          />}
           enableEmptySections={true}
         />
-               
 
-        <PopupDialog
+        <Dialog 
           dialogTitle={<DialogTitle title="Add New Item" />}
-          height={0.5}
+          height={0.65}
           width = {0.9}
-          dismissOnTouchOutside={false}
-          ref={popupDialog => {
-            this.popupDialog = popupDialog;
-          }}>
-          <Form>
-            <Item floatingLabel>
-              <Label>Item Name</Label>
-              <Input               
-              value={this.state.newItemName}
-              onChangeText={text => this.setState({ newItemName: text })}/>
-            </Item>
-          </Form>
-          <View style={styles.checkBoxes}>
-            <Text style={styles.checkAvailabilityTitle}>Check Availability</Text>
-            <RadioGroup
-              onSelect={(index, value) => this._onSelect(index, value)}>
-              <RadioButton value={'Low'}>
-                <Text>Low</Text>
-              </RadioButton>
+          visible={this.state.showAddItemDialog}>
+            <InventoryAddItem tasksRef = {this.state.tasksRef} hideAddBox = {this.hideAddBox} />
+        </Dialog>
 
-              <RadioButton value={'Medium'}>
-                <Text>Medium</Text>
-              </RadioButton>
-
-              <RadioButton value={'High'}>
-                <Text>High</Text>
-              </RadioButton>
-            </RadioGroup>
-          </View>
-          <Grid style={styles.container}>
-            <Button onPress={this._dismissPopup.bind(this)} style={styles.cancelButton}> 
-              <Text>Cancel</Text>
-            </Button>
-            <Button onPress={this._additem.bind(this)} style={styles.addButton}> 
-              <Text>Add</Text>
-            </Button>
-          </Grid>
-        </PopupDialog>
       </Container>
     </StyleProvider>
     );
   }
 }
 
-/*
-const Row = props => (
-  <View>
-    <View style={styles.row}>
-      <Text style={styles.text}>{`${props.item_name}`}</Text>
-      <View style={styles.rowItem}>
-        {this.state.editItem && (
-          <TouchableHighlight
-            style={styles.button}
-             onPress={() => this.addTodo()} underlayColor="#dddddd">
-            <Text style={styles.btnText}> - </Text>
-          </TouchableHighlight>
-        )}
-
-        <Text style={styles.text}>{`${props.item_availability}`}</Text>
-
-        <TouchableHighlight
-          style={styles.button}
-           onPress={() => this.addTodo()} underlayColor="#dddddd">
-          <Text style={styles.btnText}> + </Text>
-        </TouchableHighlight>
-      </View>
-    </View>
-    <View style={styles.separator} />
-  </View>
-);
-*/
 
 const styles = StyleSheet.create({
-  checkBoxes: {
-    margin: DEVICE_WIDTH / 30,
-  }
-  ,
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -316,43 +182,22 @@ const styles = StyleSheet.create({
   itemnameTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-
-
   },
-  cancelButton: {
-    width: DEVICE_WIDTH / 4,
-    height: DEVICE_HEIGHT / 20,
-    backgroundColor: 'red',
-    justifyContent: 'center',
-  },
-
-  addButton: {
-    width: DEVICE_WIDTH / 4,
-    height: DEVICE_HEIGHT / 20,
-    justifyContent: 'center',
-  },
-
   availabilityText: {
     marginRight: sideMargin,
   },
-
   availabilityTitle: {
     marginRight: sideMargin,
     fontSize: 20,
     fontWeight: 'bold',
-
   },
-
   editDoneButton: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-
   checkAvailabilityTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-
-
   }
   
 });
