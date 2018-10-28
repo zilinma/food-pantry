@@ -2,9 +2,12 @@ import React from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Item, Input, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right} from 'native-base';
-import InventoryView from './InventoryView';
+import Dialog, { DialogTitle } from 'react-native-popup-dialog';
+
 import * as firebase from 'firebase';
-import firebaseConfig from '../firebaseConfig';
+import firebaseConfig from '../../firebaseConfig';
+
+import InventoryEditItem from './InventoryEditItem';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -16,9 +19,15 @@ export default class InventoryList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.hideEditBox = this._hideEditBox.bind(this);
+
     this.state = {
       showEditItemDialog : false,
     };
+  }
+
+  _hideEditBox() {
+    this.setState({ showEditItemDialog: false });
   }
 
   /* Delete the item from the database */
@@ -26,14 +35,6 @@ export default class InventoryList extends React.Component {
     //alert('Are you sure you want to delete the item?');
     //console.log(item.tasksRef)
     item.tasksRef.child(item.item_name).remove();
-  }
-
-/* Update the item availability for an item in the database */
-
-  _onValueChange(value:string, item) {
-    //console.log(item);
-    itemRef = item.tasksRef.child(item.item_name);
-    itemRef.update({ item_availability: value });
   }
 
   _renderTags(item) {
@@ -53,6 +54,7 @@ export default class InventoryList extends React.Component {
 
   render(){
     return (
+      <View>
       <ListItem icon>
         <Left>
           {this.props.editButtonClicked && (
@@ -88,39 +90,7 @@ export default class InventoryList extends React.Component {
         </Body>
 
         <Right>
-          {!this.props.editButtonClicked && (
-            <Text style={styles.availabilityText}>{`${this.props.item_availability}`}</Text>
-          )}
-          {this.props.editButtonClicked && (
-            <View style={{marginLeft: 0, marginRight: 10}}>
-              <Picker
-                mode = "dropdown"
-                style={{width:100}}
-                selectedValue={`${this.props.item_availability}`}
-                onValueChange={(e) => 
-                  Alert.alert(
-                      'Are you sure you want to change the availability for '+[this.props.item_name]+'?',
-                      'Yes/Cancel?',
-                      [
-                        {
-                          text: 'Yes',
-                          onPress: () => this._onValueChange(e,this.props),
-                        },
-                        {
-                          text: 'Cancel',
-                          onPress: () => console.log('cancel'),
-                          style: 'cancel',
-                        },
-                      ]
-                    )
-                }        
-              >
-                <Picker.Item label="Low" value="Low"/>
-                <Picker.Item label="Medium" value="Medium"/>
-                <Picker.Item label="High" value="High"/>
-              </Picker>
-            </View>
-          )}
+            <Text style={styles.availabilityText}>{`${this.props.item_availability}`}</Text>      
         </Right>
 
         <Right>
@@ -128,12 +98,23 @@ export default class InventoryList extends React.Component {
             <Icon
               name="edit"
               color="black"
-              onPress={() => console.log('Edit item')}
+              onPress={() => this.setState({showEditItemDialog: !this.state.showEditItemDialog})}
             />
           )}
         </Right>
+        
 
       </ListItem>
+
+      <Dialog 
+        dialogTitle={<DialogTitle title="Edit Item" />}
+        height={0.65}
+        width = {0.9}
+        visible={this.state.showEditItemDialog}>
+          <InventoryEditItem {...this.props} hideEditBox = {this.hideEditBox}/>  
+      </Dialog>
+      </View>
+
     )
   }
 }

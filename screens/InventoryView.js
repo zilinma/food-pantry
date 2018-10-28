@@ -3,24 +3,19 @@ import {
   StyleSheet,
   View,
   ListView,
-  TouchableHighlight,
-  TouchableOpacity,
-  TextInput,
-  Alert,
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
 import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
 import Dialog, { DialogTitle } from 'react-native-popup-dialog';
-import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
 
-import InventoryList from './InventoryList';
-import InventoryAddItem from './InventoryAddItem';
+import InventoryList from './InventoryFeatures/InventoryList';
+import InventoryAddItem from './InventoryFeatures/InventoryAddItem';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;

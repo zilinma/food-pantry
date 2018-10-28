@@ -11,10 +11,10 @@ import { Grid, Button, StyleProvider, Item, Input, Form, Label, Container,Title,
 import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import * as firebase from 'firebase';
-import firebaseConfig from '../firebaseConfig';
+import firebaseConfig from '../../firebaseConfig';
 import Dimensions from 'Dimensions';
-import getTheme from '../native-base-theme/components';
-import colors from '../native-base-theme/variables/commonColor';
+import getTheme from '../../native-base-theme/components';
+import colors from '../../native-base-theme/variables/commonColor';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
