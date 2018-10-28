@@ -21,6 +21,12 @@ const HEIGHT = WIDTH / 7;
 const RADIUS = HEIGHT / 2;
 
 export default class LoginForm extends Component {
+	static navigationOptions = {
+		header: null
+
+
+	}
+	
 	constructor(props) {
 		super(props);
 		this.state = {

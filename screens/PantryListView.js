@@ -48,6 +48,8 @@ export default class PantryListView extends React.Component {
         tasks.push({
           name: child.val().name,
           address: child.val().address,
+          lng: child.val().lng,
+          lat: child.val().lat,
           contact: child.val().contact,
           hour: child.val().hour,
         });
@@ -65,7 +67,11 @@ export default class PantryListView extends React.Component {
     this.listenForTasks(this.tasksRef);
   }
 
+  componentDidUnMount() {
 
+    this.state.dataSource.off('value');
+
+  }
 
   render() {
     return (
@@ -78,25 +84,25 @@ export default class PantryListView extends React.Component {
                 <Button 
                   style={styles.button}
                   onPress={(navigation) => {
-                    uid = this.props.navigation.getParam('userID', 'no-id')
+                    uid = this.props.navigation('userID', 'no-id')
                     this.props.navigation.navigate("InventoryView",
                     {
                       name: data.name,
                       userID: uid,
                     })
                   }}>
-                  <Text style = {styles.text} numberOfLines="1" ellipsizeMode="tail">{`${data.name}`}</Text>
+                  <Text style = {styles.text} numberOfLines={1} ellipsizeMode="tail">{`${data.name}`}</Text>
                 </Button>
                 <Right>
                   <TouchableOpacity
                   onPress={(navigation) => {
                     uid = this.props.navigation.getParam('userID', 'no-id')
-                    console.log("hour: " + data.hour)
                     this.props.navigation.navigate("PantryInfoView", {
                       pantryName: data.name,
                       pantryAddress: data.address,
                       pantryContact: data.contact,
                       pantryHour: data.hour,
+                      pantryCoordinates: {longitude: data.lng, latitude: data.lat},
                       userID: uid,
                     })
                   }}>

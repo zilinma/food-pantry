@@ -32,10 +32,17 @@ const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
 const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
 
 export default class PantryInfoView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      location: null,
+      errorMessage: null,
+      end: this.props.navigation.getParam("pantryCoordinates"),
+    };
+  }
+
   state = {
-    location: null,
-    errorMessage: null,
-    end: null,
+
   };
   static navigationOptions = {
 
@@ -53,17 +60,16 @@ export default class PantryInfoView extends React.Component {
       this._getLocationAsync();
     }
   }
-  _callShowDirections = () => {
+
+  _callShowDirections = (endPoint) => {
     const startPoint = {
       latitude: this.state.location.coords.latitude,
       longitude: this.state.location.coords.longitude,
     } 
+
+    console.log(this.endPoint)
+
     console.log(this.state)
-    const endPoint = {
-      latitude: this.state.end[0],
-      longitude: this.state.end[1],
-  
-    }
 
     const transportPlan = 'w';
 
@@ -81,8 +87,9 @@ export default class PantryInfoView extends React.Component {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location });
-
+    this.setState({ location: location });
+    console.log(this.state.location);
+    /**
     const end = this.props.navigation.getParam("pantryAddress", "Unknown")
     if(end != "Unknown"){
         Geocoder.from(end)
@@ -90,13 +97,13 @@ export default class PantryInfoView extends React.Component {
             var end = json.results[0].geometry.location;
 
             this.setState({end})
-            console.log(end);
+            //console.log(end);
         })
         .catch(error => console.warn(error));
 
 
     }
-
+    */
 
 
   };
@@ -112,7 +119,9 @@ export default class PantryInfoView extends React.Component {
     const pantryHour = navigation.getParam("pantryHour", null);
     //const isDisabled = navigation.getParam("pantryUID", null);
     //console.log(isDisabled)
-
+    const endPoint = this.props.navigation.getParam("pantryCoordinates");
+    console.log(endPoint);
+    this._getLocationAsync();
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
@@ -181,7 +190,12 @@ export default class PantryInfoView extends React.Component {
             </Button>
             <Button
             style ={styles.button} 
-            onPress={() => {this._callShowDirections()}}>
+            onPress={() => {
+              const endPoint = this.props.navigation.getParam("pantryCoordinates");
+              console.log(endPoint);
+              this._callShowDirections(endPoint);
+
+            }}>
               <Text>Directions</Text>
             </Button>
           </ListItem>
@@ -192,12 +206,9 @@ export default class PantryInfoView extends React.Component {
           <View style={styles.map}>
             <MapView
               style={{ flex: 1 }}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
+              initialRegion={
+                {...this.state.location.coords}
+              }
             />
 
 

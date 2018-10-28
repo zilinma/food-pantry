@@ -27,13 +27,19 @@ export default class SignupPwd extends Component {
   	this.state = {
   		disabled: true,
   		duplicate: false,
-  		pantryName: this.props.navigation.getParam("pantryName")
-  		email: this.props.navigation.state.params.email,
-  		pwd: this.props.navigation.state.params.pwd,
+  		pantryName: this.props.navigation.getParam("pantryName"),
+  		pantryAddress: this.props.navigation.getParam("pantryAddress", "not provided"),
+  		pantryHour: this.props.navigation.getParam("pantryHour", "not provided"),
+  		pantryContact: this.props.navigation.getParam("pantryPhone", "not provided"),
+  		email: this.props.navigation.getParam("email", "not provided"),
+  		pwd: this.props.navigation.getParam("pwd"),
   		handle: "",
   	};
 	}
+	static navigationOptions = {
+		header: null,
 
+	}
 	changeState(disabled, duplicate, handle) {
 		this.setState({
 			disabled: disabled,
@@ -60,21 +66,24 @@ export default class SignupPwd extends Component {
 
 	async createAccount() {
 		var self = this;
-		var navigate = this.props.nav.navigate;
-		var email = this.state.email;
+		var navigate = this.props.navigation.navigate;
+		const email = this.state.email;
 		var handle = this.state.handle;
-		var pantryName = 
-		
-		firebase.auth().createUserWithEmailAndPassword(email, this.state.pwd).then(function() {
+		const pantryName = this.state.pantryName;
+		const pantryAddress = this.state.pantryAddress;
+		const pantryHour = this.state.pantryHour;
+		const pantryContact = this.state.pantryContact;
+		const pwd = this.state.pwd;
+		firebase.auth().createUserWithEmailAndPassword(email, pwd).then(function() {
 
 			var user = firebase.auth().currentUser;
 
 			user.updateProfile({
-				displayName: displayName,
+				pantryName: pantryName,
 			}).then(function() {
 				user.sendEmailVerification().then(function() {
 			  	// Email sent.
-			  	self.initUser(user.uid, handle, firstname, lastname);
+			  	self.initUser(user.uid, handle, pantryName, pantryAddress, pantryHour, pantryContact);
 			  	navigate('SignUpConfirm', {email: email});
 				}).catch(function(error) {
 			  	// An error happened.
@@ -91,16 +100,23 @@ export default class SignupPwd extends Component {
 		});
 	}
 
-	async initUser(uid, handle, firstname, lastname) {
+	async initUser(uid, handle, pantryName, pantryAddress, pantryHour, pantryContact) {
+		
+		// initialize users
 		await firebase.database().ref('users/handles/' + handle).set(uid);
+		console.log("user created")
+		// create new pantry data
+		await firebase.database().ref(`Pantry/` +pantryName).set({
+		name: pantryName,
+	    address: pantryAddress,
+	    hour: pantryHour, 
+	    contact: pantryContact,
+	    uid: uid,
+		}
+	);
+		console.log("pantry created")
+		
 
-		await firebase.database().ref('users/main/' + uid).set({
-	    firstname: firstname,
-	    lastname: lastname,
-	    handle: handle,
-	    numFollowers: 0,
-	    numFollowing: 0,
-		});
 	}
 
 	render() {
@@ -109,10 +125,10 @@ export default class SignupPwd extends Component {
 				<Content keyboardShouldPersistTaps='always'>
 					<Form>
 						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>HANDLE</Label>
+							<Label style={styles.label}>USER ID</Label>
 							<Input onChangeText={(text) => this.checkHandle(text)} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
 						</Item>
-						<Text style={[styles.duplicate, {display: this.state.duplicate ? 'flex' : 'none'}]}>This handle is already in use!</Text>
+						<Text style={[styles.duplicate, {display: this.state.duplicate ? 'flex' : 'none'}]}>This user ID is already in use!</Text>
 					</Form>
 					<TouchableOpacity disabled={this.state.disabled} style={this.state.disabled ? [styles.button, styles.disabled] : styles.button} onPress={() => {this.createAccount()}}>
 			    	<FontAwesome name="angle-right" style={styles.next}/>
@@ -131,19 +147,16 @@ const styles = StyleSheet.create({
 		justifyContent:'center',
 	},
 	label: {
-		color: "white",
 		fontSize: 12,
 		fontWeight: "700",
 		marginBottom: DEVICE_HEIGHT * 0.01,
 	},
 	duplicate: {
-		color: 'red',
 		fontSize: 12,
 		marginTop: DEVICE_HEIGHT * 0.01,
 	},
 	input: {
 		height: INPUT_HEIGHT,
-		color: "white",
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,
@@ -161,10 +174,8 @@ const styles = StyleSheet.create({
 		marginLeft: WIDTH * 6 - MARGIN_RIGHT,
 	},
 	next: {
-		color: "blue",
 		fontSize: 35,
 	},
 	disabled: {
-		backgroundColor: "white",
 	},
 });
