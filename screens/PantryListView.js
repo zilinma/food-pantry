@@ -105,7 +105,8 @@ export default class PantryListView extends React.Component {
                       pantryAddress: data.address,
                       pantryContact: data.contact,
                       pantryHour: data.hour,
-                      pantryCoordinates: {longitude: data.lng, latitude: data.lat},
+                      longitude: data.lng, 
+                      latitude: data.lat,
                       userID: uid,
                     })
                   }}>

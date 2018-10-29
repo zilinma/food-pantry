@@ -1,5 +1,5 @@
 import React from "react";
-import {MapView} from 'expo';
+import MapView from 'react-native-maps';
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Grid, Button,StyleProvider,  Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -35,41 +35,40 @@ export default class PantryInfoView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      location: null,
-      errorMessage: null,
-      end: this.props.navigation.getParam("pantryCoordinates"),
+      startPoint: {},
+      error:null,
     };
   }
-
-  state = {
-
-  };
   static navigationOptions = {
 
     headerTitle: "Pantry Information",
     
   };
 
-
-  componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
-    } else {
-      this._getLocationAsync();
-    }
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+       (position) => {
+         console.log("wokeeey");
+         startPoint = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+         }
+         this.setState({
+            startPoint: startPoint,
+            error: null,
+         });
+         console.log(this.state.startPoint);
+       },
+       (error) => this.setState({ error: error.message }),
+       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+     );
   }
 
-  _callShowDirections = (endPoint) => {
-    const startPoint = {
-      latitude: this.state.location.coords.latitude,
-      longitude: this.state.location.coords.longitude,
-    } 
+  _callShowDirections = (startPoint, endPoint) => {
 
-    console.log(this.endPoint)
+    console.log(endPoint)
 
-    console.log(this.state)
+    console.log(startPoint)
 
     const transportPlan = 'w';
 
@@ -78,37 +77,7 @@ export default class PantryInfoView extends React.Component {
     });
 
   }
-  /**
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
 
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location: location });
-    console.log(this.state.location);
-
-    const end = this.props.navigation.getParam("pantryAddress", "Unknown")
-    if(end != "Unknown"){
-        Geocoder.from(end)
-        .then(json => {
-            var end = json.results[0].geometry.location;
-
-            this.setState({end})
-            //console.log(end);
-        })
-        .catch(error => console.warn(error));
-
-
-    }
-
-
-
-  };
-  */
 
   render() {
     const { navigation } = this.props;
@@ -117,17 +86,24 @@ export default class PantryInfoView extends React.Component {
     const pantryContact = navigation.getParam("pantryContact", null);
     const userid = navigation.getParam("userID", "no-id")
     console.log("userID: " + userid)
-    console.log("pantryContact: " + pantryContact)
+    //console.log("pantryContact: " + pantryContact)
     const pantryHour = navigation.getParam("pantryHour", null);
     //const isDisabled = navigation.getParam("pantryUID", null);
     //console.log(isDisabled)
-    const endPoint = this.props.navigation.getParam("pantryCoordinates");
-    //console.log(endPoint);
+    const longitude = this.props.navigation.getParam("longitude");
+    const latitude = this.props.navigation.getParam("latitude");
+    const endPoint = {
+      longitude: longitude,
+      latitude: latitude,
+
+    }
+    //console.log(this.state.longitude)
+    //console.log(this.state.latitude)
+    console.log("end point: " + longitude + latitude);
     //this._getLocationAsync();
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
-
         <Content>
           <View style={styles.container}>
             <Left>
@@ -190,34 +166,48 @@ export default class PantryInfoView extends React.Component {
                   }}>
               <Text>Inventory</Text>
             </Button>
-            /**
+            
             <Button
             style ={styles.button} 
             onPress={() => {
-              const endPoint = this.props.navigation.getParam("pantryCoordinates");
-              console.log(endPoint);
-              this._callShowDirections(endPoint);
+              //const endPoint = this.props.navigation.getParam("pantryCoordinates");
+              //console.log("calling function: " + this.state.startPoint);
+              //console.log("endPoint: " + endPoint);
+              this._callShowDirections(this.state.startPoint, endPoint);
 
             }}>
               <Text>Directions</Text>
             </Button>
-            */
+            
           </ListItem>
 
-
-
-          /**
           <View style={styles.map}>
             <MapView
               style={{ flex: 1 }}
               initialRegion={
-                {...this.state.location.coords}
+                {
+                ...endPoint,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
               }
-            />
+            }>
+            
+              <MapView.Marker
+                coordinate={
+                  {
+                    longitude: -76.88449,
+                    latitude: 40.956355,
+                  }
+                }
+                title={pantryName}
+                description={pantryAddress}
+              />
+            
+            </MapView>
 
 
           </View>
-          */
+
         </Content>
 
       </Container>

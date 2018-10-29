@@ -19,6 +19,7 @@
     "react-native-flexi-radio-button": "^0.2.2",
     "react-native-geocoding": "^0.3.0",
     "react-native-google-maps-directions": "^2.0.0",
+    "react-native-maps": "^0.22.0",
     "react-native-navigation-directions": "^1.0.3",
     "react-native-open-maps": "^0.3.2",
     "react-native-popup-dialog": "^0.16.0",
