@@ -94,6 +94,7 @@ export default class PantryInfoView extends React.Component {
     //console.log(isDisabled)
     const longitude = this.props.navigation.getParam("longitude");
     const latitude = this.props.navigation.getParam("latitude");
+    const pantryCheckout = this.props.navigation.getParam("pantryCheckout", null);
     const endPoint = {
       longitude: longitude,
       latitude: latitude,
@@ -168,7 +169,11 @@ export default class PantryInfoView extends React.Component {
                   }}>
               <Text>Inventory</Text>
             </Button>
-            
+            {pantryCheckout && 
+              <Button style = {styles.button} onPress=()=>{Linking.openURL(pantryCheckout)}>
+                <Text>Checkout</Text>
+              </Button>
+            }
             <Button
             style ={styles.button} 
             onPress={() => {

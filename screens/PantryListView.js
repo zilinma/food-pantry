@@ -54,6 +54,7 @@ export default class PantryListView extends React.Component {
           lat: child.val().lat,
           contact: child.val().contact,
           hour: child.val().hour,
+          checkout: child.val().checkout,
         });
       });
 
@@ -105,9 +106,11 @@ export default class PantryListView extends React.Component {
                       pantryAddress: data.address,
                       pantryContact: data.contact,
                       pantryHour: data.hour,
+                      pantryCheckout: data.checkout,
                       longitude: data.lng, 
                       latitude: data.lat,
                       userID: uid,
+
                     })
                   }}>
                     <Ionicons style={styles.fontIcon} active name="ios-information-circle" />

@@ -261,6 +261,7 @@ export default class App extends React.Component {
                       pantryHour: marker.hour,
                       longitude: marker.lng, 
                       latitude: marker.lat,
+                      pantryCheckout: marker.checkout,
                       userID: uid,
                     })
                   }}>
