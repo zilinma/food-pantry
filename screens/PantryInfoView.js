@@ -1,5 +1,5 @@
 import React from "react";
-import MapView from 'react-native-maps';
+import {MapView} from 'expo';
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Grid, Button,StyleProvider,  Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -35,7 +35,7 @@ export default class PantryInfoView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startPoint: {},
+      startPoint: null,
       error:null,
     };
   }
@@ -48,7 +48,7 @@ export default class PantryInfoView extends React.Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
        (position) => {
-         console.log("wokeeey");
+         //console.log("wokeeey");
          startPoint = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
@@ -56,12 +56,14 @@ export default class PantryInfoView extends React.Component {
          this.setState({
             startPoint: startPoint,
             error: null,
-         });
-         console.log(this.state.startPoint);
+         }
+         );
        },
        (error) => this.setState({ error: error.message }),
-       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+       { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 },
      );
+    
+
   }
 
   _callShowDirections = (startPoint, endPoint) => {
@@ -170,9 +172,6 @@ export default class PantryInfoView extends React.Component {
             <Button
             style ={styles.button} 
             onPress={() => {
-              //const endPoint = this.props.navigation.getParam("pantryCoordinates");
-              //console.log("calling function: " + this.state.startPoint);
-              //console.log("endPoint: " + endPoint);
               this._callShowDirections(this.state.startPoint, endPoint);
 
             }}>
@@ -181,6 +180,7 @@ export default class PantryInfoView extends React.Component {
             
           </ListItem>
 
+            {this.state.startPoint && Object.keys(this.state.startPoint).length == 2 && endPoint ? (
           <View style={styles.map}>
             <MapView
               style={{ flex: 1 }}
@@ -191,22 +191,23 @@ export default class PantryInfoView extends React.Component {
                 longitudeDelta: 0.01,
               }
             }>
-            
               <MapView.Marker
                 coordinate={
                   {
-                    longitude: -76.88449,
-                    latitude: 40.956355,
+                    ...endPoint
                   }
                 }
                 title={pantryName}
                 description={pantryAddress}
               />
-            
             </MapView>
+          </View>) : (
+            <View style={styles.map}>
+              <Text> Loading... </Text>
+            </View>
 
-
-          </View>
+          )
+            }
 
         </Content>
 
