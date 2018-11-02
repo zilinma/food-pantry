@@ -22,12 +22,22 @@ const BUTTON_WIDTH = DEVICE_WIDTH * 0.38;
 const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
 const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
 export default class PantryListView extends React.Component {
-
-
+  /**
   static navigationOptions = {
-    headerTitle: "List View"
+    tabBarOptions: {
+      activeTintColor: '#FAFAFA',
+      activeBackgroundColor: "#3D70C9",
+      inactiveTintColor: "#FAFAFA",
+      inactiveBackgroundColor: "#808080"
+      labelStyle: {
+        fontSize: 20,
+      },
+      tabStyle: {
+        width: 100
+      },
+    }
   }
-
+*/
   constructor() {
     super();
     this.tasksRef = firebase.database().ref("Pantry");
@@ -109,7 +119,7 @@ export default class PantryListView extends React.Component {
                       pantryCheckout: data.checkout,
                       longitude: data.lng, 
                       latitude: data.lat,
-                      userID: uid,
+                      userid: uid,
 
                     })
                   }}>
