@@ -16,10 +16,12 @@ import colors from '../native-base-theme/variables/commonColor';
 
 import InventoryList from './InventoryFeatures/InventoryList';
 import InventoryAddItem from './InventoryFeatures/InventoryAddItem';
+//import InventoryFilter from './InventoryFeatures/InventoryFilter';
+//import InventorySearch from './InventoryFeatures/InventorySearch';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-const BUTTON_HEIGH = DEVICE_HEIGHT / 20;
+const BUTTON_HEIGHT = DEVICE_HEIGHT / 20;
 sideMargin = DEVICE_WIDTH / 20
 topMargin = DEVICE_HEIGHT/ 50
 
@@ -103,40 +105,41 @@ export default class InventoryView extends React.Component {
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
-      {userID != "no-id" && (
-        <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
-            <Left>
-            {userID != 'no-id' && (
-              <Button transparent onPress={this._toggleEdit}>
-                <Text
-                  style={styles.editDoneButton}>
-                  {this._renderConditionalText()}
-                </Text>
-              </Button>
-            )}
-            </Left>
 
-            <Body style={styles.bodyContainer}>
-                <Button
-                  style={styles.addItemButton}
-                  onPress={() => this.setState({showAddItemDialog: !this.state.showAddItemDialog})}
-                >
-                  <Text> + Add Item</Text>
-
+        {userID != "no-id" && (
+          <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+              <Left>
+              {userID != 'no-id' && (
+                <Button transparent onPress={this._toggleEdit}>
+                  <Text
+                    style={styles.editDoneButton}>
+                    {this._renderConditionalText()}
+                  </Text>
                 </Button>
+              )}
+              </Left>
 
-            </Body>
-            <Right/>
-                        {/*
-            <Body>
-              <Button transparent onPress={()=>console.log("filter")}>
-                <Text> Filter </Text>
-              </Button>
-            </Body>
-            **/}
-        </View>
-        )
-      }
+              <Body style={styles.bodyContainer}>
+                  <Button
+                    style={styles.addItemButton}
+                    onPress={() => this.setState({showAddItemDialog: !this.state.showAddItemDialog})}
+                  >
+                    <Text> + Add Item</Text>
+
+                  </Button>
+
+              </Body>
+              
+              <Right>
+                <Button transparent onPress={()=> console.log("filter")/>}>
+                  <Text style = {styles.editDoneButton}> Filter </Text>
+                </Button>
+              </Right>
+              
+          </View>
+          )
+        }
+
         <ListItem icon style={styles.items}>
           <Left/>
           <Body>
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     backgroundColor: "#FAFAFA",
-    height: BUTTON_HEIGH * 1.5,
+    height: BUTTON_HEIGHT * 1.5,
     marginBottom: sideMargin,
   },
   items: {
@@ -195,7 +198,7 @@ const styles = StyleSheet.create({
   addItemButton: {
 
     padding: sideMargin / 10,
-    height: BUTTON_HEIGH,
+    height: BUTTON_HEIGHT,
     justifyContent: 'center',
 
   }
@@ -215,7 +218,7 @@ const styles = StyleSheet.create({
     color: "black",
   },
   editDoneButton: {
-    fontSize: 20,
+    fontSize: 15,
     textDecorationLine: 'underline',
   },
   checkAvailabilityTitle: {
