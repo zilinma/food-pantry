@@ -101,7 +101,7 @@ export default class InventoryView extends React.Component {
     const userID = this.props.navigation.getParam("userID", "no-id")
     //const userID = '1234'
     //console.log(this.state.showAddItemDialog)
-    //console.log("isDisabled: "+ isDisabled)
+    console.log("userID: "+ userID)
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>

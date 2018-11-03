@@ -5,6 +5,7 @@ import MainTabs from '../Navigators/MainTabNavigator';
 import PantryInfoView from '../screens/PantryInfoView';
 import InventoryView from '../screens/InventoryView';
 import LoginNavigators from "../Navigators/LoginNavigators";
+import InfoEditView from '../screens/infoEditView';
 //import LoginNavigators from '../Navigators/LoginNavigator';
 
 import {
@@ -18,6 +19,7 @@ const AppNavigator = createStackNavigator({
   PantryInfoView: PantryInfoView,
   InventoryView: InventoryView,
   LoginNavigators: LoginNavigators,
+  InfoEditView: InfoEditView,
   //LoginNavigator: LoginNavigator,
 },
 {

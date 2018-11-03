@@ -5,7 +5,7 @@ import PantryMapView from '../screens/PantryMapView';
 //import PantryInfoView from '../screens/PantryInfoView';
 import {
   createBottomTabNavigator,
-  createStackNavigator
+  createStackNavigator,
 } from "react-navigation";
 
 const MainTabs = createBottomTabNavigator(
@@ -16,7 +16,16 @@ const MainTabs = createBottomTabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: "#a41034"
+      activeTintColor: '#FAFAFA',
+      activeBackgroundColor: "#3D70C9",
+      inactiveTintColor: "#808080",
+      inactiveBackgroundColor: "#FAFAFA",
+      labelStyle: {
+        fontSize: 20,
+      },
+      tabStyle: {
+        width: 100
+      },
     }
   }
 );
