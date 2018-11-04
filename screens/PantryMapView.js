@@ -1,14 +1,30 @@
 import React from 'react';
 import {
   Platform,
+  ScrollView,
   View,
   StyleSheet,
   ListView,
   Dimensions,
   Animated,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import { Button, Grid, Container, Header, Text, Content, Card, CardItem, Body, StyleProvider, Left, Right} from 'native-base';
+import {
+  Button,
+  Grid,
+  Container,
+  Header,
+  Text,
+  Content,
+  Card,
+  CardItem,
+  Body,
+  StyleProvider,
+  Left,
+  Right,
+  Spinner,
+} from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Constants, Location, Permissions } from 'expo';
@@ -21,92 +37,21 @@ import firebaseConfig from '../firebaseConfig';
 const { width, height } = Dimensions.get('window');
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-const sideMargin = DEVICE_WIDTH / 20
-const topMargin = DEVICE_HEIGHT/ 50
-const CENTER = DEVICE_HEIGHT/ 2.5
-const SKIP = DEVICE_HEIGHT/  1.75
+const sideMargin = DEVICE_WIDTH / 20;
+const topMargin = DEVICE_HEIGHT / 50;
+const CENTER = DEVICE_HEIGHT / 2.5;
+const SKIP = DEVICE_HEIGHT / 1.75;
 const BUTTON_WIDTH = DEVICE_WIDTH * 0.38;
 const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
 const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
-const CARD_HEIGHT = height / 4;
+const CARD_HEIGHT = height / 8;
 const CARD_WIDTH = width * 0.8;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
-const mapStyle = [
-  {
-    featureType: 'landscape.natural',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        visibility: 'on',
-      },
-      {
-        color: '#e0efef',
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        visibility: 'on',
-      },
-      {
-        hue: '#1900ff',
-      },
-      {
-        color: '#c0e8e8',
-      },
-    ],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [
-      {
-        lightness: 100,
-      },
-      {
-        visibility: 'simplified',
-      },
-    ],
-  },
-  {
-    featureType: 'road',
-    elementType: 'labels',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'transit.line',
-    elementType: 'geometry',
-    stylers: [
-      {
-        visibility: 'on',
-      },
-      {
-        lightness: 700,
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'all',
-    stylers: [
-      {
-        color: '#7dcdcd',
-      },
-    ],
-  },
-];
 
-export default class App extends React.Component {
+export default class screens extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -120,12 +65,15 @@ export default class App extends React.Component {
     this.animation = new Animated.Value(0);
   }
   componentDidMount() {
+    // add current and pantry locations
     navigator.geolocation.getCurrentPosition(
       position => {
         //console.log("wokeeey");
         const startPoint = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         };
         this.setState({
           startPoint: startPoint,
@@ -166,12 +114,16 @@ export default class App extends React.Component {
       this.regionTimeout = setTimeout(() => {
         if (this.index !== index) {
           this.index = index;
-          const { coordinate } = this.state.pantries[index];
+          console.log('pantry: ' + JSON.stringify(this.state.pantries[index]));
+          const coordinate = {
+            longitude: this.state.pantries[index].lng,
+            latitude: this.state.pantries[index].lat,
+          };
           this.map.animateToRegion(
             {
               ...coordinate,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+              latitudeDelta: this.state.startPoint.latitudeDelta,
+              longitudeDelta: this.state.startPoint.longitudeDelta,
             },
             350
           );
@@ -181,40 +133,61 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log('wooooo');
-    //console.log(JSON.stringify(this.state.pantries));
-
-    return (
-      <View style={styles.container}>
-        {this.state.startPoint && this.state.pantries ? (
-          <View>
+    if (this.state.pantries) {
+      const interpolations = this.state.pantries.map((marker, index) => {
+        const inputRange = [
+          (index - 1) * CARD_WIDTH,
+          index * CARD_WIDTH,
+          (index + 1) * CARD_WIDTH,
+        ];
+        const scale = this.animation.interpolate({
+          inputRange,
+          outputRange: [1, 2.5, 1],
+          extrapolate: 'clamp',
+        });
+        const opacity = this.animation.interpolate({
+          inputRange,
+          outputRange: [0.35, 1, 0.35],
+          extrapolate: 'clamp',
+        });
+        return { scale, opacity };
+      });
+      return (
+        <Container>
+          <View style={styles.container}>
             <MapView
-              provider={PROVIDER_GOOGLE}
               ref={map => (this.map = map)}
-              style={{ minHeight: height/ 2 }}
-              initialRegion={{
-                ...this.state.startPoint,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              customMapStyle={mapStyle}>
-              <MapView.Marker
-                coordinate={{
-                  ...this.state.startPoint,
-                }}
-                title={'you are here'}
-              />
-              {this.state.pantries.map((marker, index) => (
-                <MapView.Marker
-                  key={index}
-                  coordinate={{
-                    longitude: marker.lng,
-                    latitude: marker.lat,
-                  }}
-                  title={marker.name}
-                  description={marker.address}
-                />
-              ))}
+              initialRegion={this.state.startPoint}
+              style={styles.container}>
+              <MapView.Marker coordinate={this.state.startPoint}>
+                <Text>You are here.</Text>
+              </MapView.Marker>
+              {this.state.pantries.map((marker, index) => {
+                const scaleStyle = {
+                  transform: [
+                    {
+                      scale: interpolations[index].scale,
+                    },
+                  ],
+                };
+                const opacityStyle = {
+                  opacity: interpolations[index].opacity,
+                };
+                return (
+                  <MapView.Marker
+                    key={index}
+                    coordinate={{
+                      longitude: marker.lng,
+                      latitude: marker.lat,
+                    }}>
+                    {console.log(JSON.stringify(marker))}
+                    <Animated.View style={[styles.markerWrap, opacityStyle]}>
+                      <Animated.View style={[styles.ring, scaleStyle]} />
+                      <View style={styles.marker} />
+                    </Animated.View>
+                  </MapView.Marker>
+                );
+              })}
             </MapView>
             <Animated.ScrollView
               horizontal
@@ -236,84 +209,122 @@ export default class App extends React.Component {
               style={styles.scrollView}
               contentContainerStyle={styles.endPadding}>
               {this.state.pantries.map((marker, index) => (
-<Grid style={styles.containerButtons}>
-                <Button 
-                  style={styles.button}
-                  onPress={(navigation) => {
-                    const uid = this.props.navigation.getParam('userID', 'no-id')
-                    console.log("uid: " + uid)
-                    this.props.navigation.navigate("InventoryView",
-                    {
-                      name: marker.name,
-                      userID: uid,
-                    })
-                  }}>
-                  <Text style = {styles.text} numberOfLines={1} ellipsizeMode="tail">{`${marker.name}`}</Text>
-                </Button>
-                <Right>
-                  <TouchableOpacity
-                  onPress={(navigation) => {
-                    const uid = this.props.navigation.getParam('userID', 'no-id')
-                    this.props.navigation.navigate("PantryInfoView", {
-                      pantryName: marker.name,
-                      pantryAddress: marker.address,
-                      pantryContact: marker.contact,
-                      pantryHour: marker.hour,
-                      longitude: marker.lng, 
-                      latitude: marker.lat,
-                      pantryCheckout: marker.checkout,
-                      userID: uid,
-                    })
-                  }}>
-                    <Ionicons style={styles.fontIcon} active name="ios-information-circle" />
-              
-                  </TouchableOpacity>
-                </Right>
-              </Grid>
+                <View style={styles.card} key={index}>
+                  <Grid>
+                    <Left>
+                      <Button
+                        style={styles.button}
+                        onPress={navigation => {
+                          const uid = this.props.nabuttonvigation.getParam(
+                            'userID',
+                            'no-id'
+                          );
+                          console.log('uid: ' + uid);
+                          this.props.navigation.navigate('InventoryView', {
+                            name: marker.name,
+                            userID: uid,
+                          });
+                        }}>
+                        <Text
+                          style={styles.title}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">{`${marker.name}`}</Text>
+                      </Button>
+                    </Left>
+                    <Right>
+                      <TouchableOpacity
+                        onPress={navigation => {
+                          const uid = this.props.navigation.getParam(
+                            'userID',
+                            'no-id'
+                          );
+                          this.props.navigation.navigate('PantryInfoView', {
+                            pantryName: marker.name,
+                            pantryAddress: marker.address,
+                            pantryContact: marker.contact,
+                            pantryHour: marker.hour,
+                            longitude: marker.lng,
+                            latitude: marker.lat,
+                            pantryCheckout: marker.checkout,
+                            userID: uid,
+                          });
+                        }}>
+                        <Ionicons
+                          style={styles.fontIcon}
+                          active
+                          name="ios-information-circle"
+                        />
+                      </TouchableOpacity>
+                    </Right>
+                  </Grid>
+
+                </View>
               ))}
             </Animated.ScrollView>
           </View>
-        ) : (
-          <Text>Loading......</Text>
-        )}
-      </View>
-    );
+        </Container>
+      );
+    } else {
+      return <Spinner />;
+    }
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
   },
-  containerButtons:{
-    marginTop: topMargin, 
-    marginRight: sideMargin,
-    marginLeft: sideMargin,
-    backgroundColor: '#3D70c9',
-    flexDirection: 'row',
-    flex: 1,
+  button: {
+    backgroundColor: '#FFFFFFFF',
+  },
+  scrollView: {
+    position: 'absolute',
+    bottom: 30,
+    left: 0,
+    right: 0,
+    paddingVertical: 10,
+  },
+  endPadding: {
+    paddingRight: width - CARD_WIDTH,
+  },
+  card: {
+    padding: 10,
+    elevation: 2,
+    backgroundColor: '#FFF',
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    shadowOffset: { x: 2, y: -2 },
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
+    overflow: 'hidden',
   },
-  text: {
-    //textAlign: "center",
-    color: "#FAFAFA",
-    fontSize: 18,
-    flexWrap: 'wrap'
-  },  
-  button: {
-    borderRadius:BUTTON_RADIUS,
-    margin: 10,
-    elevation:0,
-    width: DEVICE_WIDTH * 0.6,
+  title: {
+    color: 'black',
+  },
+  markerWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  marker: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(130,4,150, 0.9)',
+  },
+  ring: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(130,4,150, 0.3)',
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'rgba(130,4,150, 0.5)',
   },
   fontIcon: {
     color: '#FAFAFA',
     fontSize: 30,
     marginRight: sideMargin,
-  }
+  },
 });
