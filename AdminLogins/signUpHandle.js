@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import firebase from 'firebase';
-//import { primary, white, transparentWhite } from '../../utils/colors';
+import { primary} from '../util/colors';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -17,8 +17,8 @@ const SKIP = DEVICE_HEIGHT / 10;
 const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
 
 // Round button
-const WIDTH = DEVICE_WIDTH / 8;
-const HEIGHT = WIDTH;
+const WIDTH = DEVICE_WIDTH / 2;
+const HEIGHT = WIDTH/3;
 const RADIUS = WIDTH / 2;
 
 export default class SignupPwd extends Component {
@@ -130,9 +130,12 @@ export default class SignupPwd extends Component {
 						</Item>
 						<Text style={[styles.duplicate, {display: this.state.duplicate ? 'flex' : 'none'}]}>This user ID is already in use!</Text>
 					</Form>
-					<TouchableOpacity disabled={this.state.disabled} style={this.state.disabled ? [styles.button, styles.disabled] : styles.button} onPress={() => {this.createAccount()}}>
-			    	<FontAwesome name="angle-right" style={styles.next}/>
-			    </TouchableOpacity>
+
+					<View>
+						<TouchableOpacity disabled={this.state.disabled} style={this.state.disabled ? [styles.button, styles.disabled] : styles.button} onPress={() => {this.createAccount()}}>
+			    		<Text style={styles.buttonText}>Register</Text>
+			    		</TouchableOpacity>
+			    	</View>
 				</Content>
 			</Container>
 		);
@@ -141,14 +144,15 @@ export default class SignupPwd extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		marginTop: SKIP,
-		marginLeft: MARGIN_LEFT,
-		marginRight: MARGIN_RIGHT,
+		//marginTop: SKIP,
+		//marginLeft: MARGIN_LEFT,
+		//marginRight: MARGIN_RIGHT,
 		justifyContent:'center',
 	},
 	label: {
 		fontSize: 12,
 		fontWeight: "700",
+		marginLeft: DEVICE_HEIGHT * 0.02,
 		marginBottom: DEVICE_HEIGHT * 0.01,
 	},
 	duplicate: {
@@ -157,6 +161,7 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		height: INPUT_HEIGHT,
+		marginLeft: DEVICE_HEIGHT * 0.02,
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,
@@ -167,15 +172,23 @@ const styles = StyleSheet.create({
 	button: {
 		width: WIDTH,
 		height: HEIGHT,
-		borderRadius: RADIUS,
 		alignItems: 'center',
+		alignSelf: 'center',
 		justifyContent: 'center',
-		marginTop: SKIP / 3,
-		marginLeft: WIDTH * 6 - MARGIN_RIGHT,
-	},
-	next: {
-		fontSize: 35,
+		borderRadius: 2,
+		backgroundColor: primary,
 	},
 	disabled: {
+		width: WIDTH,
+		height: HEIGHT,
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		borderRadius: 2,
+		backgroundColor: 'gray',
+	},
+	buttonText: {
+		color: "white",
+		fontWeight: 'bold',
 	},
 });

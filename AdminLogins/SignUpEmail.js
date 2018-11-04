@@ -4,6 +4,7 @@ import Dimensions from 'Dimensions';
 import { FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 import { StackNavigator } from 'react-navigation';
+import {primary} from '../util/colors';
 import firebase from 'firebase';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -16,8 +17,8 @@ const SKIP = DEVICE_HEIGHT / 10;
 const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
 
 // Round button
-const WIDTH = DEVICE_WIDTH / 8;
-const HEIGHT = WIDTH;
+const WIDTH = DEVICE_WIDTH / 5;
+const HEIGHT = WIDTH/2;
 const RADIUS = WIDTH / 2;
 
 export default class SignupEmail extends Component {
@@ -76,9 +77,12 @@ export default class SignupEmail extends Component {
 						</Item>
 						<Text style={[styles.duplicate, {display: this.state.duplicate ? 'flex' : 'none'}]}>THIS EMAIL IS ALREADY REGISTERED!</Text>
 					</Form>
-					<TouchableOpacity disabled={this.state.disabled} style={this.state.disabled ? [styles.button, styles.disabled] : styles.button} onPress={() => {this.checkDuplicate()}}>
-				    	<FontAwesome name="angle-right" style={styles.next}/>
-				    </TouchableOpacity>
+
+					<View>
+		    			<TouchableOpacity disabled={this.state.disabled} style={this.state.disabled ? [styles.button, styles.disabled] : styles.button} onPress={() => {this.checkDuplicate()}}>
+					    	<Text style={styles.buttonText}>Next</Text>
+					    </TouchableOpacity>
+					</View>					
 				</Content>
 			</Container>
 		);
@@ -90,22 +94,17 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 8,
 	},
-	container1: {
-		marginTop: SKIP,
-		marginLeft: MARGIN,
-		marginRight: MARGIN,
-		justifyContent:'center',
-		flex: 4.7,
-	},
 	label: {
-		//color: primary,
+		color: primary,
 		fontSize: 12,
 		fontWeight: "700",
+		marginLeft: DEVICE_WIDTH * 0.02,
 		marginBottom: DEVICE_HEIGHT * 0.01,
 	},
 	input: {
 		height: INPUT_HEIGHT,
 		color: "black",
+		marginLeft: DEVICE_WIDTH * 0.02,
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,
@@ -113,31 +112,23 @@ const styles = StyleSheet.create({
 		marginLeft: 0,
 		paddingBottom: 0,
 	},
-	container2: {
-		flex: 0.8,
-		marginLeft: 20,
-		marginRight: 20,
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-	},
-	text: {
-		color: "gray",
-		backgroundColor: 'transparent',
-		fontSize: 12,
-		fontWeight: '500',
-	},
-	container3: {
-		flex: 2,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
 	button: {
 		width: WIDTH,
 		height: HEIGHT,
 		alignItems: 'center',
+		alignSelf: 'center',
 		justifyContent: 'center',
-		backgroundColor: "blue",
-		borderRadius: RADIUS,
+		borderRadius: 2,
+		backgroundColor: primary,
+	},
+	disabled: {
+		width: WIDTH,
+		height: HEIGHT,
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		borderRadius: 2,
+		backgroundColor: 'gray',
 	},
 	buttonText: {
 		color: "white",

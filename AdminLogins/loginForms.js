@@ -3,7 +3,7 @@ import { Alert, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Dimensions from 'Dimensions';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 import firebase from 'firebase';
-//import { primary, black, white, gray } from '../../utils/colors';
+import {primary} from '../util/colors';
 //import { registerForPushNotificationsAsyc } from '../../functions/push_code'; 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -14,7 +14,7 @@ const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
 
 const BUTTON_WIDTH = DEVICE_WIDTH * 0.75;
 const BUTTON_HEIGHT = BUTTON_WIDTH / 7;
-const BUTTON_RADIUS = BUTTON_HEIGHT / 2;
+const BUTTON_RADIUS = BUTTON_HEIGHT / 10;
 
 const WIDTH = DEVICE_WIDTH * 0.75;
 const HEIGHT = WIDTH / 7;
@@ -23,9 +23,21 @@ const RADIUS = HEIGHT / 2;
 export default class LoginForm extends Component {
 	static navigationOptions = {
 		header: null
-
-
-	}
+		/*
+		title: applyLetterSpacing("LOG IN"),
+		header: navigation => ({
+			style: {
+				backgroundColor: 'rgb(47,54,61)'
+			},
+			TitleStyle: {
+				color: '#fefefe',
+				fontWeight:'300',
+				textAlign: 'center',
+			}, 
+			tintColor: '#fefefe'
+		})
+		*/
+	};
 	
 	constructor(props) {
 		super(props);
@@ -95,7 +107,7 @@ export default class LoginForm extends Component {
 						</View>
 						<View>
 			    			<TouchableOpacity style={styles.button} onPress={() => {this.loginSubmit()}}>
-						    	<Text style={styles.buttonText}>LOGIN</Text>
+						    	<Text style={styles.buttonText}>LOG IN</Text>
 						    </TouchableOpacity>
 						</View>
 					</Content>
@@ -108,22 +120,17 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 8,
 	},
-	container1: {
-		marginTop: SKIP,
-		marginLeft: MARGIN,
-		marginRight: MARGIN,
-		justifyContent:'center',
-		flex: 4.7,
-	},
 	label: {
-		//color: primary,
+		color: primary,
 		fontSize: 12,
 		fontWeight: "700",
+		marginLeft: DEVICE_WIDTH * 0.02,
 		marginBottom: DEVICE_HEIGHT * 0.01,
 	},
 	input: {
 		height: INPUT_HEIGHT,
 		color: "black",
+		marginLeft: DEVICE_WIDTH * 0.02,
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,
@@ -132,11 +139,11 @@ const styles = StyleSheet.create({
 		paddingBottom: 0,
 	},
 	container2: {
-		flex: 0.8,
-		marginLeft: 20,
-		marginRight: 20,
+		flex: 1,
+		marginLeft: 10,
+		marginRight: 10,
 		flexDirection: 'row',
-		justifyContent: 'space-around',
+		justifyContent: 'space-between',
 	},
 	text: {
 		color: "gray",
@@ -144,18 +151,15 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		fontWeight: '500',
 	},
-	container3: {
-		flex: 2,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
 	button: {
 		width: WIDTH,
 		height: HEIGHT,
+		alignSelf: 'center',
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: "blue",
-		borderRadius: RADIUS,
+		backgroundColor: primary,
+		borderRadius: BUTTON_RADIUS,
+		marginTop: 30,
 	},
 	buttonText: {
 		color: "white",

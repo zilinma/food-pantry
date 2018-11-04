@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 import { StackNavigator } from 'react-navigation';
 import firebase from 'firebase';
-//import { primary, white, transparentWhite } from '../../utils/colors';
+import { primary} from '../util/colors';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -17,8 +17,8 @@ const SKIP = DEVICE_HEIGHT / 15;
 const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
 
 // Round button
-const WIDTH = DEVICE_WIDTH / 8;
-const HEIGHT = WIDTH;
+const WIDTH = DEVICE_WIDTH / 3;
+const HEIGHT = WIDTH/3;
 const RADIUS = WIDTH / 2;
 
 export default class SignupPwd extends Component {
@@ -92,16 +92,20 @@ export default class SignupPwd extends Component {
 						</Item>
 						<Text style={[styles.alert, {display: this.state.verified ? 'none' : 'flex'}]}>VERIFIED PASSWORD DOES NOT MATCH!</Text>
 					</Form>
-					<TouchableOpacity 
-					disabled={!(this.state.allowed && this.state.verified)} 
-					style={(this.state.allowed && this.state.verified) ? styles.button : [styles.button, styles.disabled]} 
-					onPress={() => {
-						console.log(this.getUserData());
-						this.props.navigation.navigate('SignUpHandle', this.getUserData());
 
-					}}>
-			    		<FontAwesome name="angle-right" style={styles.next}/>
-			    	</TouchableOpacity>
+					<View>
+						<TouchableOpacity 
+						disabled={!(this.state.allowed && this.state.verified)} 
+						style={(this.state.allowed && this.state.verified) ? styles.button : [styles.button, styles.disabled]} 
+						onPress={() => {
+							console.log(this.getUserData());
+							this.props.navigation.navigate('SignUpHandle', this.getUserData());
+
+						}}>
+				    		<Text style={styles.buttonText}>Next</Text>
+				    	</TouchableOpacity>
+				    </View>
+
 				</Content>
 			</Container>
 		);
@@ -113,12 +117,15 @@ const styles = StyleSheet.create({
 		justifyContent:'center',
 	},
 	label: {
+		color: primary,
 		fontSize: 12,
 		fontWeight: "700",
+		marginLeft: DEVICE_HEIGHT * 0.02,
 		marginBottom: DEVICE_HEIGHT * 0.01,
 	},
 	input: {
 		height: INPUT_HEIGHT,
+		marginLeft: DEVICE_HEIGHT * 0.02,
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,
@@ -134,18 +141,23 @@ const styles = StyleSheet.create({
 	button: {
 		width: WIDTH,
 		height: HEIGHT,
-		borderRadius: RADIUS,
 		alignItems: 'center',
+		alignSelf: 'center',
 		justifyContent: 'center',
-		marginTop: SKIP / 3,
-		marginLeft: WIDTH * 6 - MARGIN_RIGHT,
-
-	},
-	next: {
-		color: "blue",
-		fontSize: 35,
+		borderRadius: 2,
+		backgroundColor: primary,
 	},
 	disabled: {
-		backgroundColor: "white",
+		width: WIDTH,
+		height: HEIGHT,
+		alignItems: 'center',
+		alignSelf: 'center',
+		justifyContent: 'center',
+		borderRadius: 2,
+		backgroundColor: 'gray',
+	},
+	buttonText: {
+		color: "white",
+		fontWeight: 'bold',
 	},
 });
