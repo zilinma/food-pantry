@@ -215,7 +215,7 @@ export default class screens extends React.Component {
                       <Button
                         style={styles.button}
                         onPress={navigation => {
-                          const uid = this.props.nabuttonvigation.getParam(
+                          const uid = this.props.navigation.getParam(
                             'userID',
                             'no-id'
                           );
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   title: {
-    color: 'black',
+    color: '#2EBDD5',
   },
   markerWrap: {
     alignItems: 'center',
@@ -311,19 +311,19 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'rgba(130,4,150, 0.9)',
+    backgroundColor: 'rgba(10, 42, 102, 0.9)',
   },
   ring: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: 'rgba(130,4,150, 0.3)',
+    backgroundColor: 'rgba(46, 189, 213, 0.3)',
     position: 'absolute',
     borderWidth: 1,
-    borderColor: 'rgba(130,4,150, 0.5)',
+    borderColor: 'rgba(46, 189, 213, 0.5)',
   },
   fontIcon: {
-    color: '#FAFAFA',
+    color: '#2EBDD5',
     fontSize: 30,
     marginRight: sideMargin,
   },
