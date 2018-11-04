@@ -16,7 +16,6 @@ import colors from '../native-base-theme/variables/commonColor';
 
 import InventoryList from './InventoryFeatures/InventoryList';
 import InventoryAddItem from './InventoryFeatures/InventoryAddItem';
-//import InventoryFilter from './InventoryFeatures/InventoryFilter';
 //import InventorySearch from './InventoryFeatures/InventorySearch';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -54,6 +53,11 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editButtonClicked: false,
       showAddItemDialog: false,
+      filter:{
+        //item_name: "",
+        item_availability: ["Medium"],
+        
+      },
     };
   }
 
@@ -69,6 +73,7 @@ export default class InventoryView extends React.Component {
       });
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(tasks),
+        myData: tasks,
       });
     });
   }
@@ -97,11 +102,38 @@ export default class InventoryView extends React.Component {
     return "Edit Items"
   }
 
+  /*filter the items based on the criteria*/
+  filterList (event) {
+    filterCriteria = this.state.filter;
+    let filteredItems = this.state.myData.filter(function(item){
+      for (var key in filterCriteria){
+        //console.log(key)
+        if (item[key] === undefined){
+          return false;
+        } else {
+          console.log(filterCriteria[key])
+          for (var index in filterCriteria[key]) {
+            console.log(index)
+            if(item[key] === filterCriteria[key][index]){
+              return true;
+            }
+          }
+          return false; 
+        }
+      }
+    });
+    console.log(filteredItems);
+    this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(filteredItems),
+      });
+
+  }   
+    
+
   render() {
-    const userID = this.props.navigation.getParam("userID", "no-id")
-    //const userID = '1234'
-    //console.log(this.state.showAddItemDialog)
-    console.log("userID: "+ userID)
+    //const userID = this.props.navigation.getParam("userID", "no-id")
+    const userID = '1234'
+    //console.log("userID: "+ userID)
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
@@ -131,7 +163,7 @@ export default class InventoryView extends React.Component {
               </Body>
               
               <Right>
-                <Button transparent onPress={()=> console.log("filter")/>}>
+                <Button transparent onPress={()=> this.filterList()}>
                   <Text style = {styles.editDoneButton}> Filter </Text>
                 </Button>
               </Right>

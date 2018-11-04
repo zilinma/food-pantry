@@ -7,14 +7,11 @@ import {
   Alert,
 } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
-import { Grid, Button, StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
-import PopupDialog, { DialogTitle } from 'react-native-popup-dialog';
+import { Grid, Button, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import * as firebase from 'firebase';
 import firebaseConfig from '../../firebaseConfig';
 import Dimensions from 'Dimensions';
-import getTheme from '../../native-base-theme/components';
-import colors from '../../native-base-theme/variables/commonColor';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -31,12 +28,6 @@ export default class InventoryEditItem extends React.Component {
 		super(props);
 
 		this.state = {
-		  itemName: props.item_name,
-		  itemAvailability: props.item_availability,
-		  itemTags:{
-		  	Glutenfree:props.tags.Glutenfree,
-		  	Vegetarian:props.tags.Vegetarian,
-		  },
 		  editedItemName:props.item_name,
 		  editedItemAvailability:props.item_availability,
 		  editedTags:{
@@ -55,7 +46,7 @@ export default class InventoryEditItem extends React.Component {
       alert('Need both item name and availability');
       return;
     }
-    this.props.tasksRef.child(this.state.itemName).remove();
+    this.props.tasksRef.child(this.props.item_name).remove();
     itemRef = firebase.database().ref(name+"/"+this.state.editedItemName);
     itemRef.set({
       item_name: this.state.editedItemName,
@@ -119,7 +110,7 @@ export default class InventoryEditItem extends React.Component {
 		    </View>
 
 			<View style={styles.checkBoxes}>
-				<Text style={styles.checkAvailabilityTitle}>Check Tags</Text>
+				<Text style={styles.checkAvailabilityTitle}>Change Tags</Text>
 				<CheckBox 
 				title= 'Vegetarian'
 				checked={this.state.editedTags.Vegetarian}

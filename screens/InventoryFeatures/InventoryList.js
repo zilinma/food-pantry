@@ -32,8 +32,6 @@ export default class InventoryList extends React.Component {
 
   /* Delete the item from the database */
   _deleteItem(item) {
-    //alert('Are you sure you want to delete the item?');
-    //console.log(item.tasksRef)
     item.tasksRef.child(item.item_name).remove();
   }
 
@@ -91,15 +89,16 @@ export default class InventoryList extends React.Component {
 
         <Right>
             <Text style={styles.availabilityText}>{`${this.props.item_availability}`}</Text>      
+
         </Right>
 
         <Right>
           {this.props.editButtonClicked && (
-            <Icon
-              name="edit"
-              color="black"
-              onPress={() => this.setState({showEditItemDialog: !this.state.showEditItemDialog})}
-            />
+              <Icon
+                name="edit"
+                color="black"
+                onPress={() => this.setState({showEditItemDialog: !this.state.showEditItemDialog})}
+              />
           )}
         </Right>
         
