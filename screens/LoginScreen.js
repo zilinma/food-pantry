@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
     height: BUTTON_HEIGHT,
     position: "relative",
     top: SKIP,
-    borderRadius:BUTTON_RADIUS, 
-    backgroundColor: primary,
+    borderRadius:BUTTON_RADIUS,
   },
   button_cons: {
     justifyContent: 'center',
@@ -63,8 +62,7 @@ const styles = StyleSheet.create({
     height: BUTTON_HEIGHT,
     position: "relative",
     top: SKIP,
-    borderRadius:BUTTON_RADIUS, 
-    borderColor: primary,
+    borderRadius:BUTTON_RADIUS,
   },
   text_admin: {
     textAlign: "center",
@@ -75,7 +73,6 @@ const styles = StyleSheet.create({
   text_cons: {  
     textAlign: "center",
     fontSize: 15,
-    color: primary,
     fontWeight: "bold",
   },
   text_title: {
@@ -83,6 +80,5 @@ const styles = StyleSheet.create({
     fontSize: 40,
     top: CENTER, 
     textAlign: 'center',
-    color: primary,
   },
 });

@@ -265,7 +265,11 @@ export default class screens extends React.Component {
         </Container>
       );
     } else {
-      return <Spinner />;
+      return(
+        <View style={styles.loadingContainer}>
+          <Spinner style={styles.spinnerStyle} blue/>;
+        </View>
+        ) ;
     }
   }
 }
@@ -276,6 +280,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FFFFFFFF',
+  },
+  spinnerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
   },
   scrollView: {
     position: 'absolute',

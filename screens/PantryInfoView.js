@@ -178,7 +178,7 @@ export default class PantryInfoView extends React.Component {
                 }}>
                 <Text>Inventory</Text>
               </Button>
-              {this.state.pantryData.checkout && (
+              {this.state.pantryData.checkout ? (
                 <Button
                   style={styles.button}
                   onPress={() => {
@@ -186,7 +186,15 @@ export default class PantryInfoView extends React.Component {
                   }}>
                   <Text>Checkout</Text>
                 </Button>
-              )}
+              ) :
+              (                
+                <Button disabled
+                  style={styles.button}
+                  >
+                  <Text>Checkout</Text>
+                </Button>
+                )
+            }
               <Button
                 style={styles.button}
                 onPress={() => {
@@ -211,7 +219,7 @@ export default class PantryInfoView extends React.Component {
                       ...this.state.endPoint,
                     }}
                     title={this.state.pantryData.name}
-                    description={this.state.pantryData.name}
+                    description={this.state.pantryData.address}
                   />
                 </MapView>
               </View>
@@ -240,8 +248,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: DEVICE_HEIGHT / 50,
-    marginLeft: DEVICE_HEIGHT / 40,
-    marginRight: DEVICE_HEIGHT / 40,
+    marginLeft: "5%",
+    marginRight: "5%",
   },
   textDes: {
     fontSize: 14,
@@ -255,11 +263,13 @@ const styles = StyleSheet.create({
     color: '#2699FB',
   },
   button: {
-    width: BUTTON_WIDTH * 1.5,
+    width: BUTTON_WIDTH * 1.1,
     height: BUTTON_HEIGHT,
     borderRadius: BUTTON_RADIUS,
     justifyContent: 'center',
     margin: DEVICE_HEIGHT / 30,
+    marginLeft: DEVICE_HEIGHT/ 60,
+    marginRight: DEVICE_HEIGHT / 60,
   },
   buttonEdit: {
     width: BUTTON_WIDTH,
