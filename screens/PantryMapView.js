@@ -61,7 +61,7 @@ export default class screens extends React.Component {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         },
-      pantries: null,
+      pantries: [],
       error: null,
     };
   }
