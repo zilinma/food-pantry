@@ -38,7 +38,7 @@ export default class SignupConfirm extends Component {
       	user.reload();
       	if (user.emailVerified) {
 					clearInterval(intervalID);
-					navigate("SignUpDone", {uid: user.uid});
+					navigate("MainTab", {userID: user.uid});
 				}
       }
     }, 2000);
