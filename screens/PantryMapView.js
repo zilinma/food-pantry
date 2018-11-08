@@ -55,7 +55,12 @@ export default class screens extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startPoint: null,
+      startPoint: {
+          latitude: 0,
+          longitude: 0,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
       pantries: null,
       error: null,
     };
@@ -81,7 +86,7 @@ export default class screens extends React.Component {
         });
       },
       error => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
     );
     //console.log('firebase');
     firebase
@@ -155,10 +160,10 @@ export default class screens extends React.Component {
       return (
         <Container>
           <View style={styles.container}>
-            <MapView
+            <MapView style={styles.mapcontainer}
               ref={map => (this.map = map)}
               initialRegion={this.state.startPoint}
-              style={styles.container}>
+              >
               <MapView.Marker coordinate={this.state.startPoint}>
                 <Text>You are here.</Text>
               </MapView.Marker>
@@ -273,6 +278,11 @@ export default class screens extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  mapcontainer: {
+    flex: 1,
+    width: DEVICE_WIDTH,
+    height: DEVICE_HEIGHT,
   },
   button: {
     backgroundColor: '#FFFFFFFF',
