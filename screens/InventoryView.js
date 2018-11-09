@@ -132,13 +132,14 @@ export default class InventoryView extends React.Component {
 
   render() {
     const userID = this.props.navigation.getParam("userID", "no-id")
+    const pantryID = this.props.navigation.getParam("pantryID", "no-pantry-id")
     //const userID = '1234'
     //console.log("userID: "+ userID)
     return (
     <StyleProvider style = {getTheme(colors)}>
       <Container>
 
-        {userID != "no-id" && (
+        {userID == pantryID && (
           <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
               <Left>
               {userID != 'no-id' && (

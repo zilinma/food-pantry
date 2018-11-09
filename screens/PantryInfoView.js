@@ -109,8 +109,11 @@ export default class PantryInfoView extends React.Component {
     //console.log(this.state.longitude)
     //console.log(this.state.latitude)
     console.log('end point: ' + JSON.stringify(this.state.endPoint));
-    const userid = this.props.navigation.getParam("userid", "no-id");
+    const userid = this.props.navigation.getParam("userID", "no-id");
+    const pantryid = this.props.navigation.getParam("pantryID", "no-pantry-id");
+
     console.log("userid: " + userid);
+    console.log('pantryid: '+ pantryid);
     //this._getLocationAsync();
     return (
       <StyleProvider style={getTheme(colors)}>
@@ -122,7 +125,7 @@ export default class PantryInfoView extends React.Component {
                 <Text style={styles.title}>{this.state.pantryData.name}</Text>
               </Left>
               <Right>
-                {userid != 'no-id' && (
+                {userid == pantryid && (
                   <Button 
                   style={styles.buttonEdit} 
                   onPress={() => {
@@ -173,7 +176,8 @@ export default class PantryInfoView extends React.Component {
                 onPress={navigation => {
                   this.props.navigation.navigate('InventoryView', {
                     name: this.state.pantryData.name,
-                    pantryUID: userid,
+                    userID: userid,
+                    pantryid: pantryid, 
                   });
                 }}>
                 <Text>Inventory</Text>

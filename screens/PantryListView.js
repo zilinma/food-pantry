@@ -123,6 +123,7 @@ export default class PantryListView extends React.Component {
                         pantryCheckout: data.checkout,
                         longitude: data.lng,
                         latitude: data.lat,
+                        pantryID: data.uid,
                         userID: uid,
                       });
                     }}>
