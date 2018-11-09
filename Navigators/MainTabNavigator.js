@@ -26,7 +26,7 @@ const MainTabs = createBottomTabNavigator(
 
             }/>
             ),
-        tabBarLabel: ({tintColor}) => (<Text style={{ fontSize: 10, marginBottom: 7 }} color={tintColor}>Pantry List</Text>),
+        tabBarLabel: ({tintColor}) => (<Text style={{ fontSize: 10, marginBottom: 7, alignSelf:'center' }} color={tintColor}>Pantry List</Text>),
 
 
       }),
@@ -48,7 +48,7 @@ const MainTabs = createBottomTabNavigator(
             }/>
             ),
         tabBarLabel: ({tintColor}) => (
-          <Text style={{ fontSize: 10, marginBottom: 7 }}  color={tintColor} >Map</Text>),
+          <Text style={{ fontSize: 10, marginBottom: 7, alignSelf:'center' }}  color={tintColor} >Map</Text>),
 
       }),
 

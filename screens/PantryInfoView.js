@@ -38,7 +38,10 @@ export default class PantryInfoView extends React.Component {
     super(props);
     this.state = {
       pantryData: null,
-      startPoint: null,
+      startPoint: {
+          latitude: 0,
+          longitude: 0,
+      },
       endPoint: null,
       error: null,
     };
@@ -106,15 +109,10 @@ export default class PantryInfoView extends React.Component {
   };
 
   render() {
-    //console.log(this.state.longitude)
-    //console.log(this.state.latitude)
     console.log('end point: ' + JSON.stringify(this.state.endPoint));
     const userid = this.props.navigation.getParam("userID", "no-id");
     const pantryid = this.props.navigation.getParam("pantryID", "no-pantry-id");
 
-    console.log("userid: " + userid);
-    console.log('pantryid: '+ pantryid);
-    //this._getLocationAsync();
     return (
       <StyleProvider style={getTheme(colors)}>
       { this.state.pantryData ? (
@@ -170,7 +168,7 @@ export default class PantryInfoView extends React.Component {
               </Body>
             </ListItem>
 
-            <ListItem icon noBorder style={styles.item}>
+            <ListItem icon noBorder style={{justifyContent:'space-between', marginRight:15}}>
               <Button
                 style={styles.button}
                 onPress={navigation => {
@@ -212,7 +210,7 @@ export default class PantryInfoView extends React.Component {
             this.state.endPoint ? (
               <View style={styles.map}>
                 <MapView
-                  style={{ flex: 1 }}
+                  style={styles.mapcontainer}
                   initialRegion={{
                     ...this.state.endPoint,
                     latitudeDelta: 0.01,
@@ -267,13 +265,13 @@ const styles = StyleSheet.create({
     color: '#2699FB',
   },
   button: {
-    width: BUTTON_WIDTH * 1.1,
+    width: BUTTON_WIDTH,
     height: BUTTON_HEIGHT,
     borderRadius: BUTTON_RADIUS,
     justifyContent: 'center',
-    margin: DEVICE_HEIGHT / 30,
-    marginLeft: DEVICE_HEIGHT/ 60,
-    marginRight: DEVICE_HEIGHT / 60,
+    //margin: DEVICE_HEIGHT / 30,
+    //marginLeft: DEVICE_HEIGHT/ 60,
+    //marginRight: DEVICE_HEIGHT / 60,
   },
   buttonEdit: {
     width: BUTTON_WIDTH,
@@ -284,8 +282,12 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  mapcontainer: {
+    flex: 1,
     minHeight: DEVICE_HEIGHT / 2,
-    margin: DEVICE_HEIGHT / 30,
+    marginRight: DEVICE_WIDTH / 30,
+    marginLeft: DEVICE_WIDTH / 30,
     marginTop: DEVICE_HEIGHT / 50,
   },
 });

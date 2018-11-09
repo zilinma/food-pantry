@@ -19,11 +19,8 @@ import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
 import { Ionicons } from '@expo/vector-icons';
 import Dimensions from 'Dimensions';
-//import MainTabNavigator from "../Navigators/MainTabNavigator";
-//import AppNavigator from "../App.js"
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
-//import FontAwesome from '../node_modules/@expo/vector-icons/fonts/FontAwesome.ttf';
 
 firebase.initializeApp(firebaseConfig);
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -36,28 +33,12 @@ const BUTTON_WIDTH = DEVICE_WIDTH * 0.38;
 const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
 const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
 export default class PantryListView extends React.Component {
-  /**
-  static navigationOptions = {
-    tabBarOptions: {
-      activeTintColor: '#FAFAFA',
-      activeBackgroundColor: "#3D70C9",
-      inactiveTintColor: "#FAFAFA",
-      inactiveBackgroundColor: "#808080"
-      labelStyle: {
-        fontSize: 20,
-      },
-      tabStyle: {
-        width: 100
-      },
-    }
-  }
-*/
+
   constructor() {
     super();
 
     this.state = {
-      pantries: null,
-      //allData: []
+      pantries: [],
     };
   }
 
@@ -67,15 +48,11 @@ export default class PantryListView extends React.Component {
       .ref('Pantry')
       .once('value')
       .then(snapshot => {
-        //console.log(pd)
         this.setState({
           pantries: Object.values(snapshot.val()),
         });
-
-        //console.log('state: ' + JSON.stringify(this.state));
       })
       .catch(error => {
-        //error callback
         console.log('error ', error);
       });
   }
@@ -141,7 +118,7 @@ export default class PantryListView extends React.Component {
         </StyleProvider>
       );
     } else {
-      console.log("spinnder: "+ this.state.pantries)
+      console.log("spinner: "+ this.state.pantries)
       return(
         <View style={styles.loadingContainer}>
           <Spinner style={styles.spinnerStyle} blue/>;
@@ -173,7 +150,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    //textAlign: "center",
     color: '#0a2a66',
     fontSize: 18,
     flexWrap: 'wrap',
