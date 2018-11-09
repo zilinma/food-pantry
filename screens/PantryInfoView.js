@@ -55,9 +55,10 @@ export default class PantryInfoView extends React.Component {
 
   }
   componentDidMount() {
+    console.log("wokeeey");
     navigator.geolocation.getCurrentPosition(
       position => {
-        //console.log("wokeeey");
+        console.log("wokeeey");
         const startPoint = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -67,8 +68,8 @@ export default class PantryInfoView extends React.Component {
           error: null,
         });
       },
-      error => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 1000 }
+      error => {console.log(error)},
+      { enableHighAccuracy: true}
     );
 
     //const { navigation } = this.props;
@@ -109,7 +110,7 @@ export default class PantryInfoView extends React.Component {
   };
 
   render() {
-    console.log('end point: ' + JSON.stringify(this.state.endPoint));
+    {/*console.log('end point: ' + JSON.stringify(this.state.endPoint));*/}
     const userid = this.props.navigation.getParam("userid", "no-id");
     console.log("userid: " + userid);
     return (
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
     color: '#2699FB',
   },
   button: {
-    width: BUTTON_WIDTH,
+    width: BUTTON_WIDTH*1.1,
     height: BUTTON_HEIGHT,
     borderRadius: BUTTON_RADIUS,
     justifyContent: 'center',

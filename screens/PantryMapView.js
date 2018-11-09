@@ -56,8 +56,8 @@ export default class screens extends React.Component {
     super(props);
     this.state = {
       startPoint: {
-          latitude: 0,
-          longitude: 0,
+          latitude: 40.956355,
+          longitude: -76.88449,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         },
@@ -184,7 +184,10 @@ export default class screens extends React.Component {
                     coordinate={{
                       longitude: marker.lng,
                       latitude: marker.lat,
-                    }}>
+                    }}
+                    title={this.state.pantries.name}
+                    description={this.state.pantries.address}
+                    >
                     {console.log(JSON.stringify(marker))}
                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
                       <Animated.View style={[styles.ring, scaleStyle]} />
@@ -290,6 +293,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#FFFFFFFF',
+    elevation:0,
   },
   spinnerStyle: {
     flex: 1,
