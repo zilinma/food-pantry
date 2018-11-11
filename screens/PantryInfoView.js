@@ -55,10 +55,9 @@ export default class PantryInfoView extends React.Component {
 
   }
   componentDidMount() {
-    console.log("wokeeey");
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log("wokeeey");
+        //console.log("wokeeey");
         const startPoint = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,

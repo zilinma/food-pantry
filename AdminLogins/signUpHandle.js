@@ -4,6 +4,7 @@ import Dimensions from 'Dimensions';
 import { FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
 import { StackNavigator } from 'react-navigation';
+import { Location } from 'expo';
 import firebase from 'firebase';
 import { primary} from '../util/colors';
 
@@ -34,17 +35,35 @@ export default class SignupPwd extends Component {
   		email: this.props.navigation.getParam("email", "not provided"),
   		pwd: this.props.navigation.getParam("pwd"),
   		handle: "",
+  		lat: 0,
+  		lng: 0,
   	};
 	}
 	static navigationOptions = {
 		header: null,
 
 	}
+
+	componentDidMount() {
+    	this.getGeoCode();
+  	}
+
 	changeState(disabled, duplicate, handle) {
 		this.setState({
 			disabled: disabled,
 			duplicate: duplicate,
 			handle: handle,
+		})
+	}
+
+	async getGeoCode(){
+		let location = (await Location.geocodeAsync(this.state.pantryAddress))[0];
+		console.log(location);
+		var latitude = location.latitude;
+		var longitude = location.longitude;
+		this.setState({
+			lat : latitude,
+			lng: longitude,
 		})
 	}
 
@@ -74,6 +93,8 @@ export default class SignupPwd extends Component {
 		const pantryHour = this.state.pantryHour;
 		const pantryContact = this.state.pantryContact;
 		const pwd = this.state.pwd;
+		const pantryLat = this.state.lat;
+		const pantryLng = this.state.lng;
 		firebase.auth().createUserWithEmailAndPassword(email, pwd).then(function() {
 
 			var user = firebase.auth().currentUser;
@@ -83,7 +104,7 @@ export default class SignupPwd extends Component {
 			}).then(function() {
 				user.sendEmailVerification().then(function() {
 			  	// Email sent.
-			  	self.initUser(user.uid, handle, pantryName, pantryAddress, pantryHour, pantryContact);
+			  	self.initUser(user.uid, handle, pantryName, pantryAddress, pantryHour, pantryContact, pantryLat, pantryLng);
 			  	navigate('SignUpConfirm', {email: email});
 				}).catch(function(error) {
 			  	// An error happened.
@@ -100,7 +121,7 @@ export default class SignupPwd extends Component {
 		});
 	}
 
-	async initUser(uid, handle, pantryName, pantryAddress, pantryHour, pantryContact) {
+	async initUser(uid, handle, pantryName, pantryAddress, pantryHour, pantryContact, pantryLat, pantryLng) {
 		
 		// initialize users
 		await firebase.database().ref('users/handles/' + handle).set(uid);
@@ -111,6 +132,8 @@ export default class SignupPwd extends Component {
 	    address: pantryAddress,
 	    hour: pantryHour, 
 	    contact: pantryContact,
+	    lat: pantryLat,
+	    lng: pantryLng,
 	    uid: uid,
 		}
 	);
