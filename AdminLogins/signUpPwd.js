@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Dimensions from 'Dimensions';
 import { FontAwesome } from '@expo/vector-icons';
 import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
@@ -62,8 +63,11 @@ export default class SignupPwd extends Component {
 	}
 	render() {
 		return (
-			<Container style={styles.container}>
-				<Content keyboardShouldPersistTaps='always'>
+			<KeyboardAwareScrollView 
+				contentContainerStyle={styles.container}
+				enableOnAndroid={true}
+                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
+    			<View>
 					<Form>
 						<Item stackedLabel style={styles.item}>
 							<Label style={styles.label}>PANTRY NAME</Label>
@@ -80,7 +84,7 @@ export default class SignupPwd extends Component {
 
 						<Item stackedLabel style={styles.item}>
 							<Label style={styles.label}>PANTRY PHONE CONTACT</Label>
-							<Input onChangeText={(text) => {this.state.pantryPhone = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
+							<Input onChangeText={(text) => {this.state.pantryPhone = text}} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} keyboardType = 'numeric' style={styles.input}/>
 						</Item>
 						<Item stackedLabel style={styles.item}>
 							<Label style={styles.label}>PASSWORD</Label>
@@ -105,16 +109,17 @@ export default class SignupPwd extends Component {
 				    		<Text style={styles.buttonText}>Next</Text>
 				    	</TouchableOpacity>
 				    </View>
-
-				</Content>
-			</Container>
+				    <View style={{ height: 100 }} />
+				</View>
+			</KeyboardAwareScrollView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-		justifyContent:'center',
+	    flexGrow: 1,
+	    backgroundColor:"#ffffff"
 	},
 	label: {
 		color: primary,
