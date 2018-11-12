@@ -53,11 +53,12 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editButtonClicked: false,
       showAddItemDialog: false,
+      /*
       filter:{
         //item_name: "",
         item_availability: ["Medium"],
         
-      },
+      },*/
     };
   }
 
@@ -102,7 +103,8 @@ export default class InventoryView extends React.Component {
     return "Edit Items"
   }
 
-  /*filter the items based on the criteria*/
+
+  /*filter the items based on the criteria
   filterList (event) {
     filterCriteria = this.state.filter;
     let filteredItems = this.state.myData.filter(function(item){
@@ -128,6 +130,7 @@ export default class InventoryView extends React.Component {
       });
 
   }   
+  */
     
 
   render() {
@@ -162,12 +165,14 @@ export default class InventoryView extends React.Component {
                   </Button>
 
               </Body>
-              
+              <Right/>
+              {/*
               <Right>
                 <Button transparent onPress={()=> this.filterList()}>
                   <Text style = {styles.editDoneButton}> Filter </Text>
                 </Button>
               </Right>
+              */}
               
           </View>
           )

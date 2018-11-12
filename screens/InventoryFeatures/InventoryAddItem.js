@@ -55,7 +55,12 @@ export default class InventoryAddItem extends React.Component {
       item_name: this.state.newItemName,
       item_availability: this.state.newItemAvailability,
       tags: this.state.newItemTags,
+    }).then(()=>{
+    	console.log('Item inserted');
+    }).catch((error)=>{
+    	console.log('error');
     });
+ 
     this.setState({ newItemName: '' });
     this._dismissPopup();
   }
