@@ -1,7 +1,7 @@
 import React from "react";
 import {MapView} from 'expo';
 import { View, StyleSheet, TouchableOpacity, Platform, Linking } from "react-native";
-import { Grid, Button,StyleProvider,  Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Switch } from 'native-base';
+import { Grid, Button,StyleProvider,  Container,Title, Header, Content, List, ListItem, Text, Left, Body, Right, Spinner } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
@@ -232,7 +232,9 @@ export default class PantryInfoView extends React.Component {
           </Content>
         </Container>) : 
         (
-          <Text> loading ... </Text>
+          <View style={styles.loadingContainer}>
+            <Spinner style={styles.spinnerStyle} blue/>
+          </View>
         )
   }
       </StyleProvider>
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
     height: BUTTON_HEIGHT,
     borderRadius: BUTTON_RADIUS,
     justifyContent: 'center',
-    margin: DEVICE_HEIGHT / 30,
+    marginRight: DEVICE_HEIGHT / 50,
   },
   map: {
     flex: 1,
@@ -288,5 +290,13 @@ const styles = StyleSheet.create({
     marginRight: DEVICE_WIDTH / 30,
     marginLeft: DEVICE_WIDTH / 30,
     marginTop: DEVICE_HEIGHT / 50,
+  },
+  spinnerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
   },
 });

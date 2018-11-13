@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import {
   Button,
   Text,
   Form,
-  ListItem,
   Container,
   Header,
   Content,
@@ -14,8 +13,10 @@ import {
   Label,
   Spinner,
 } from 'native-base';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Constants } from 'expo';
 import Dimensions from 'Dimensions';
+import { primary } from '../util/colors';
 
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
@@ -27,11 +28,16 @@ if (!firebase.apps.length) {
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const CENTER = DEVICE_HEIGHT / 2.5;
-const SKIP = DEVICE_HEIGHT / 1.75;
-const BUTTON_WIDTH = DEVICE_WIDTH * 0.25;
-const BUTTON_HEIGHT = BUTTON_WIDTH / 3;
-const BUTTON_RADIUS = BUTTON_HEIGHT / 8;
+const MARGIN_LEFT = DEVICE_WIDTH * 0.1;
+const MARGIN_RIGHT = MARGIN_LEFT;
 
+const SKIP = DEVICE_HEIGHT / 15;
+const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
+
+// Round button
+const WIDTH = DEVICE_WIDTH / 4;
+const HEIGHT = WIDTH / 3;
+const RADIUS = WIDTH / 2;
 
 export default class App extends React.Component {
   constructor() {
@@ -44,12 +50,10 @@ export default class App extends React.Component {
   goBack() {
     const { navigation } = this.props;
     navigation.goBack();
-    navigation.state.params.onSelect({...this.state.pantryData});
-  
-
+    navigation.state.params.onSelect({ ...this.state.pantryData });
   }
   componentDidMount() {
-    this.state.name = this.props.navigation.getParam("name", null)
+    this.state.name = this.props.navigation.getParam('name', null);
     firebase
       .database()
       .ref('Pantry/' + this.state.name)
@@ -67,170 +71,190 @@ export default class App extends React.Component {
   }
   render() {
     return (
-      <Content>
-        {console.log('pantry data: ' + JSON.stringify(this.state.pantryData))}
-        
-        {this.state.pantryData ? (
-          <View>
-            <Form>
-              <Item floatingLabel>
-                <Label>Pantry Name</Label>
-                <Input
-                  value={this.state.pantryData.name}
-                  onChangeText={text => {
-                    this.setState({
-                      pantryData: {
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        enableOnAndroid={true}
+        enableAutoAutomaticScroll={Platform.OS === 'ios'}>
+        <View>
+          {console.log('pantry data: ' + JSON.stringify(this.state.pantryData))}
+
+          {this.state.pantryData ? (
+            <View>
+              <Form>
+                <Item stackedLabel style={styles.item}>
+                  <Label style={styles.label}>Pantry Name</Label>
+                  <Input
+                    style={styles.input}
+                    value={this.state.pantryData.name}
+                    onChangeText={text => {
+                      this.setState({
+                        pantryData: {
+                          ...this.state.pantryData,
+                          name: text,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+                <Item stackedLabel style={styles.item}>
+                  <Label style={styles.label}>Pantry Address</Label>
+                  <Input
+                    style={styles.input}
+                    value={this.state.pantryData.address}
+                    onChangeText={text => {
+                      this.setState({
+                        pantryData: {
+                          ...this.state.pantryData,
+                          address: text,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+
+                <Item stackedLabel style={styles.item}>
+                  <Label style={styles.label}>Pantry Hour</Label>
+                  <Input
+                    style={styles.input}
+                    value={this.state.pantryData.hour}
+                    onChangeText={text => {
+                      this.setState({
+                        pantryData: {
+                          ...this.state.pantryData,
+                          hour: text,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+                <Item stackedLabel style={styles.item}>
+                  <Label style={styles.label}>Pantry Contact</Label>
+                  <Input
+                    style={styles.input}
+                    value={this.state.pantryData.contact}
+                    onChangeText={text => {
+                      this.setState({
+                        pantryData: {
+                          ...this.state.pantryData,
+                          contact: text,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+                <Item stackedLabel style={styles.item}>
+                  <Label style={styles.label}>Pantry Checkout Form Link</Label>
+                  <Input
+                    style={styles.input}
+                    value={this.state.pantryData.checkout}
+                    onChangeText={text => {
+                      this.setState({
+                        pantryData: {
+                          ...this.state.pantryData,
+                          checkout: text,
+                        },
+                      });
+                    }}
+                  />
+                </Item>
+              </Form>
+
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    console.log(
+                      'data after modification: ' +
+                        JSON.stringify(this.state.pantryData)
+                    );
+                    firebase
+                      .database()
+                      .ref('Pantry/' + this.state.name)
+                      .remove();
+                    firebase
+                      .database()
+                      .ref('Pantry/' + this.state.pantryData.name)
+                      .set({
                         ...this.state.pantryData,
-                        name: text,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Pantry Address</Label>
-                <Input
-                  value={this.state.pantryData.address}
-                  onChangeText={text => {
-                    this.setState({
-                      pantryData: {
+                      });
+
+                    this.goBack();
+                  }}>
+                  <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    console.log(
+                      'data after modification: ' +
+                        JSON.stringify(this.state.pantryData)
+                    );
+                    firebase
+                      .database()
+                      .ref('Pantry/' + this.state.name)
+                      .remove();
+                    firebase
+                      .database()
+                      .ref('Pantry/' + this.state.pantryData.name)
+                      .set({
                         ...this.state.pantryData,
-                        address: text,
-                      },
-                    });
-                  }}
-                />
-              </Item>
+                      });
 
-              <Item floatingLabel>
-                <Label>Pantry Hour</Label>
-                <Input
-                  value={this.state.pantryData.hour}
-                  onChangeText={text => {
-                    this.setState({
-                      pantryData: {
-                        ...this.state.pantryData,
-                        hour: text,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Pantry Contact</Label>
-                <Input
-                  value={this.state.pantryData.contact}
-                  onChangeText={text => {
-                    this.setState({
-                      pantryData: {
-                        ...this.state.pantryData,
-                        contact: text,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Pantry Checkout Form Link</Label>
-                <Input
-                  value={this.state.pantryData.checkout}
-                  onChangeText={text => {
-                    this.setState({
-                      pantryData: {
-                        ...this.state.pantryData,
-                        checkout: text,
-                      },
-                    });
-                  }}
-                />
-              </Item>
-            </Form>
-            <ListItem icon noBorder style={styles.item}>
-              <Button
-                onPress={() => {
-                  console.log(
-                    'data after modification: ' +
-                      JSON.stringify(this.state.pantryData)
-                  );
-                  firebase
-                    .database()
-                    .ref('Pantry/' + this.state.name)
-                    .remove();
-                  firebase
-                    .database()
-                    .ref('Pantry/' + this.state.pantryData.name)
-                    .set({
-                      ...this.state.pantryData,
-                    });
-
-                  this.goBack();
-
-                }
-
-              }>
-
-                <Text>Submit</Text>
-              </Button>
-
-              <Button onPress={() => {
-                this.props.navigation.goBack()
-              }}>
-                <Text>Cancel</Text>
-              </Button>
-
-            </ListItem>
-          </View>
-        ) : (
-          <Spinner />
-        )}
-      </Content>
+                    this.goBack();
+                  }}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <Spinner />
+          )}
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
 
-
-
 const styles = StyleSheet.create({
-  item: {
-    margin: DEVICE_HEIGHT / 60,
-  },
   container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: DEVICE_HEIGHT / 50,
-    marginLeft: DEVICE_HEIGHT / 40,
-    marginRight: DEVICE_HEIGHT / 40,
+    flexGrow: 1,
+    backgroundColor: '#ffffff',
   },
-  textDes: {
-    fontSize: 14,
+  label: {
+    color: primary,
+    fontSize: 12,
+    fontWeight: '700',
+    marginLeft: DEVICE_HEIGHT * 0.02,
+    marginBottom: DEVICE_HEIGHT * 0.01,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  input: {
+    height: INPUT_HEIGHT,
+    marginLeft: DEVICE_HEIGHT * 0.02,
   },
-  icon: {
-    fontSize: 20,
-    color: '#2699FB',
+  item: {
+    marginBottom: INPUT_HEIGHT/3,
+    paddingLeft: 0,
+    marginLeft: 0,
+    paddingBottom: 0,
+  },
+  buttonRow:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    marginLeft: DEVICE_WIDTH * 0.2,
+    marginRight: DEVICE_WIDTH * 0.2,
   },
   button: {
-    width: BUTTON_WIDTH * 1.5,
-    height: BUTTON_HEIGHT,
-    borderRadius: BUTTON_RADIUS,
+    width: WIDTH,
+    height: HEIGHT,
+    alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
-    margin: DEVICE_HEIGHT / 30,
+    borderRadius: 4,
+    backgroundColor: primary,
   },
-  buttonEdit: {
-    width: BUTTON_WIDTH,
-    height: BUTTON_HEIGHT,
-    borderRadius: BUTTON_RADIUS,
-    justifyContent: 'center',
-    margin: DEVICE_HEIGHT / 30,
-  },
-  map: {
-    flex: 1,
-    minHeight: DEVICE_HEIGHT / 2,
-    margin: DEVICE_HEIGHT / 30,
-    marginTop: DEVICE_HEIGHT / 50,
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
