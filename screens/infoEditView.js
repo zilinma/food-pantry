@@ -14,7 +14,7 @@ import {
   Spinner,
 } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Constants } from 'expo';
+import { Constants , Location} from 'expo';
 import Dimensions from 'Dimensions';
 import { primary } from '../util/colors';
 
@@ -69,6 +69,21 @@ export default class App extends React.Component {
         console.log('error ', error);
       });
   }
+
+  async getGeoCode(){
+    let location = (await Location.geocodeAsync(this.state.pantryData.address))[0];
+    console.log(location);
+    var latitude = location.latitude;
+    var longitude = location.longitude;
+    firebase
+      .database()
+      .ref('Pantry/' + this.state.pantryData.name)
+      .update({
+        lat:latitude,
+        lng:longitude,
+      });
+  }
+
   render() {
     return (
       <KeyboardAwareScrollView
@@ -76,7 +91,7 @@ export default class App extends React.Component {
         enableOnAndroid={true}
         enableAutoAutomaticScroll={Platform.OS === 'ios'}>
         <View>
-          {console.log('pantry data: ' + JSON.stringify(this.state.pantryData))}
+          {/*console.log('pantry data: ' + JSON.stringify(this.state.pantryData))*/}
 
           {this.state.pantryData ? (
             <View>
@@ -167,6 +182,7 @@ export default class App extends React.Component {
                       'data after modification: ' +
                         JSON.stringify(this.state.pantryData)
                     );
+
                     firebase
                       .database()
                       .ref('Pantry/' + this.state.name)
@@ -178,6 +194,7 @@ export default class App extends React.Component {
                         ...this.state.pantryData,
                       });
 
+                    this.getGeoCode();
                     this.goBack();
                   }}>
                   <Text style={styles.buttonText}>Submit</Text>
@@ -186,25 +203,11 @@ export default class App extends React.Component {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    console.log(
-                      'data after modification: ' +
-                        JSON.stringify(this.state.pantryData)
-                    );
-                    firebase
-                      .database()
-                      .ref('Pantry/' + this.state.name)
-                      .remove();
-                    firebase
-                      .database()
-                      .ref('Pantry/' + this.state.pantryData.name)
-                      .set({
-                        ...this.state.pantryData,
-                      });
-
-                    this.goBack();
+                    this.props.navigation.goBack();
                   }}>
                   <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
+                
               </View>
             </View>
           ) : (

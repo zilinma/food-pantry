@@ -97,9 +97,9 @@ export default class PantryInfoView extends React.Component {
   }
 
   _callShowDirections = (startPoint, endPoint) => {
-    console.log(endPoint);
+    //console.log(endPoint);
 
-    console.log(startPoint);
+    //console.log(startPoint);
 
     const transportPlan = 'w';
 
@@ -109,7 +109,7 @@ export default class PantryInfoView extends React.Component {
   };
 
   render() {
-    console.log('end point: ' + JSON.stringify(this.state.endPoint));
+    //console.log('end point: ' + JSON.stringify(this.state.endPoint));
     const userid = this.props.navigation.getParam("userID", "no-id");
     const pantryid = this.props.navigation.getParam("pantryID", "no-pantry-id");
     return (
