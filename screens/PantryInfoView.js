@@ -47,7 +47,7 @@ export default class PantryInfoView extends React.Component {
     };
   }
   static navigationOptions = {
-    headerTitle: 'Pantry Information',
+    title: 'Pantry Information',
   };
 
   onSelect = data => {
@@ -168,17 +168,6 @@ export default class PantryInfoView extends React.Component {
             </ListItem>
 
             <ListItem icon noBorder style={{justifyContent:'space-between', marginRight:15}}>
-              <Button
-                style={styles.button}
-                onPress={navigation => {
-                  this.props.navigation.navigate('InventoryView', {
-                    name: this.state.pantryData.name,
-                    userID: userid,
-                    pantryid: pantryid, 
-                  });
-                }}>
-                <Text>Inventory</Text>
-              </Button>
               {this.state.pantryData.checkout ? (
                 <Button
                   style={styles.button}

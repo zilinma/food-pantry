@@ -75,9 +75,11 @@ export default class PantryListView extends React.Component {
                       'no-id'
                     );
                     console.log('uid: ' + uid);
-                    this.props.navigation.navigate('InventoryView', {
+                    this.props.navigation.navigate('infoInventoryTab', {
                       name: data.name,
+                      pantryName: data.name,
                       userID: uid,
+                      pantryid: data.uid, 
                     });
                   }}>
                   <Text
@@ -92,14 +94,9 @@ export default class PantryListView extends React.Component {
                         'userID',
                         'no-id'
                       );
-                      this.props.navigation.navigate('PantryInfoView', {
+                      this.props.navigation.navigate('infoInventoryTab', {
+                        name: data.name,
                         pantryName: data.name,
-                        pantryAddress: data.address,
-                        pantryContact: data.contact,
-                        pantryHour: data.hour,
-                        pantryCheckout: data.checkout,
-                        longitude: data.lng,
-                        latitude: data.lat,
                         pantryID: data.uid,
                         userID: uid,
                       });

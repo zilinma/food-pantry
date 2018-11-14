@@ -13,9 +13,13 @@ import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
-
+import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
+import { CheckBox } from 'react-native-elements'
 import InventoryList from './InventoryFeatures/InventoryList';
 import InventoryAddItem from './InventoryFeatures/InventoryAddItem';
+import PantryInfoView from './PantryInfoView';
+import ScrollableTabView, { DefaultTabBar, } from 'react-native-scrollable-tab-view';
+
 //import InventorySearch from './InventoryFeatures/InventorySearch';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -32,8 +36,7 @@ if (!firebase.apps.length) {
 export default class InventoryView extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: `${navigation.getParam("name", "NO-name")}`,
-    headerTitleStyle : {alignSelf:'center'}
+    title: "Pantry List"
   })
 
   constructor(props) {
@@ -53,6 +56,10 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editButtonClicked: false,
       showAddItemDialog: false,
+      showFilterDialog: false,
+      filterKeys: [],
+      glutenfree: false,
+      vegetarian: false,
       /*
       filter:{
         //item_name: "",
@@ -65,13 +72,42 @@ export default class InventoryView extends React.Component {
   listenForTasks(tasksRef) {
     tasksRef.on('value', dataSnapshot => {
       var tasks = [];
-      dataSnapshot.forEach(child => {
-        tasks.push({
-          item_name: child.val().item_name,
-          item_availability: child.val().item_availability,
-          tags: child.val().tags,
+      const filterKeys = this.state.filterKeys;
+      //console.log("filter keys: " + filterKeys);
+      if(filterKeys.length == 0){
+        console.log("empty filter keys.");
+        dataSnapshot.forEach(child => {
+
+              tasks.push({
+                item_name: child.val().item_name,
+                item_availability: child.val().item_availability,
+                tags: child.val().tags,
+              });
         });
-      });
+      }
+      else{  
+        // filter out elements without tags in filterKeys
+        dataSnapshot.forEach(child => {
+          const isTages = Object.keys(child.val().tags);
+          const tags =  isTages.filter(tag => child.val().tags[tag]);
+
+          console.log("item: " + child.val().item_name + "; tags: " + JSON.stringify(tags));
+          for(var filter in filterKeys){
+            //console.log("index of: " + tags.indexOf(filter))
+            console.log("filter: " + filterKeys[filter] + "; tags: " + tags);
+            if(tags.indexOf(filterKeys[filter]) >= 0){
+              tasks.push({
+                item_name: child.val().item_name,
+                item_availability: child.val().item_availability,
+                tags: child.val().tags,
+              });
+              break;
+            }
+          }
+        });
+
+      }
+
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(tasks),
         myData: tasks,
@@ -83,7 +119,6 @@ export default class InventoryView extends React.Component {
     // start listening for firebase updates
     this.listenForTasks(this.tasksRef);
   }
-
   /* Toggle the Edit and Done button for the Admins */
   _toggleEdit = () => {
     this.setState(prevState => ({ editButtonClicked: !prevState.editButtonClicked }));
@@ -103,7 +138,31 @@ export default class InventoryView extends React.Component {
     return "Edit Items"
   }
 
+  _onSelect(index, value) {
+    this.setState({
+      editedFilterKeys: value,
 
+    });
+    console.log("edited keys: " + this.state.editedFilterKeys)
+
+  }
+  _saveFilter(){  
+    const keys = []
+    if(this.state.glutenfree){
+      keys.push("Glutenfree");
+    }
+
+    if(this.state.vegetarian){
+      keys.push("Vegetarian");
+    }
+
+    this.setState({
+      showFilterDialog: false,
+      filterKeys: keys,
+    });
+    this.listenForTasks(this.tasksRef);
+    console.log("confirm filtered Keys: "  + this.state.filterKeys);
+  }
   /*filter the items based on the criteria
   filterList (event) {
     filterCriteria = this.state.filter;
@@ -139,20 +198,17 @@ export default class InventoryView extends React.Component {
     //const userID = '1234'
     //console.log("userID: "+ userID)
     return (
-    <StyleProvider style = {getTheme(colors)}>
-      <Container>
-
-        {userID == pantryID && (
+      <StyleProvider style={getTheme(colors)}>
+        <Container tabLabel="pantry item">
+        {userID == pantryID ? (
           <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
               <Left>
-              {userID != 'no-id' && (
                 <Button transparent onPress={this._toggleEdit}>
                   <Text
                     style={styles.editDoneButton}>
                     {this._renderConditionalText()}
                   </Text>
                 </Button>
-              )}
               </Left>
 
               <Body style={styles.bodyContainer}>
@@ -166,14 +222,23 @@ export default class InventoryView extends React.Component {
 
               </Body>
               <Right/>
-              {/*
               <Right>
-                <Button transparent onPress={()=> this.filterList()}>
-                  <Text style = {styles.editDoneButton}> Filter </Text>
+                <Button transparent onPress={() => this.setState({showFilterDialog: true})}>
+                  <Text style = {styles.editDoneButton}>Filter</Text>
                 </Button>
               </Right>
-              */}
               
+          </View>
+          ) :(
+          <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+              <Left/>
+              <Body/>
+              
+              <Right>
+                <Button transparent onPress={() => this.setState({showFilterDialog: true})}>
+                  <Text style = {styles.editDoneButton}>Filter</Text>
+                </Button>
+              </Right>
           </View>
           )
         }
@@ -208,8 +273,41 @@ export default class InventoryView extends React.Component {
             <InventoryAddItem tasksRef = {this.state.tasksRef} hideAddBox = {this.hideAddBox} />
         </Dialog>
 
+        <Dialog 
+          dialogTitle={<DialogTitle title="Filters" />}
+          height={0.65}
+          width = {0.9}
+          visible={this.state.showFilterDialog}>
+          <View style={styles.checkBoxes}>
+            <Text style={styles.filterTitle}>Filter items by tags</Text>
+            <CheckBox
+              checked={this.state.glutenfree}
+              title="glutenfree"
+              onPress={()=>this.setState({glutenfree: !this.state.glutenfree})}
+            />
+            <CheckBox
+              title="vegetarian"
+              checked={this.state.vegetarian}
+              onPress={
+                ()=>{
+                  this.setState({vegetarian: !this.state.vegetarian})
+                  console.log(this.state.vegetarian)
+              }
+
+            }
+            />
+            <Button onPress={() => this._saveFilter()}>
+              <Text>Confirm</Text>
+            </Button>
+
+            <Button onPress={()=> this.setState({showFilterDialog: false})}>
+              <Text>Cancel</Text>
+            </Button>
+          </View>
+        </Dialog>
       </Container>
-    </StyleProvider>
+       </StyleProvider>
+
     );
   }
 }
@@ -221,6 +319,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flex: 1,
   },
+  checkBoxes: {
+    margin: DEVICE_WIDTH / 30,
+  }
+  ,
   bodyContainer: {
     flex: 1,
   },
@@ -262,6 +364,9 @@ const styles = StyleSheet.create({
   checkAvailabilityTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-  }
-  
+  },
+  filterTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
 });

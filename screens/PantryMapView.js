@@ -228,10 +228,12 @@ export default class screens extends React.Component {
                             'no-id'
                           );
                           console.log('uid: ' + uid);
-                          this.props.navigation.navigate('InventoryView', {
-                            name: marker.name,
+                          this.props.navigation.navigate('infoInventoryTab', {
+                            name: data.name,
+                            pantryName: data.name,
+                            pantryID: data.uid,
                             userID: uid,
-                          });
+                      });
                         }}>
                         <Text
                           style={styles.title}
@@ -246,16 +248,12 @@ export default class screens extends React.Component {
                             'userID',
                             'no-id'
                           );
-                          this.props.navigation.navigate('PantryInfoView', {
-                            pantryName: marker.name,
-                            pantryAddress: marker.address,
-                            pantryContact: marker.contact,
-                            pantryHour: marker.hour,
-                            longitude: marker.lng,
-                            latitude: marker.lat,
-                            pantryCheckout: marker.checkout,
+                          this.props.navigation.navigate('infoInventoryTab', {
+                            name: data.name,
+                            pantryName: data.name,
+                            pantryID: data.uid,
                             userID: uid,
-                          });
+                      });
                         }}>
                         <Ionicons
                           style={styles.fontIcon}
