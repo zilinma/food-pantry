@@ -25,7 +25,7 @@ import {
   Right,
   Spinner,
 } from 'native-base';
-import Icon from 'react-native-vector-icons/Foundation';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Constants, Location, Permissions } from 'expo';
@@ -166,8 +166,10 @@ export default class screens extends React.Component {
               ref={map => (this.map = map)}
               initialRegion={this.state.startPoint}
               >
-              <MapView.Marker coordinate={this.state.startPoint}>
-                <Text>You are here.</Text>
+              <MapView.Marker coordinate={this.state.startPoint}
+                title={'You are here'}
+              >
+                
               </MapView.Marker>
               {this.state.pantries.map((marker, index) => {
                 const scaleStyle = {
@@ -194,7 +196,7 @@ export default class screens extends React.Component {
                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
                       <Animated.View style={[styles.ring, scaleStyle]} />
                         <Icon active 
-                          name={'corn'}
+                          name='corn'
                           size={40}
                           
                           />
