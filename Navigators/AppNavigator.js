@@ -10,20 +10,41 @@ import InfoEditView from '../screens/infoEditView';
 
 import {
   createBottomTabNavigator,
-  createStackNavigator
+  createStackNavigator,
+  createMaterialTopTabNavigator,
+
 } from "react-navigation";
+
+const infoInventoryTab = createMaterialTopTabNavigator({
+  PantryInfoView: PantryInfoView,
+  InventoryView: InventoryView,
+
+},{
+
+  initialRouteName: 'PantryInfoView',
+  tabBarOptions: {
+    inactiveTintColor: "rgba(10, 42, 102, 0.3)",
+    activeTintColor: 'rgb(10, 42, 102)',
+    activeBackgroundColor: "#F6F7F7",
+    inactiveBackgroundColor: "#F6F7F7",
+    style: {
+    backgroundColor: '#FFFFFF',
+  },
+
+  }
+});
 
 const AppNavigator = createStackNavigator({
   Login: LoginScreen,
   MainTab: MainTabs,
-  PantryInfoView: PantryInfoView,
-  InventoryView: InventoryView,
+  infoInventoryTab: infoInventoryTab,
   LoginNavigators: LoginNavigators,
   InfoEditView: InfoEditView,
   //LoginNavigator: LoginNavigator,
 },
 {
   initialRouteName: 'Login',
+  
 }
 
 );
