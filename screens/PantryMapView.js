@@ -25,11 +25,13 @@ import {
   Right,
   Spinner,
 } from 'native-base';
+import Icon from 'react-native-vector-icons/Foundation';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Constants, Location, Permissions } from 'expo';
 import { MapView } from 'expo';
 import { PROVIDER_GOOGLE } from 'expo';
+import { primary } from '../util/colors';
 //import MapView from 'react-native-maps';
 
 import * as firebase from 'firebase';
@@ -188,11 +190,16 @@ export default class screens extends React.Component {
                     title={this.state.pantries.name}
                     description={this.state.pantries.address}
                     >
-                    {console.log(JSON.stringify(marker))}
+                    {/*console.log(JSON.stringify(marker))*/}
                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
                       <Animated.View style={[styles.ring, scaleStyle]} />
-                      <View style={styles.marker} />
+                        <Icon active 
+                          name={'corn'}
+                          size={40}
+                          
+                          />
                     </Animated.View>
+                  
                   </MapView.Marker>
                 );
               })}
@@ -332,12 +339,6 @@ const styles = StyleSheet.create({
   markerWrap: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  marker: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(10, 42, 102, 0.9)',
   },
   ring: {
     width: 24,
