@@ -166,8 +166,10 @@ export default class screens extends React.Component {
               ref={map => (this.map = map)}
               initialRegion={this.state.startPoint}
               >
-              <MapView.Marker coordinate={this.state.startPoint}>
-                <Text>You are here.</Text>
+              <MapView.Marker coordinate={this.state.startPoint}
+                title={'You are here'}
+              >
+                
               </MapView.Marker>
               {this.state.pantries.map((marker, index) => {
                 const scaleStyle = {
