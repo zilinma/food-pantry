@@ -36,7 +36,7 @@ if (!firebase.apps.length) {
 export default class InventoryView extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: "Pantry List"
+    title: "Pantry Inventory"
   })
 
   constructor(props) {
@@ -200,8 +200,31 @@ export default class InventoryView extends React.Component {
     return (
       <StyleProvider style={getTheme(colors)}>
         <Container tabLabel="pantry item">
-        {userID == pantryID ? (
-          <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+        
+        <ListItem icon style={styles.items}>
+          <Left/>
+          <Body>
+            <Text style= {styles.itemnameTitle}>Item Name</Text>
+          </Body>
+          
+          <Right>
+            <Text style={styles.availabilityTitle}>Availability</Text>
+          </Right>
+        </ListItem>
+        
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={(data) => 
+            <InventoryList 
+            {...data} 
+            editButtonClicked={this.state.editButtonClicked} 
+            tasksRef = {this.state.tasksRef}
+          />}
+          enableEmptySections={true}
+        />
+{userID == pantryID ? (
+        <Container>
+          <View borderTopWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
               <Left>
                 <Button transparent onPress={this._toggleEdit}>
                   <Text
@@ -229,8 +252,9 @@ export default class InventoryView extends React.Component {
               </Right>
               
           </View>
+          </Container>
           ) :(
-          <View borderBottomWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+          <Container borderTopWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
               <Left/>
               <Body/>
               
@@ -239,31 +263,9 @@ export default class InventoryView extends React.Component {
                   <Text style = {styles.editDoneButton}>Filter</Text>
                 </Button>
               </Right>
-          </View>
+          </Container>
           )
         }
-
-        <ListItem icon style={styles.items}>
-          <Left/>
-          <Body>
-            <Text style= {styles.itemnameTitle}>Item Name</Text>
-          </Body>
-          
-          <Right>
-            <Text style={styles.availabilityTitle}>Availability</Text>
-          </Right>
-        </ListItem>
-        
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(data) => 
-            <InventoryList 
-            {...data} 
-            editButtonClicked={this.state.editButtonClicked} 
-            tasksRef = {this.state.tasksRef}
-          />}
-          enableEmptySections={true}
-        />
 
         <Dialog 
           dialogTitle={<DialogTitle title="Add New Item" />}

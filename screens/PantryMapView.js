@@ -25,7 +25,7 @@ import {
   Right,
   Spinner,
 } from 'native-base';
-import Icon from 'react-native-vector-icons/Foundation';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Constants, Location, Permissions } from 'expo';
@@ -194,7 +194,7 @@ export default class screens extends React.Component {
                     <Animated.View style={[styles.markerWrap, opacityStyle]}>
                       <Animated.View style={[styles.ring, scaleStyle]} />
                         <Icon active 
-                          name={'corn'}
+                          name='corn'
                           size={40}
                           
                           />
@@ -236,9 +236,9 @@ export default class screens extends React.Component {
                           );
                           console.log('uid: ' + uid);
                           this.props.navigation.navigate('infoInventoryTab', {
-                            name: data.name,
-                            pantryName: data.name,
-                            pantryID: data.uid,
+                            name: marker.name,
+                            pantryName: marker.name,
+                            pantryID: marker.uid,
                             userID: uid,
                       });
                         }}>
@@ -256,9 +256,9 @@ export default class screens extends React.Component {
                             'no-id'
                           );
                           this.props.navigation.navigate('infoInventoryTab', {
-                            name: data.name,
-                            pantryName: data.name,
-                            pantryID: data.uid,
+                            name: marker.name,
+                            pantryName: marker.name,
+                            pantryID: marker.uid,
                             userID: uid,
                       });
                         }}>

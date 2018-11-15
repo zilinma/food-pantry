@@ -75,6 +75,10 @@ export default class PantryListView extends React.Component {
                       'no-id'
                     );
                     console.log('uid: ' + uid);
+
+                    console.log('name: ' + data.name);
+
+                    console.log('pantry uid: ' + data.uid);
                     this.props.navigation.navigate('infoInventoryTab', {
                       name: data.name,
                       pantryName: data.name,
@@ -97,8 +101,8 @@ export default class PantryListView extends React.Component {
                       this.props.navigation.navigate('infoInventoryTab', {
                         name: data.name,
                         pantryName: data.name,
-                        pantryID: data.uid,
                         userID: uid,
+                        pantryID: data.uid,
                       });
                     }}>
                     <Ionicons
