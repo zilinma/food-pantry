@@ -1,168 +1,177 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Dimensions from 'Dimensions';
-import { FontAwesome } from '@expo/vector-icons';
-import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
-import { StackNavigator } from 'react-navigation';
-import firebase from 'firebase';
-import { primary} from '../util/colors';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Platform,
+} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { primary } from '../util/colors';
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
+import { Button } from 'react-native-elements';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Input from './Input';
 
-const MARGIN_LEFT = DEVICE_WIDTH * 0.1;
-const MARGIN_RIGHT = MARGIN_LEFT;
+export default class SignupPwd extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: this.props.navigation.getParam('email'),
+    };
+  }
 
-const SKIP = DEVICE_HEIGHT / 15;
-const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
+  _handleSubmit = (values, bag) => {
+    try {
+      this.setState({
+        pantryName: values.pantryName,
+        pantryAddress: values.pantryAddress,
+        pantryHour: values.pantryHour,
+        pantryPhone: values.pantryContact,
+        pwd: values.password,
+      });
+      this.props.navigation.navigate('SignUpHandle', this.getUserData());
+    } catch (error) {
+      bag.setSubmitting(false);
+      bag.setErrors(error);
+    }
+  };
 
-// Round button
-const WIDTH = DEVICE_WIDTH / 3;
-const HEIGHT = WIDTH/3;
-const RADIUS = WIDTH / 2;
+  getUserData() {
+    return { ...this.state };
+  }
 
-export default class SignupPwd extends Component {
-	static navigationOptions = {
-		header: null
-
-
-	}
-	constructor(props) {
-		super(props);
-  	this.state = {
-  		allowed: false,
-  		verified: true,
-  		email: this.props.navigation.getParam("email"),
-  		pantryName: "",
-  		pwd: "",
-  		pwdVerify: ""
-  	};
-	}
-	checkPwd(pwd) {
-		format = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]){8,20}/;
-		allowed = /^[a-zA-Z0-9@#$%?!]+$/;
-		pwdVerify = this.state.pwdVerify;
-		this.setState({
-			allowed: ((format.test(pwd) && allowed.test(pwd)) ? true : false),
-			verified: pwd == pwdVerify,
-			pwd: pwd,
-		});
-	}
-
-	checkPwdVerify(pwdVerify) {
-		pwd = this.state.pwd;
-		this.setState({
-			verified: pwd == pwdVerify,
-			pwdVerify: pwdVerify,
-		});
-	}
-
-	getUserData() {
-		return {...this.state};
-	}
-	render() {
-		return (
-			<KeyboardAwareScrollView 
-				contentContainerStyle={styles.container}
-				enableOnAndroid={true}
-                enableAutoAutomaticScroll={(Platform.OS === 'ios')}>
-    			<View>
-					<Form>
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>PANTRY NAME</Label>
-							<Input onChangeText={(text) => {this.state.pantryName = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
-						</Item>
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>PANTRY ADDRESS</Label>
-							<Input onChangeText={(text) => {this.state.pantryAddress = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
-						</Item>
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>PANTRY HOUR</Label>
-							<Input onChangeText={(text) => {this.state.pantryHour = text}}  autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
-						</Item>
-
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>PANTRY PHONE CONTACT</Label>
-							<Input onChangeText={(text) => {this.state.pantryPhone = text}} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} keyboardType = 'numeric' style={styles.input}/>
-						</Item>
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>PASSWORD</Label>
-							<Input onChangeText={(text) => this.checkPwd(text)} secureTextEntry={true} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
-						</Item>
-						<Item stackedLabel style={styles.item}>
-							<Label style={styles.label}>VERIFY PASSWORD</Label>
-							<Input onChangeText={(text) => this.checkPwdVerify(text)} secureTextEntry={true} autoCapitalize='none' autoCorrect={false} keyboardAppearance={'light'} style={styles.input}/>
-						</Item>
-						<Text style={[styles.alert, {display: this.state.verified ? 'none' : 'flex'}]}>VERIFIED PASSWORD DOES NOT MATCH!</Text>
-					</Form>
-
-					<View>
-						<TouchableOpacity 
-						disabled={!(this.state.allowed && this.state.verified)} 
-						style={(this.state.allowed && this.state.verified) ? styles.button : [styles.button, styles.disabled]} 
-						onPress={() => {
-							console.log(this.getUserData());
-							this.props.navigation.navigate('SignUpHandle', this.getUserData());
-
-						}}>
-				    		<Text style={styles.buttonText}>Next</Text>
-				    	</TouchableOpacity>
-				    </View>
-				    <View style={{ height: 100 }} />
-				</View>
-			</KeyboardAwareScrollView>
-		);
-	}
+  render() {
+    return (
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        enableOnAndroid={true}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        enableAutoAutomaticScroll={Platform.OS === 'ios'}>
+        <View>
+          <Formik
+            initialValues={{
+              pantryName: '',
+              pantryAddress: '',
+              pantryHour: '',
+              pantryContact: '',
+              password: '',
+              confirmPassword: '',
+            }}
+            onSubmit={this._handleSubmit}
+            validationSchema={Yup.object().shape({
+              pantryName: Yup.string().required('Pantry Name is required'),
+              pantryAddress: Yup.string()
+                .min(6)
+                .required('Pantry Address is required'),
+              pantryHour: Yup.string(),
+              pantryContact: Yup.string()
+                .min(10, 'Please enter a valid phone number')
+                .max(10, 'Please enter a valid phone number'),
+              password: Yup.string()
+                .min(6)
+                .matches(
+                  /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]){6,20}/,
+                  'Password should contain at least one uppercase letter and one number'
+                )
+                .required('Password is required'),
+              confirmPassword: Yup.string()
+                .oneOf([Yup.ref('password', null)], 'Password does not match')
+                .required('Confirm Password is required'),
+            })}
+            render={({
+              values,
+              handleSubmit,
+              setFieldValue,
+              errors,
+              touched,
+              setFieldTouched,
+              isValid,
+              isSubmitting,
+            }) => (
+              <React.Fragment>
+                <Input
+                  label="PANTRY NAME"
+                  value={values.pantryName}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="pantryName"
+                  error={touched.pantryName && errors.pantryName}
+                />
+                <Input
+                  label="PANTRY ADDRESS"
+                  value={values.pantryAddress}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="pantryAddress"
+                  error={touched.pantryAddress && errors.pantryAddress}
+                />
+                <Input
+                  label="PANTRY HOUR"
+                  value={values.pantryHour}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="pantryHour"
+                  error={touched.pantryHour && errors.pantryHour}
+                />
+                <Input
+                  label="PANTRY CONTACT"
+                  value={values.pantryContact}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="pantryContact"
+                  error={touched.pantryContact && errors.pantryContact}
+                  keyboardType="numeric"
+                />
+                <Input
+                  label="PASSWORD"
+                  autoCapitalize="none"
+                  secureTextEntry
+                  value={values.password}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="password"
+                  error={touched.password && errors.password}
+                />
+                <Input
+                  label="CONFIRM PASSWORD"
+                  autoCapitalize="none"
+                  secureTextEntry
+                  value={values.confirmPassword}
+                  onChange={setFieldValue}
+                  onTouch={setFieldTouched}
+                  name="confirmPassword"
+                  error={touched.confirmPassword && errors.confirmPassword}
+                />
+                <Button
+                  buttonStyle={styles.button}
+                  title="Submit"
+                  onPress={handleSubmit}
+                  disabled={!isValid || isSubmitting}
+                  loading={isSubmitting}
+                />
+              </React.Fragment>
+            )}
+          />
+          <View style={{ height: 100 }} />
+        </View>
+      </KeyboardAwareScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-	container: {
-	    flexGrow: 1,
-	    backgroundColor:"#ffffff"
-	},
-	label: {
-		color: primary,
-		fontSize: 12,
-		fontWeight: "700",
-		marginLeft: DEVICE_HEIGHT * 0.02,
-		marginBottom: DEVICE_HEIGHT * 0.01,
-	},
-	input: {
-		height: INPUT_HEIGHT,
-		marginLeft: DEVICE_HEIGHT * 0.02,
-	},
-	item: {
-		marginBottom: INPUT_HEIGHT/3,
-		paddingLeft: 0,
-		marginLeft: 0,
-		paddingBottom: 0,
-	},
-	alert: {
-		color: 'red',
-		fontSize: 12,
-		marginTop: DEVICE_HEIGHT * 0.01,
-	},
-	button: {
-		width: WIDTH,
-		height: HEIGHT,
-		alignItems: 'center',
-		alignSelf: 'center',
-		justifyContent: 'center',
-		borderRadius: 2,
-		backgroundColor: primary,
-	},
-	disabled: {
-		width: WIDTH,
-		height: HEIGHT,
-		alignItems: 'center',
-		alignSelf: 'center',
-		justifyContent: 'center',
-		borderRadius: 2,
-		backgroundColor: 'gray',
-	},
-	buttonText: {
-		color: "white",
-		fontWeight: 'bold',
-	},
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#fff',
+  },
+  button: {
+    marginTop: 20,
+    width: '100%',
+    backgroundColor: primary,
+  },
 });

@@ -14,6 +14,8 @@
     "native-base": "^2.8.1",
     "npm": "^6.4.1",
     "react": "16.6.0",
+    "formik": "^0.11.11",
+    "yup": "^0.25.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
     "react-native-flexi-radio-button": "^0.2.2",
@@ -25,6 +27,7 @@
     "react-native-popup-dialog": "^0.16.0",
     "react-native-scrollable-tab-view": "^0.10.0",
     "react-navigation": "^2.18.2",
-    "whatwg-fetch": "^2.0.4"
+    "whatwg-fetch": "^2.0.4",
+    "@babel/runtime": "7.0.0-beta.55"
   }
 }
