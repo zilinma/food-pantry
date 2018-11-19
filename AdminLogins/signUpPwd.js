@@ -64,7 +64,8 @@ export default class SignupPwd extends React.Component {
             }}
             onSubmit={this._handleSubmit}
             validationSchema={Yup.object().shape({
-              pantryName: Yup.string().required('Pantry Name is required'),
+              pantryName: Yup.string()
+                .required('Pantry Name is required'),
               pantryAddress: Yup.string()
                 .min(6)
                 .required('Pantry Address is required'),

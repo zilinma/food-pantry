@@ -40,8 +40,9 @@ class Input extends PureComponent {
 
 const styles = StyleSheet.create({
   root: {
-    width: '95%',
-    alignSelf: 'center',
+    width: '100%',
+    margin: 0,
+    //alignSelf: 'center',
   },
   label: {
     color: primary,

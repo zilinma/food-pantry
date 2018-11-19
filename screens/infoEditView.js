@@ -1,21 +1,14 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import {
-  Button,
-  Text,
-  Form,
-  Container,
-  Header,
-  Content,
-  Item,
-  Input,
-  InputGroup,
-  Label,
-  Spinner,
-} from 'native-base';
+import { View, StyleSheet, Platform } from 'react-native';
+import { Spinner } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Constants , Location} from 'expo';
+import { Constants, Location } from 'expo';
 import Dimensions from 'Dimensions';
+
+import { Button } from 'react-native-elements';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Input from '../AdminLogins/Input';
 import { primary } from '../util/colors';
 
 import * as firebase from 'firebase';
@@ -25,20 +18,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
-const CENTER = DEVICE_HEIGHT / 2.5;
-const MARGIN_LEFT = DEVICE_WIDTH * 0.1;
-const MARGIN_RIGHT = MARGIN_LEFT;
-
-const SKIP = DEVICE_HEIGHT / 15;
-const INPUT_HEIGHT = DEVICE_HEIGHT * 0.05;
-
-// Round button
-const WIDTH = DEVICE_WIDTH / 4;
-const HEIGHT = WIDTH / 3;
-const RADIUS = WIDTH / 2;
-
 export default class App extends React.Component {
   constructor() {
     super();
@@ -47,11 +26,7 @@ export default class App extends React.Component {
       name: null,
     };
   }
-  goBack() {
-    const { navigation } = this.props;
-    navigation.goBack();
-    navigation.state.params.onSelect({ ...this.state.pantryData });
-  }
+
   componentDidMount() {
     this.state.name = this.props.navigation.getParam('name', null);
     firebase
@@ -70,8 +45,42 @@ export default class App extends React.Component {
       });
   }
 
-  async getGeoCode(){
-    let location = (await Location.geocodeAsync(this.state.pantryData.address))[0];
+  _handleSubmit = values => {
+    if (values.pantryForm === undefined) {
+      values.pantryForm = ''
+    }
+    this.setState({
+      pantryData: {
+        ...this.state.pantryData,
+        name: values.pantryName,
+        address: values.pantryAddress,
+        hour: values.pantryHour,
+        contact: values.pantryContact,
+        checkout: values.pantryForm,
+      },
+    });
+    firebase
+      .database()
+      .ref('Pantry/' + this.state.name)
+      .remove();
+    firebase
+      .database()
+      .ref('Pantry/' + this.state.pantryData.name)
+      .set({ ...this.state.pantryData });
+    this.getGeoCode();
+    this.goBack();
+  };
+
+  goBack() {
+    const { navigation } = this.props;
+    navigation.goBack();
+    navigation.state.params.onSelect({ ...this.state.pantryData });
+  }
+
+  async getGeoCode() {
+    let location = (await Location.geocodeAsync(
+      this.state.pantryData.address
+    ))[0];
     console.log(location);
     var latitude = location.latitude;
     var longitude = location.longitude;
@@ -79,8 +88,8 @@ export default class App extends React.Component {
       .database()
       .ref('Pantry/' + this.state.pantryData.name)
       .update({
-        lat:latitude,
-        lng:longitude,
+        lat: latitude,
+        lng: longitude,
       });
   }
 
@@ -91,124 +100,100 @@ export default class App extends React.Component {
         enableOnAndroid={true}
         enableAutoAutomaticScroll={Platform.OS === 'ios'}>
         <View>
-          {/*console.log('pantry data: ' + JSON.stringify(this.state.pantryData))*/}
+          {console.log('pantry data: ' + JSON.stringify(this.state.pantryData))}
 
           {this.state.pantryData ? (
             <View>
-              <Form>
-                <Item stackedLabel style={styles.item}>
-                  <Label style={styles.label}>Pantry Name</Label>
-                  <Input
-                    style={styles.input}
-                    value={this.state.pantryData.name}
-                    onChangeText={text => {
-                      this.setState({
-                        pantryData: {
-                          ...this.state.pantryData,
-                          name: text,
-                        },
-                      });
-                    }}
-                  />
-                </Item>
-                <Item stackedLabel style={styles.item}>
-                  <Label style={styles.label}>Pantry Address</Label>
-                  <Input
-                    style={styles.input}
-                    value={this.state.pantryData.address}
-                    onChangeText={text => {
-                      this.setState({
-                        pantryData: {
-                          ...this.state.pantryData,
-                          address: text,
-                        },
-                      });
-                    }}
-                  />
-                </Item>
-
-                <Item stackedLabel style={styles.item}>
-                  <Label style={styles.label}>Pantry Hour</Label>
-                  <Input
-                    style={styles.input}
-                    value={this.state.pantryData.hour}
-                    onChangeText={text => {
-                      this.setState({
-                        pantryData: {
-                          ...this.state.pantryData,
-                          hour: text,
-                        },
-                      });
-                    }}
-                  />
-                </Item>
-                <Item stackedLabel style={styles.item}>
-                  <Label style={styles.label}>Pantry Contact</Label>
-                  <Input
-                    style={styles.input}
-                    value={this.state.pantryData.contact}
-                    onChangeText={text => {
-                      this.setState({
-                        pantryData: {
-                          ...this.state.pantryData,
-                          contact: text,
-                        },
-                      });
-                    }}
-                  />
-                </Item>
-                <Item stackedLabel style={styles.item}>
-                  <Label style={styles.label}>Pantry Checkout Form Link</Label>
-                  <Input
-                    style={styles.input}
-                    value={this.state.pantryData.checkout}
-                    onChangeText={text => {
-                      this.setState({
-                        pantryData: {
-                          ...this.state.pantryData,
-                          checkout: text,
-                        },
-                      });
-                    }}
-                  />
-                </Item>
-              </Form>
-
-              <View style={styles.buttonRow}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    console.log(
-                      'data after modification: ' +
-                        JSON.stringify(this.state.pantryData)
-                    );
-
-                    firebase
-                      .database()
-                      .ref('Pantry/' + this.state.name)
-                      .remove();
-                    firebase
-                      .database()
-                      .ref('Pantry/' + this.state.pantryData.name)
-                      .set({
-                        ...this.state.pantryData,
-                      });
-
-                    this.getGeoCode();
-                    this.goBack();
-                  }}>
-                  <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    this.props.navigation.goBack();
-                  }}>
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                
-              </View>
+              <Formik
+                initialValues={{
+                  pantryName: this.state.pantryData.name,
+                  pantryAddress: this.state.pantryData.address,
+                  pantryHour: this.state.pantryData.hour,
+                  pantryContact: this.state.pantryData.contact,
+                  pantryForm: this.state.pantryData.checkout,
+                }}
+                onSubmit={this._handleSubmit}
+                validationSchema={Yup.object().shape({
+                  pantryName: Yup.string().required('Pantry Name is required'),
+                  pantryAddress: Yup.string()
+                    .min(6)
+                    .required('Pantry Address is required'),
+                  pantryHour: Yup.string(),
+                  pantryContact: Yup.string()
+                    .min(10, 'Please enter a valid phone number')
+                    .max(10, 'Please enter a valid phone number'),
+                  pantryForm: Yup.string(),
+                })}
+                render={({
+                  values,
+                  handleSubmit,
+                  setFieldValue,
+                  errors,
+                  touched,
+                  setFieldTouched,
+                  isValid,
+                  isSubmitting,
+                }) => (
+                  <React.Fragment>
+                    <Input
+                      label="PANTRY NAME"
+                      value={values.pantryName}
+                      onChange={setFieldValue}
+                      onTouch={setFieldTouched}
+                      name="pantryName"
+                      error={touched.pantryName && errors.pantryName}
+                    />
+                    <Input
+                      label="PANTRY ADDRESS"
+                      value={values.pantryAddress}
+                      onChange={setFieldValue}
+                      onTouch={setFieldTouched}
+                      name="pantryAddress"
+                      error={touched.pantryAddress && errors.pantryAddress}
+                    />
+                    <Input
+                      label="PANTRY HOUR"
+                      value={values.pantryHour}
+                      onChange={setFieldValue}
+                      onTouch={setFieldTouched}
+                      name="pantryHour"
+                      error={touched.pantryHour && errors.pantryHour}
+                    />
+                    <Input
+                      label="PANTRY CONTACT"
+                      value={values.pantryContact}
+                      onChange={setFieldValue}
+                      onTouch={setFieldTouched}
+                      name="pantryContact"
+                      error={touched.pantryContact && errors.pantryContact}
+                      keyboardType="numeric"
+                    />
+                    <Input
+                      label="PANTRY GOOGLE FORM LINK"
+                      autoCapitalize="none"
+                      value={values.pantryForm}
+                      onChange={setFieldValue}
+                      onTouch={setFieldTouched}
+                      name="pantryForm"
+                      error={touched.pantryForm && errors.pantryForm}
+                    />
+                    <Button
+                      buttonStyle={styles.button}
+                      title="Save"
+                      onPress={handleSubmit}
+                      disabled={!isValid || isSubmitting}
+                      loading={isSubmitting}
+                    />
+                    <Button
+                      buttonStyle={styles.cancelButton}
+                      title="Cancel"
+                      onPress={() => {this.props.navigation.goBack()}}
+                      loading={isSubmitting}
+                    />
+                  </React.Fragment>
+                )}
+              />
+              <View style={{ height: 100 }} />
             </View>
           ) : (
             <Spinner />
@@ -224,40 +209,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#ffffff',
   },
-  label: {
-    color: primary,
-    fontSize: 12,
-    fontWeight: '700',
-    marginLeft: DEVICE_HEIGHT * 0.02,
-    marginBottom: DEVICE_HEIGHT * 0.01,
-  },
-  input: {
-    height: INPUT_HEIGHT,
-    marginLeft: DEVICE_HEIGHT * 0.02,
-  },
-  item: {
-    marginBottom: INPUT_HEIGHT/3,
-    paddingLeft: 0,
-    marginLeft: 0,
-    paddingBottom: 0,
-  },
-  buttonRow:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginLeft: DEVICE_WIDTH * 0.2,
-    marginRight: DEVICE_WIDTH * 0.2,
-  },
   button: {
-    width: WIDTH,
-    height: HEIGHT,
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    borderRadius: 4,
+    marginTop: 20,
+    width: '100%',
     backgroundColor: primary,
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
+  cancelButton: {
+    marginTop: 20,
+    width: '100%',
+    backgroundColor: '#ff6961',
   },
 });
