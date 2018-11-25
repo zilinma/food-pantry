@@ -16,9 +16,9 @@ This project aims to tackle this problem, by collaborating with Professor Darakh
 
 ## **_Design Revisions_**
 ## Initial Version
-**Sketch here**
+<Sketch here>
 As seen in the sketches above, listed below are some of the features that the app provides based on the users.
-### Features available to all users: ###
+### Features available to all users:
 * Information about specific pantry
 * Contact information
 * Address
@@ -67,16 +67,22 @@ To make sure our product caters to our users’ needs, we set out to do user res
 * Google APIs
     * Google Map APIs provide direction and distance calculations.
 
-## **_Functionalities Finished_**
+### UI Design ###
+* Adobe XD
+    * Adobe XD is a user experience design software application developed and published by Adobe Systems. It supports vector design and website wireframing, and creating simple interactive click-through prototypes.
+    * We used adobe XD to create mid-fidelity and high-fidelity prototypes in order to test the user flow and visual appeal of our app before commiting to coding the app. Adobe XD particularly shine here due to its native prototyping feature where we can generate interactive clickable screens without the need of a third-party app.
 
-### Tasks Completed
+## **_Demo_**
 
-### Demos
+**TODO: Upload a video of us going through the app or a gif of that**
 
 ## **_Development & Challenges_**
 
 ### What did we enjoy?
-
+* The multifaceted nature of the project. We worked with our client, different types of users, and our professor. It was fun getting input from such a diverse set of individuals.
+* Doing user research and have our preconceived notions of what works and what does not work be challenged.
+* Coming up with creative ways to solve problems
+* Iteratively changing our designs to be more slick and streamlined
 ### What should we do differently?
 * Document the code along the way.
 * Better time management.
@@ -86,7 +92,14 @@ To make sure our product caters to our users’ needs, we set out to do user res
 * A website version of the app for access in the public.
 
 ## **_Acknowledgements_**
-Thank you person, person and person for ....
+We would love to thank the following people for their generous contribution to our project:
+* Cynthia Peltier for giving us feedback on early versions of our app and connecting us with people who would be interested in the app
+* Kyle Bray for connecting us with students and staff members to help us test our app
+* Hannah Buckley for helping us do user research
+* Bucknell University students for helping us do user research
+* Jennifer Albright for her contributions to the food pantry, taking the lead on being the main administrator for the app, and help us do user research
+* Professor Darakhshan Mir for mentoring the team on a regular basis and providing positive and constructive feedback
+* Professor Evan Peck for guiding us throughout the project and proving us with the necessary tools to succeed
 
 ## **_How to run the app from these files_**
 * Initial requirements
@@ -101,5 +114,3 @@ Thank you person, person and person for ....
         * on your phone. Click on the project that you are working on. After the progress bar reaching 100%, you should see the app running on your phone locally.
         * on emulator. In emulator, the app should be shown automatically when you click on "open in emulator" in the XDE. 
     * Then enjoy the food.
-
-
