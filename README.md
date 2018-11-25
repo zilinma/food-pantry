@@ -19,3 +19,39 @@ For administrators of these pantries, the app will allow necessary edit function
 * Google APIs
     * Google Map APIs provide direction and distance calculations.
 
+## **_Functionalities Finished_**
+
+### Tasks Completed
+
+### Demos
+
+## **_Development & Challenges_**
+
+### What did we enjoy?
+
+### What should we do differently?
+* Document the code along the way.
+* Better time management.
+
+### What's more?
+* More user studies of the targeted users.
+* A website version of the app for access in the public.
+
+## **_Acknowledgements_**
+Thank you person, person and person for ....
+
+## **_How to run the app from these files_**
+* Initial requirements
+	* NPM - Node Package Manager
+	* Expo - installations: `npm install -g expo-cli`
+	* Expo (Expo Project) - Installed on your mobile device.
+* Packages installation
+    * move to the project directory `cd food-pantry`
+    * `npm install --save` After this, npm should report that your project packages are correctly installed.
+* Compile JavaScript Bundles on your phone or on the emulator.
+    * `expo start` After running this, you should see your browser opening the XDE for you. Follow the instruction and open the Expo app:
+        * on your phone. Click on the project that you are working on. After the progress bar reaching 100%, you should see the app running on your phone locally.
+        * on emulator. In emulator, the app should be shown automatically when you click on "open in emulator" in the XDE. 
+    * Then enjoy the food.
+
+
