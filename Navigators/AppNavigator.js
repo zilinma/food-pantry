@@ -36,20 +36,54 @@ const infoInventoryTab = createMaterialTopTabNavigator({
 
 const AppNavigator = createStackNavigator({
   Login: LoginScreen,
-  MainTab: MainTabs,
-  infoInventoryTab: infoInventoryTab,
-  LoginNavigators: LoginNavigators,
-  InfoEditView: InfoEditView,
-  //LoginNavigator: LoginNavigator,
-},
-{
-  initialRouteName: 'Login',
-  
-}
 
-);
-AppNavigator.navigationOptions = {
-	
+  MainTab: {
+    screen: MainTabs,
+    navigationOptions: {
+      headerTitle: "Pantries",
+    }
+  },
+
+  infoInventoryTab: {
+    screen: infoInventoryTab,
+    navigationOptions : ({navigation}) => ({
+      headerTitle: navigation.getParam("pantryName", "No-name"),
+    })
+  },
+
+  LoginNavigators: {
+    screen: LoginNavigators,
+    navigationOptions: {
+      headerTitle: "Admin",
+      } 
+  },
+  
+  InfoEditView: InfoEditView,
+  },
+
+  {
+    initialRouteName: 'Login',
+    navigationOptions: {
+        headerStyle: {
+          backgroundColor: "#0a2a66"
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          color: "#fff",
+          fontSize: 18,
+          width:"75%",
+          justifyContent: "center",
+          alignSelf:'center',
+          textAlign: 'center',
+        },
+        headerTintColor: "#fff"
+      }
+    
+  }
+
+  );
+  AppNavigator.navigationOptions = {
+  	
 
 }
 

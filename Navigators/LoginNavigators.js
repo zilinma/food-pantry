@@ -13,18 +13,26 @@ import {
 
 const LoginNavigators = createStackNavigator(
   {
-    loginForms: loginForms,
+    loginForms: {
+      screen: loginForms,
+      navigationOptions: {
+        headerTitle: "Admin Login",
+      }
+    },
     //forgetPassword: forgetPassword,
     signUpPwd: signUpPwd,
-    SignUpEmail: SignUpEmail,
+    SignUpEmail: {
+      screen: SignUpEmail,
+      navigationOptions:{
+        headerTitle: "SignUp",
+      }
+    },
     SignUpHandle: SignUpHandle,
     SignUpConfirm: SignUpConfirm,
   },
   {
-    tabBarOptions: {
-      activeTintColor: "#a41034"
-    }
-  }
+    initialRouteName: 'loginForms',
+  },
 );
 
 export default LoginNavigators;
