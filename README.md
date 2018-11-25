@@ -16,7 +16,7 @@ This project aims to tackle this problem, by collaborating with Professor Darakh
 
 ## **_Design Revisions_**
 ## Initial Version
-<Sketch here>
+Sketch here
 As seen in the sketches above, listed below are some of the features that the app provides based on the users.
 ### Features available to all users:
 * Information about specific pantry
