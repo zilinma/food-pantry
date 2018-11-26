@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
 		height: INPUT_HEIGHT,
 		color: "black",
 		marginLeft: DEVICE_WIDTH * 0.02,
+		fontSize:16,
 	},
 	item: {
 		marginBottom: INPUT_HEIGHT/3,

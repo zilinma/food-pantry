@@ -112,7 +112,7 @@ export default class SignupPwd extends React.Component {
                   error={touched.pantryAddress && errors.pantryAddress}
                 />
                 <Input
-                  label="PANTRY HOUR"
+                  label="PANTRY HOURS"
                   value={values.pantryHour}
                   onChange={setFieldValue}
                   onTouch={setFieldTouched}
