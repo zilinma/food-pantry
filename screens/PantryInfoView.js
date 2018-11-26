@@ -167,32 +167,32 @@ export default class PantryInfoView extends React.Component {
               </Body>
             </ListItem>
 
-            <ListItem icon noBorder style={{justifyContent:'space-between', marginRight:15}}>
+            <Grid style={styles.buttons_container}>
               {this.state.pantryData.checkout ? (
                 <Button
-                  style={styles.button}
+                  style={styles.button_check}
                   onPress={() => {
                     Linking.openURL(this.state.pantryData.checkout);
                   }}>
-                  <Text>Checkout</Text>
+                  <Text>Google Form</Text>
                 </Button>
               ) :
               (                
                 <Button disabled
-                  style={styles.button}
+                  style={styles.button_check}
                   >
-                  <Text>Checkout</Text>
+                  <Text>Google Form</Text>
                 </Button>
                 )
             }
               <Button
-                style={styles.button}
+                style={styles.button_dir}
                 onPress={() => {
                   this._callShowDirections(this.state.startPoint, this.state.endPoint);
                 }}>
                 <Text>Directions</Text>
               </Button>
-            </ListItem>
+            </Grid>
 
             {this.state.startPoint &&
             this.state.endPoint ? (
@@ -243,6 +243,13 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     marginRight: "5%",
   },
+  buttons_container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: DEVICE_HEIGHT / 50,
+    marginLeft: "2%",
+  },
   textDes: {
     fontSize: 14,
   },
@@ -252,16 +259,27 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 20,
-    color: '#2699FB',
+    color: '#0a2a66',
   },
-  button: {
-    width: BUTTON_WIDTH*1.1,
+  button_dir: {
+    width: BUTTON_WIDTH * 1.7,
     height: BUTTON_HEIGHT,
     borderRadius: BUTTON_RADIUS,
     justifyContent: 'center',
-    //margin: DEVICE_HEIGHT / 30,
-    //marginLeft: DEVICE_HEIGHT/ 60,
-    //marginRight: DEVICE_HEIGHT / 60,
+    position: "relative",
+    margin: DEVICE_WIDTH / 40,
+    //marginLeft: DEVICE_HEIGHT/ 25,
+    //marginLeft: DEVICE_HEIGHT / 50,
+  },
+  button_check: {
+    width: BUTTON_WIDTH * 1.7,
+    height: BUTTON_HEIGHT,
+    position: "relative",
+    borderRadius: BUTTON_RADIUS,
+    justifyContent: 'center',
+    margin: DEVICE_WIDTH / 40,
+    //marginLeft: DEVICE_HEIGHT/ 25,
+    //marginRight: DEVICE_HEIGHT / 50,
   },
   buttonEdit: {
     width: BUTTON_WIDTH,

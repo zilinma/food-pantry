@@ -30,6 +30,9 @@ const infoInventoryTab = createMaterialTopTabNavigator({
     style: {
     backgroundColor: '#FFFFFF',
   },
+    indicatorStyle:{
+    backgroundColor:'#de1d3e'
+  },
 
   }
 });

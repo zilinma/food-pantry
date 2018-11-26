@@ -222,7 +222,7 @@ export default class InventoryView extends React.Component {
           />}
           enableEmptySections={true}
         />
-{userID == pantryID ? (
+{userID == pantryID && (
         <Container>
           <View borderTopWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
               <Left>
@@ -245,26 +245,10 @@ export default class InventoryView extends React.Component {
 
               </Body>
               <Right/>
-              <Right>
-                <Button transparent onPress={() => this.setState({showFilterDialog: true})}>
-                  <Text style = {styles.editDoneButton}>Filter</Text>
-                </Button>
-              </Right>
-              
           </View>
           </Container>
-          ) :(
-          <Container borderTopWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
-              <Left/>
-              <Body/>
-              
-              <Right>
-                <Button transparent onPress={() => this.setState({showFilterDialog: true})}>
-                  <Text style = {styles.editDoneButton}>Filter</Text>
-                </Button>
-              </Right>
-          </Container>
-          )
+          ) 
+
         }
 
         <Dialog 
