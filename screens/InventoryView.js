@@ -3,16 +3,19 @@ import {
   StyleSheet,
   View,
   ListView,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import { Constants } from 'expo';
 import { Icon } from 'react-native-elements';
-import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
+import { Grid, Button,StyleProvider, Item, Input, Form, Label, Container,Title, Header, Content, Footer, FooterTab, List, ListItem, Picker, Text, Left, Body, Right, Switch } from 'native-base';
 import Dialog, { DialogTitle } from 'react-native-popup-dialog';
 import * as firebase from 'firebase';
 import firebaseConfig from '../firebaseConfig';
 import Dimensions from 'Dimensions';
 import getTheme from '../native-base-theme/components';
 import colors from '../native-base-theme/variables/commonColor';
+import { Ionicons } from '@expo/vector-icons';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import { CheckBox } from 'react-native-elements'
 import InventoryList from './InventoryFeatures/InventoryList';
@@ -56,6 +59,7 @@ export default class InventoryView extends React.Component {
       dataSource: dataSource,
       editButtonClicked: false,
       showAddItemDialog: false,
+      showInfoDialog: false,
       showFilterDialog: false,
       filterKeys: [],
       glutenfree: false,
@@ -210,6 +214,18 @@ export default class InventoryView extends React.Component {
           <Right>
             <Text style={styles.availabilityTitle}>Availability</Text>
           </Right>
+
+          <Right>
+            <TouchableOpacity
+              onPress={()=> this.setState({showInfoDialog: !this.state.showInfoDialog}) }>
+              <Ionicons
+                style={styles.fontIcon}
+                active
+                name="ios-information-circle"
+              />
+            </TouchableOpacity>
+          </Right>
+
         </ListItem>
         
         <ListView
@@ -222,9 +238,9 @@ export default class InventoryView extends React.Component {
           />}
           enableEmptySections={true}
         />
-{userID == pantryID && (
-        <Container>
-          <View borderTopWidth={1} borderColor="#D3D3D3" style={styles.headerContainer}>
+      {userID == pantryID && (
+        <Footer>
+          <FooterTab style={styles.footerContainer}>
               <Left>
                 <Button transparent onPress={this._toggleEdit}>
                   <Text
@@ -245,9 +261,9 @@ export default class InventoryView extends React.Component {
 
               </Body>
               <Right/>
-          </View>
-          </Container>
-          ) 
+          </FooterTab>
+        </Footer>
+        ) 
 
         }
 
@@ -257,6 +273,30 @@ export default class InventoryView extends React.Component {
           width = {0.9}
           visible={this.state.showAddItemDialog}>
             <InventoryAddItem tasksRef = {this.state.tasksRef} hideAddBox = {this.hideAddBox} />
+        </Dialog>
+
+        <Dialog 
+          dialogTitle={<DialogTitle title="Information" />}
+          height={0.4}
+          width = {0.9}
+          onTouchOutside={() => {this.setState({ showInfoDialog: false });}}
+          visible={this.state.showInfoDialog}>
+            <View style={{margin:10}}>
+              <Text style={{fontWeight:'bold'}}> Item Name </Text>
+              <View style={{flexDirection: 'row'}}>
+                <Image source={{uri: 'https://i.pinimg.com/originals/2b/99/30/2b993081c636e2685c1239a169280bf8.png'}} style={styles.VGFicon} />
+                <Text> = Item is Vegetarian </Text>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <Image source={{uri: 'https://www.adriennegulliver.com/wp-content/uploads/2016/05/Gluten-Free-Modified-Pic.jpg'}} style={styles.VGFicon} />
+                <Text> = Item is Gluten Free </Text>
+              </View>
+              <View style={{ borderBottomColor: 'black', borderBottomWidth: 1, marginVertical:10 }}/>
+              <Text style={{fontWeight:'bold'}}> Availability </Text>
+              <Text> High : Quantity available is more than 15. </Text>
+              <Text> Medium : Quantity available is between 5 and 15. </Text>
+              <Text> Low : Quantity available is less than 5. </Text>
+            </View>
         </Dialog>
 
         <Dialog 
@@ -312,23 +352,22 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
   },
-  headerContainer: {
+  footerContainer: {
     flexDirection: "row",
     backgroundColor: "#FAFAFA",
-    height: BUTTON_HEIGHT * 1.5,
-    marginBottom: sideMargin,
+    //height: BUTTON_HEIGHT * 1.5,
+    borderTopWidth:1, 
+    borderColor:"#D3D3D3",
+    //marginBottom: sideMargin,
   },
   items: {
-    marginRight: sideMargin * 2, 
+    marginRight: sideMargin, 
   },
   addItemButton: {
-
     padding: sideMargin / 10,
     height: BUTTON_HEIGHT,
     justifyContent: 'center',
-
-  }
-  ,
+  },
   itemnameTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -354,5 +393,16 @@ const styles = StyleSheet.create({
   filterTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  fontIcon: {
+    color: '#0a2a66',
+    fontSize: 22,
+    //marginRight: sideMargin,
+  },
+  VGFicon:{
+    width: 15, 
+    height: 15, 
+    marginLeft:5,
+    marginTop:5,
   },
 });

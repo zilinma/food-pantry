@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Item, Input, Container,Title, Header, Content, List, ListItem, Picker, Text, Left, Body, Right} from 'native-base';
 import Dialog, { DialogTitle } from 'react-native-popup-dialog';
@@ -35,21 +35,6 @@ export default class InventoryList extends React.Component {
     item.tasksRef.child(item.item_name).remove();
   }
 
-  _renderTags(item) {
-    rtn_text = "";
-    if(item.tags === undefined){
-      return rtn_text;
-    } else {
-      if (item.tags.Vegetarian === true){
-        rtn_text = rtn_text + " (V)";
-      }
-      if (item.tags.Glutenfree === true){
-        rtn_text =  rtn_text + " (G)";
-      }
-      return rtn_text;
-    }
-  }
-
   render(){
     return (
       <View>
@@ -81,10 +66,17 @@ export default class InventoryList extends React.Component {
         </Left>
 
         <Body>
-          <Text>
+          <View style={{flexDirection:'row'}}>
             <Text style={styles.itemName}>{`${this.props.item_name}`}</Text>
-            <Text> {" " + this._renderTags(this.props)}</Text>
-          </Text>
+            <View style={{flexDirection:'row', alignItems:'center'}}>
+              {this.props.tags.Vegetarian && (
+                <Image source={{uri: 'https://i.pinimg.com/originals/2b/99/30/2b993081c636e2685c1239a169280bf8.png'}} style={styles.VGFicon} />
+              )}
+              {this.props.tags.Glutenfree && (
+                <Image source={{uri: 'https://www.adriennegulliver.com/wp-content/uploads/2016/05/Gluten-Free-Modified-Pic.jpg'}} style={styles.VGFicon} />
+              )}
+            </View>
+          </View>
         </Body>
 
         <Right>
@@ -125,11 +117,14 @@ const styles = StyleSheet.create({
   },
   items: {
     marginRight: sideMargin * 2,
-
-
   },
   itemName: {
     color: "black",
+  },
+  VGFicon:{
+    width: 15, 
+    height: 15, 
+    marginLeft:5
   },
 });
 
