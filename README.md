@@ -1,42 +1,41 @@
-## **_Original Problem Statement_**
-Food insecurity refers to the lack of reliable access to a sufficient quantity of affordable, nutritious food. It affects millions of people in the US, and is an invisible problem both at Bucknell and in Lewisburg as well. To mitigate this problem, there are a few formal and informal food pantries in Lewisburg. However it is hard for people to know exactly what kind of food the pantries offer, or how they might be able to help these pantries. 
+## **_Overview_**
+## Problem
+Food insecurity refers to the lack of reliable access to a sufficient quantity of affordable, nutritious food. It affects millions of people in the US, and is an invisible problem both at Bucknell and in Lewisburg as well. To mitigate this problem, there are a few formal and informal food pantries in Lewisburg. However, there are still some problems that prevent the food pantries from being as effective as they could be. Some of them are listed below:
+* There is no remote (app/website based) platform available for people to connect the food pantries with their users. 
+* People find it difficult to know the food pantries available in town.
+* People have to go to the pantry itself in order to get the information about the items available.
+* There is no formal process for keeping an inventory of the food items available at the pantries, which makes the work of the administrators hard.
 
-This project aims to tackle this problem, by collaborating with Professor Darakhshan Mir at Bucknell University and Cynthia Peltier, the director of CommUnity Zone in Lewisburg. Our initial proposed solution was to design a mobile app that will allow a user to view all food pantries near their location and offer them option to view current items in them. However, after communication with our clients, we have realized that our project scope was complicated (will be discussed in detail later). As a result, we have rescoped our project to focus primarily on the food pantry at Bucknell. We will still provide information for other pantries in the app, however, it will be limited to basic information about the pantries. For the Bucknell pantry, we will include basic information about the pantry, as well as an inventory of items, and provide the users with two options:
+This project aims to tackle these problems by collaborating with Professor Darakhshan Mir at Bucknell University and Cynthia Peltier, the director of CommUnity Zone in Lewisburg. 
+
+## Solution
+Our initial proposed solution was to design a mobile app that will allow a user to view all food pantries near their location and offer the option to view current items in them. However, after communication with our clients, we have realized that our project scope was complicated (will be discussed in detail later). As a result, we have rescoped our project to focus primarily on the food pantry at Bucknell. We will still provide information for other pantries, however, it will be limited to basic information about the pantries. For the Bucknell pantry, we will include basic information about the pantry, as well as an inventory of items, and provide the users with two options:
 
 * If the user is an admin, they will be able to edit the information about the pantry in the app, including the inventory of items.
 * If the user is a consumer, they will be able to view the basic information and the inventory of the pantry.
 
-## Current Solution (AKA Problem)
-* Currently, there is no remote (app/website based) platform available for people to connect the food pantries with their users. As a result, there are a number of issues that the users face. 
-* People have to go to the pantry itself in order to get the information about the items available. 
-* People have to show up in person and register themselves at a pantry to use the pantry.
-* People find hard to know the food pantries available in town. 
-* There is no formal process for keeping an inventory of the food items available at the pantries, which makes the work of the administrators hard. 
+## **_Project Descriptions_**
+As mentioned above, the app caters to two main groups of users: Administrator and Consumer. Administrators are people who are responsible for running the specific food pantry. Consumers are students and community members who use the food pantry. Depending on the status of the users, they will have access to various features.
 
+### Features available to Consumers:
+* Can view basic information about a pantry
+** Name
+** Contact information
+** Address and direction
+** Working hours
+* Can view the inventory of the items available (for the Bucknell pantry only)
 
-## **_Design Revisions_**
-## Initial Version
-Sketch here
-As seen in the sketches above, listed below are some of the features that the app provides based on the users.
-### Features available to all users:
-* Information about specific pantry
-* Contact information
-* Address
-* Navigation
-* Working hours
-* Bucknell students working there?
-* Can view items
-### Features available to Donors
-* Notifications for food item shortage 
-* Can only view items
-### Features available to Admins
-* Notifications for food item shortage 
-* Can add/withdraw items
-* Can see their specific food pantry
-### Features available to Consumers
-* Can only view items
-* Can see all food pantries they’re registered to
-* 
+### Features available to Administrators:
+* Can edit basic information (listed above) regarding the pantry that they administer.
+* Can edit the inventory of the items of the food pantry. 
+** Add new items
+** Delete items
+** Modify availability of items
+
+## **_Demo_**
+
+**TODO: Upload a video of us going through the app or a gif of that**
+ 
 **_Version after talking with our clients_**
 To make sure our product caters to our users’ needs, we set out to do user research. We have two main users of our product: 
 
@@ -58,12 +57,14 @@ To make sure our product caters to our users’ needs, we set out to do user res
 
 ## **_Design_**
 ### System Design ###
+
 * React Native
     * React Native provides a platform for a scalable code base and it is easy to handle API imports in it. In addition, it allows us to build cross-platform apps, which would make it really convenient in case we want to expand the app to an iOS platform. 
 
 * FireBase 
     * FireBase will provide real time synchronization of our data. With cross-platform support, synchronization between the client and the users will be pretty easy. Moreover, Firebase already has full support for React Native, which will make it easy to integrate FireBase in React Native. 
     * The whole database for FireBase might be small at the beginning, but we anticipate it to be larger as there are more users. FireBase allows us to migrate the data to other platforms easily in the future.
+    
 * Google APIs
     * Google Map APIs provide direction and distance calculations.
 
@@ -72,10 +73,6 @@ To make sure our product caters to our users’ needs, we set out to do user res
     * Adobe XD is a user experience design software application developed and published by Adobe Systems. It supports vector design and website wireframing, and creating simple interactive click-through prototypes.
     * We used adobe XD to create mid-fidelity and high-fidelity prototypes in order to test the user flow and visual appeal of our app before commiting to coding the app. Adobe XD particularly shine here due to its native prototyping feature where we can generate interactive clickable screens without the need of a third-party app.
 
-## **_Demo_**
-
-**TODO: Upload a video of us going through the app or a gif of that**
-
 ## **_Development & Challenges_**
 
 ### What did we enjoy?
@@ -83,6 +80,7 @@ To make sure our product caters to our users’ needs, we set out to do user res
 * Doing user research and have our preconceived notions of what works and what does not work be challenged.
 * Coming up with creative ways to solve problems
 * Iteratively changing our designs to be more slick and streamlined
+
 ### What should we do differently?
 * Document the code along the way.
 * Better time management.
