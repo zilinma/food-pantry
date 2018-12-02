@@ -1,5 +1,5 @@
 ## **_Overview_**
-## Problem
+### Problem
 Food insecurity refers to the lack of reliable access to a sufficient quantity of affordable, nutritious food. It affects millions of people in the US, and is an invisible problem both at Bucknell and in Lewisburg as well. To mitigate this problem, there are a few formal and informal food pantries in Lewisburg. However, there are still some problems that prevent the food pantries from being as effective as they could be. Some of them are listed below:
 * There is no remote (app/website based) platform available for people to connect the food pantries with their users. 
 * People find it difficult to know the food pantries available in town.
@@ -8,7 +8,7 @@ Food insecurity refers to the lack of reliable access to a sufficient quantity o
 
 This project aims to tackle these problems by collaborating with Professor Darakhshan Mir at Bucknell University and Cynthia Peltier, the director of CommUnity Zone in Lewisburg. 
 
-## Solution
+### Solution
 Our initial proposed solution was to design a mobile app that will allow a user to view all food pantries near their location and offer the option to view current items in them. However, after communication with our clients, we have realized that our project scope was complicated (will be discussed in detail later). As a result, we have rescoped our project to focus primarily on the food pantry at Bucknell. We will still provide information for other pantries, however, it will be limited to basic information about the pantries. For the Bucknell pantry, we will include basic information about the pantry, as well as an inventory of items, and provide the users with two options:
 
 * If the user is an admin, they will be able to edit the information about the pantry in the app, including the inventory of items.
@@ -19,22 +19,18 @@ As mentioned above, the app caters to two main groups of users: Administrator an
 
 ### Features available to Consumers:
 * Can view basic information about a pantry
-** Name
-** Contact information
-** Address and direction
-** Working hours
+	* Name
+	* Contact information
+	* Address and direction
+	* Working hours
 * Can view the inventory of the items available (for the Bucknell pantry only)
 
 ### Features available to Administrators:
 * Can edit basic information (listed above) regarding the pantry that they administer.
 * Can edit the inventory of the items of the food pantry. 
-** Add new items
-** Delete items
-** Modify availability of items
-
-## **_Demo_**
-
-**TODO: Upload a video of us going through the app or a gif of that**
+	* Add new items
+	* Delete items
+	* Modify availability of items
  
 **_Version after talking with our clients_**
 To make sure our product caters to our users’ needs, we set out to do user research. We have two main users of our product: 
@@ -54,10 +50,14 @@ To make sure our product caters to our users’ needs, we set out to do user res
     * We have changed the way an administrator can add an item to be more intuitive.
     * Instead of having the exact quantity of the food items, which would take so much of the administrator’s time, we have decided to put assign an “availability” label to the item which can be high, medium, or low. That way, administrators will not have to spend extended amounts of time counting the food items each time a student comes and picks up an item, and students will still know if the pantry is low on stock on a specific item so they do not waste their time coming all the way to the pantry.
     * Addition of the checkout form to the Bucknell Pantry. The way Bucknell has the check out process in the food pantry now is that they make students use an iPad in the pantry to fill out a form and check out an item. By including the checkout form in the app, the checkout experience will be more dignified and less awkward for students who use the pantry.
+    
+## **_Demo_**
+
+**TODO: Upload a video of us going through the app or a gif of that**
 
 ## **_Design_**
 ### System Design ###
-
+**TODO: Upload the diagram**
 * React Native
     * React Native provides a platform for a scalable code base and it is easy to handle API imports in it. In addition, it allows us to build cross-platform apps, which would make it really convenient in case we want to expand the app to an iOS platform. 
 
